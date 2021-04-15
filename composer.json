@@ -20,7 +20,8 @@
         "phpunit/phpunit": "^9.5",
         "orchestra/testbench": "^6.17",
         "mockery/mockery": "^1.4.3",
-        "nunomaduro/collision": "^5.3"
+        "nunomaduro/collision": "^5.3",
+        "spatie/phpunit-watcher": "^1.23"
     },
     "autoload": {
         "psr-4": {
