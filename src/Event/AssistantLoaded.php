@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Assistant\Event;
+namespace Sassnowski\Arcanist\Event;
 
-use Sassnowski\Arcanist\Assistant\AbstractAssistant;
+use Sassnowski\Arcanist\AbstractAssistant;
 
 final class AssistantLoaded
 {

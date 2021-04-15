@@ -1,23 +1,28 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Assistant;
+namespace Sassnowski\Arcanist;
 
 use function event;
+use function route;
+use function config;
+use function collect;
+use function data_get;
+use function redirect;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Validation\ValidationException;
+use Sassnowski\Arcanist\Event\AssistantLoaded;
+use Sassnowski\Arcanist\Event\AssistantSaving;
+use Sassnowski\Arcanist\Event\AssistantFinished;
+use Sassnowski\Arcanist\Event\AssistantFinishing;
+use Sassnowski\Arcanist\Contracts\ResponseRenderer;
+use Sassnowski\Arcanist\Contracts\AssistantRepository;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Sassnowski\Arcanist\Assistant\Event\AssistantLoaded;
-use Sassnowski\Arcanist\Assistant\Event\AssistantSaving;
-use Sassnowski\Arcanist\Assistant\Event\AssistantFinished;
-use Sassnowski\Arcanist\Assistant\Event\AssistantFinishing;
-use Sassnowski\Arcanist\Assistant\Contracts\ResponseRenderer;
-use Sassnowski\Arcanist\Assistant\Contracts\AssistantRepository;
-use Sassnowski\Arcanist\Assistant\Exception\UnknownStepException;
+use Sassnowski\Arcanist\Exception\UnknownStepException;
+use Sassnowski\Arcanist\Exception\AssistantNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Sassnowski\Arcanist\Assistant\Exception\AssistantNotFoundException;
 
 abstract class AbstractAssistant
 {

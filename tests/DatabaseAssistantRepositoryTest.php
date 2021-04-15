@@ -1,18 +1,17 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Assistant;
+namespace Tests;
 
 use function tap;
 use Mockery as m;
-use Tests\TestCase;
 use function get_class;
 use Illuminate\Support\Arr;
 use Illuminate\Http\RedirectResponse;
+use Sassnowski\Arcanist\AbstractAssistant;
+use Sassnowski\Arcanist\Repository\Assistant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Sassnowski\Arcanist\Assistant\AbstractAssistant;
-use Sassnowski\Arcanist\Assistant\Repository\Assistant;
-use Sassnowski\Arcanist\Assistant\Exception\AssistantNotFoundException;
-use Sassnowski\Arcanist\Assistant\Repository\DatabaseAssistantRepository;
+use Sassnowski\Arcanist\Exception\AssistantNotFoundException;
+use Sassnowski\Arcanist\Repository\DatabaseAssistantRepository;
 
 class DatabaseAssistantRepositoryTest extends TestCase
 {

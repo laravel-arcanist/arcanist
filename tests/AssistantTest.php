@@ -1,25 +1,24 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Assistant;
+namespace Tests;
 
 use Generator;
-use Tests\TestCase;
 use Illuminate\Http\Request;
 use Illuminate\Testing\TestResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Event;
+use Sassnowski\Arcanist\AssistantStep;
+use Sassnowski\Arcanist\AbstractAssistant;
 use Illuminate\Validation\ValidationException;
-use Sassnowski\Arcanist\Assistant\AssistantStep;
-use Sassnowski\Arcanist\Assistant\AbstractAssistant;
-use Sassnowski\Arcanist\Assistant\Event\AssistantLoaded;
-use Sassnowski\Arcanist\Assistant\Event\AssistantSaving;
-use Sassnowski\Arcanist\Assistant\Event\AssistantFinished;
-use Sassnowski\Arcanist\Assistant\Event\AssistantFinishing;
-use Sassnowski\Arcanist\Assistant\Contracts\ResponseRenderer;
-use Sassnowski\Arcanist\Assistant\Renderer\FakeResponseRenderer;
-use Sassnowski\Arcanist\Assistant\Exception\UnknownStepException;
+use Sassnowski\Arcanist\Event\AssistantLoaded;
+use Sassnowski\Arcanist\Event\AssistantSaving;
+use Sassnowski\Arcanist\Event\AssistantFinished;
+use Sassnowski\Arcanist\Event\AssistantFinishing;
+use Sassnowski\Arcanist\Contracts\ResponseRenderer;
+use Sassnowski\Arcanist\Renderer\FakeResponseRenderer;
+use Sassnowski\Arcanist\Exception\UnknownStepException;
+use Sassnowski\Arcanist\Repository\FakeAssistantRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Sassnowski\Arcanist\Assistant\Repository\FakeAssistantRepository;
 
 class AssistantTest extends TestCase
 {

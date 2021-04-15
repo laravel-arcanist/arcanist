@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Assistant;
+namespace Tests;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Arcanist\Assistant\AbstractAssistant;
-use Sassnowski\Arcanist\Assistant\Event\AssistantFinished;
-use Sassnowski\Arcanist\Assistant\Repository\FakeAssistantRepository;
-use Sassnowski\Arcanist\Assistant\Listener\RemoveCompletedAssistantListener;
+use Sassnowski\Arcanist\AbstractAssistant;
+use Sassnowski\Arcanist\Event\AssistantFinished;
+use Sassnowski\Arcanist\Repository\FakeAssistantRepository;
+use Sassnowski\Arcanist\Listener\RemoveCompletedAssistantListener;
 
 class RemoveCompletedAssistantListenerTest extends TestCase
 {

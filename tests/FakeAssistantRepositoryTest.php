@@ -1,15 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Assistant;
+namespace Tests;
 
 use Mockery as m;
-use Tests\TestCase;
 use Illuminate\Http\RedirectResponse;
-use Sassnowski\Arcanist\Assistant\AbstractAssistant;
-use Sassnowski\Arcanist\Assistant\Contracts\ResponseRenderer;
-use Sassnowski\Arcanist\Assistant\Contracts\AssistantRepository;
-use Sassnowski\Arcanist\Assistant\Repository\FakeAssistantRepository;
-use Sassnowski\Arcanist\Assistant\Exception\AssistantNotFoundException;
+use Sassnowski\Arcanist\AbstractAssistant;
+use Sassnowski\Arcanist\Contracts\ResponseRenderer;
+use Sassnowski\Arcanist\Contracts\AssistantRepository;
+use Sassnowski\Arcanist\Repository\FakeAssistantRepository;
+use Sassnowski\Arcanist\Exception\AssistantNotFoundException;
 
 class FakeAssistantRepositoryTest extends TestCase
 {

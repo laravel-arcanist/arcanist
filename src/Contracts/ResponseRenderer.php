@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Assistant\Contracts;
+namespace Sassnowski\Arcanist\Contracts;
 
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
+use Sassnowski\Arcanist\AssistantStep;
+use Sassnowski\Arcanist\AbstractAssistant;
 use Illuminate\Contracts\Support\Responsable;
-use Sassnowski\Arcanist\Assistant\AssistantStep;
-use Sassnowski\Arcanist\Assistant\AbstractAssistant;
 
 interface ResponseRenderer
 {

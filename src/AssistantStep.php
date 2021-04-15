@@ -1,7 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Assistant;
+namespace Sassnowski\Arcanist;
 
+use function collect;
 use Illuminate\Http\Request;
 
 abstract class AssistantStep

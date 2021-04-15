@@ -4,7 +4,6 @@ namespace Sassnowski\Arcanist;
 
 use function database_path;
 use Illuminate\Support\ServiceProvider;
-use Sassnowski\Arcanist\Assistant\Arcanist;
 
 class ArcanistServiceProvider extends ServiceProvider
 {

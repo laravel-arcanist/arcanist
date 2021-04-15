@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Assistant\Contracts;
+namespace Sassnowski\Arcanist\Contracts;
 
-use Sassnowski\Arcanist\Assistant\AbstractAssistant;
-use Sassnowski\Arcanist\Assistant\Exception\AssistantNotFoundException;
+use Sassnowski\Arcanist\AbstractAssistant;
+use Sassnowski\Arcanist\Exception\AssistantNotFoundException;
 
 interface AssistantRepository
 {

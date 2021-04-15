@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Assistant;
+namespace Tests;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Sassnowski\Arcanist\AbstractAssistant;
 use function PHPUnit\Framework\assertEquals;
-use Sassnowski\Arcanist\Assistant\AbstractAssistant;
-use Sassnowski\Arcanist\Assistant\Event\AssistantFinishing;
-use Sassnowski\Arcanist\Assistant\Listener\CallOnAssistantCompleteAction;
+use Sassnowski\Arcanist\Event\AssistantFinishing;
+use Sassnowski\Arcanist\Listener\CallOnAssistantCompleteAction;
 
 class AssistantFinishedListenerTest extends TestCase
 {

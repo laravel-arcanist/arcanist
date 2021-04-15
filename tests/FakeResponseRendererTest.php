@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Assistant;
+namespace Tests;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Arcanist\Assistant\AssistantStep;
-use Sassnowski\Arcanist\Assistant\AbstractAssistant;
-use Sassnowski\Arcanist\Assistant\Renderer\FakeResponseRenderer;
+use Sassnowski\Arcanist\AssistantStep;
+use Sassnowski\Arcanist\AbstractAssistant;
+use Sassnowski\Arcanist\Renderer\FakeResponseRenderer;
 
 class FakeResponseRendererTest extends TestCase
 {

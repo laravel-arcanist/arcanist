@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Assistant\Repository;
+namespace Sassnowski\Arcanist\Repository;
 
 use function get_class;
 use function array_merge;
-use Sassnowski\Arcanist\Assistant\AbstractAssistant;
-use Sassnowski\Arcanist\Assistant\Contracts\AssistantRepository;
-use Sassnowski\Arcanist\Assistant\Exception\AssistantNotFoundException;
+use Sassnowski\Arcanist\AbstractAssistant;
+use Sassnowski\Arcanist\Contracts\AssistantRepository;
+use Sassnowski\Arcanist\Exception\AssistantNotFoundException;
 
 class DatabaseAssistantRepository implements AssistantRepository
 {

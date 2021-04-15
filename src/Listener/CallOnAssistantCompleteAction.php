@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Assistant\Listener;
+namespace Sassnowski\Arcanist\Listener;
 
-use Sassnowski\Arcanist\Assistant\Event\AssistantFinishing;
+use Sassnowski\Arcanist\Event\AssistantFinishing;
 
 class CallOnAssistantCompleteAction
 {

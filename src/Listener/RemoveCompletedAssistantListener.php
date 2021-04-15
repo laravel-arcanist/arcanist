@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Assistant\Listener;
+namespace Sassnowski\Arcanist\Listener;
 
-use Sassnowski\Arcanist\Assistant\Event\AssistantFinished;
-use Sassnowski\Arcanist\Assistant\Contracts\AssistantRepository;
+use Sassnowski\Arcanist\Event\AssistantFinished;
+use Sassnowski\Arcanist\Contracts\AssistantRepository;
 
 class RemoveCompletedAssistantListener
 {

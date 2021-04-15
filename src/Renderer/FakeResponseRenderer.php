@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Assistant\Renderer;
+namespace Sassnowski\Arcanist\Renderer;
 
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
+use Sassnowski\Arcanist\AssistantStep;
+use Sassnowski\Arcanist\AbstractAssistant;
 use Illuminate\Contracts\Support\Responsable;
-use Sassnowski\Arcanist\Assistant\AssistantStep;
-use Sassnowski\Arcanist\Assistant\AbstractAssistant;
-use Sassnowski\Arcanist\Assistant\Contracts\ResponseRenderer;
+use Sassnowski\Arcanist\Contracts\ResponseRenderer;
 
 class FakeResponseRenderer implements ResponseRenderer
 {
