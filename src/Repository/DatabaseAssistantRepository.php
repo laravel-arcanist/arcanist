@@ -10,15 +10,6 @@ use Sassnowski\Arcanist\Exception\AssistantNotFoundException;
 
 class DatabaseAssistantRepository implements AssistantRepository
 {
-    public function __construct(private array $registeredAssistants = [])
-    {
-    }
-
-    public function registeredAssistants(): array
-    {
-        return $this->registeredAssistants;
-    }
-
     public function saveData(AbstractAssistant $assistant, array $data): void
     {
         $assistant->exists()

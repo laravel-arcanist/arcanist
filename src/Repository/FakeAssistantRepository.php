@@ -10,7 +10,7 @@ class FakeAssistantRepository implements AssistantRepository
 {
     private int $nextId = 1;
 
-    public function __construct(private array $data = [], private array $registeredAssistants = [])
+    public function __construct(private array $data = [])
     {
     }
 
@@ -19,6 +19,8 @@ class FakeAssistantRepository implements AssistantRepository
         if ($assistant->getId() === null) {
             $assistant->setId($this->nextId++);
         }
+
+        $this->guardAgainstAssistantClassMismatch($assistant);
 
         $assistantClass = get_class($assistant);
 
@@ -40,12 +42,21 @@ class FakeAssistantRepository implements AssistantRepository
 
     public function deleteAssistant(AbstractAssistant $assistant): void
     {
+        $this->guardAgainstAssistantClassMismatch($assistant);
+
         unset($this->data[get_class($assistant)][$assistant->getId()]);
+
         $assistant->setId(null);
     }
 
-    public function registeredAssistants(): array
+    private function guardAgainstAssistantClassMismatch(AbstractAssistant $assistant): void
     {
-        return $this->registeredAssistants();
+        $hasIdMismatch = collect($this->data)
+            ->except(get_class($assistant))
+            ->contains(fn (array $assistants) => isset($assistants[$assistant->getId()]));
+
+        if ($hasIdMismatch) {
+            throw new AssistantNotFoundException();
+        }
     }
 }

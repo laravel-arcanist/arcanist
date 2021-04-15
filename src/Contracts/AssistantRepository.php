@@ -8,11 +8,6 @@ use Sassnowski\Arcanist\Exception\AssistantNotFoundException;
 interface AssistantRepository
 {
     /**
-     * @return AbstractAssistant[]
-     */
-    public function registeredAssistants(): array;
-
-    /**
      * @throws AssistantNotFoundException
      */
     public function saveData(AbstractAssistant $assistant, array $data): void;
