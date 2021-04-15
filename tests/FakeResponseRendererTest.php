@@ -51,6 +51,20 @@ class FakeResponseRendererTest extends TestCase
 
         self::assertTrue($renderer->didRedirectTo(FakeStep::class));
         self::assertFalse($renderer->didRedirectTo(AnotherFakeStep::class));
+        self::assertFalse($renderer->didRedirectWithError(FakeStep::class));
+    }
+
+    /** @test */
+    public function it_records_redirects_with_errors(): void
+    {
+        $wizard = m::mock(AbstractWizard::class);
+        $step = new FakeStep($wizard, 1);
+        $renderer = new FakeResponseRenderer();
+
+        $renderer->redirectWithError($step, $wizard, '::message::');
+
+        self::assertTrue($renderer->didRedirectWithError(FakeStep::class, '::message::'));
+        self::assertFalse($renderer->didRedirectTo(FakeStep::class));
     }
 }
 
