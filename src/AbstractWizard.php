@@ -11,11 +11,11 @@ use function redirect;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Contracts\Support\Responsable;
-use Illuminate\Validation\ValidationException;
 use Sassnowski\Arcanist\Event\WizardLoaded;
 use Sassnowski\Arcanist\Event\WizardSaving;
+use Illuminate\Contracts\Support\Responsable;
 use Sassnowski\Arcanist\Event\WizardFinished;
+use Illuminate\Validation\ValidationException;
 use Sassnowski\Arcanist\Event\WizardFinishing;
 use Sassnowski\Arcanist\Contracts\ResponseRenderer;
 use Sassnowski\Arcanist\Contracts\WizardRepository;
@@ -160,6 +160,14 @@ abstract class AbstractWizard
 
         $result = $step->process($request);
 
+        if (!$result->successful()) {
+            return $this->responseRenderer->redirectWithError(
+                $this->steps[0],
+                $this,
+                $result->error()
+            );
+        }
+
         $this->saveStepData($step, $result->payload(), $request);
 
         return $this->responseRenderer->redirect(
@@ -181,6 +189,14 @@ abstract class AbstractWizard
         $step = $this->loadStep($slug);
 
         $result = $step->process($request);
+
+        if (!$result->successful()) {
+            return $this->responseRenderer->redirectWithError(
+                $this->steps[0],
+                $this,
+                $result->error()
+            );
+        }
 
         $this->saveStepData($step, $result->payload(), $request);
 

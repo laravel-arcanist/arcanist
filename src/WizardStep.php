@@ -2,10 +2,10 @@
 
 namespace Sassnowski\Arcanist;
 
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Validation\ValidationException;
 use function collect;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 
 abstract class WizardStep
 {
@@ -56,7 +56,12 @@ abstract class WizardStep
     {
         $data = $this->validate($request, $this->rules());
 
-        return $this->success($data);
+        return $this->handle($request, $data);
+    }
+
+    protected function handle(Request $request, array $payload): StepResult
+    {
+        return $this->success($payload);
     }
 
     /**

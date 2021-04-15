@@ -4,15 +4,16 @@ namespace Tests;
 
 use Generator;
 use Illuminate\Http\Request;
+use Sassnowski\Arcanist\StepResult;
+use Sassnowski\Arcanist\WizardStep;
 use Illuminate\Testing\TestResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Event;
-use Sassnowski\Arcanist\WizardStep;
 use Sassnowski\Arcanist\AbstractWizard;
-use Illuminate\Validation\ValidationException;
 use Sassnowski\Arcanist\Event\WizardLoaded;
 use Sassnowski\Arcanist\Event\WizardSaving;
 use Sassnowski\Arcanist\Event\WizardFinished;
+use Illuminate\Validation\ValidationException;
 use Sassnowski\Arcanist\Event\WizardFinishing;
 use Sassnowski\Arcanist\Contracts\ResponseRenderer;
 use Sassnowski\Arcanist\Renderer\FakeResponseRenderer;
@@ -644,6 +645,42 @@ class WizardTest extends TestCase
         ];
     }
 
+    /**
+     * @test
+     * @dataProvider errorWizardProvider
+     */
+    public function it_redirects_to_the_same_step_with_an_error_if_the_step_was_not_completed_successfully(callable $callWizard): void
+    {
+        $renderer = new FakeResponseRenderer();
+        $wizard = new ErrorWizard(
+            $this->createWizardRepository(wizardClass: ErrorWizard::class),
+            $renderer
+        );
+
+        $callWizard($wizard);
+
+        self::assertTrue(
+            $renderer->didRedirectWithError(ErrorStep::class, '::error-message::')
+        );
+    }
+
+    public function errorWizardProvider()
+    {
+        yield from [
+            'store' => [
+                function (AbstractWizard $wizard) {
+                    $wizard->store(new Request());
+                }
+            ],
+
+            'update' => [
+                function (AbstractWizard $wizard) {
+                    $wizard->update(new Request(), 1, '::error-step::');
+                }
+            ]
+        ];
+    }
+
     private function createWizardRepository(array $data = [], ?string $wizardClass = null)
     {
         return new FakeWizardRepository([
@@ -716,6 +753,13 @@ class SharedDataWizard extends AbstractWizard
     }
 }
 
+class ErrorWizard extends AbstractWizard
+{
+    protected array $steps = [
+        ErrorStep::class,
+    ];
+}
+
 class TestStep extends WizardStep
 {
     public string $name = '::step-1-name::';
@@ -774,5 +818,20 @@ class DummyStep extends WizardStep
     public function isComplete(): bool
     {
         return true;
+    }
+}
+
+class ErrorStep extends WizardStep
+{
+    public string $slug = '::error-step::';
+
+    public function isComplete(): bool
+    {
+        return false;
+    }
+
+    protected function handle(Request $request, array $payload): StepResult
+    {
+        return $this->error('::error-message::');
     }
 }
