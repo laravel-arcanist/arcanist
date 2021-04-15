@@ -3,7 +3,6 @@
 namespace Sassnowski\Arcanist\Assistant\Renderer;
 
 use Illuminate\Http\Response;
-use Spatie\ViewModels\ViewModel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Support\Responsable;
 use Sassnowski\Arcanist\Assistant\AssistantStep;
@@ -17,7 +16,7 @@ class FakeResponseRenderer implements ResponseRenderer
     public function renderStep(
         AssistantStep $step,
         AbstractAssistant $assistant,
-        array | ViewModel $data = []
+        array $data = []
     ): Response | Responsable {
         $this->renderedSteps[get_class($step)] = $data;
 
