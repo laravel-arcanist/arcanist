@@ -9,6 +9,9 @@
             "email": "me@kai-sassnowski.com"
         }
     ],
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
     "require": {
         "php": "^8.0",
         "laravel/framework": "^8.0"
