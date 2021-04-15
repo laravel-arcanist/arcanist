@@ -1,3 +1,5 @@
+![](logo.png)
+
 ## Installation
 
 Arcanist requires PHP 8 and Laravel 8.
