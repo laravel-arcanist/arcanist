@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * @property int $data
- * @property int $tenant_id
+ * @property int $id
  * @property string $class
  * @property array $data
  */
