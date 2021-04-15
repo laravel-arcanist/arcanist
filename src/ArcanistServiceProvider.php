@@ -4,6 +4,7 @@ namespace Sassnowski\Arcanist;
 
 use function database_path;
 use Illuminate\Support\ServiceProvider;
+use Sassnowski\Arcanist\Assistant\Arcanist;
 
 class ArcanistServiceProvider extends ServiceProvider
 {
@@ -18,6 +19,8 @@ class ArcanistServiceProvider extends ServiceProvider
         ], ['config', 'arcanist-config']);
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+
+        Arcanist::boot($this->app['config']['arcanist']['wizards']);
     }
 
     public function register(): void

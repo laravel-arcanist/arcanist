@@ -33,7 +33,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Sassnowski\\Arcanist\\AranistServiceProvider"
+                "Sassnowski\\Arcanist\\ArcanistServiceProvider"
             ]
         }
     }

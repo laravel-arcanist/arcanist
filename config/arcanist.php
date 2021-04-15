@@ -2,4 +2,8 @@
 
 return [
     'redirect_url' => '/home',
+
+    'wizards' => [
+        // ...
+    ]
 ];
