@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Support\Responsable;
 use Sassnowski\Arcanist\Assistant\AssistantStep;
 use Sassnowski\Arcanist\Assistant\AbstractAssistant;
+use Sassnowski\Arcanist\Assistant\Contracts\ResponseRenderer;
 
 class FakeResponseRenderer implements ResponseRenderer
 {

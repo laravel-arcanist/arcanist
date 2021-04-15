@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Assistant\Renderer;
+namespace Sassnowski\Arcanist\Assistant\Contracts;
 
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;

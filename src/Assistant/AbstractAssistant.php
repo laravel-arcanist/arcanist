@@ -13,7 +13,7 @@ use Sassnowski\Arcanist\Assistant\Event\AssistantLoaded;
 use Sassnowski\Arcanist\Assistant\Event\AssistantSaving;
 use Sassnowski\Arcanist\Assistant\Event\AssistantFinished;
 use Sassnowski\Arcanist\Assistant\Event\AssistantFinishing;
-use Sassnowski\Arcanist\Assistant\Renderer\ResponseRenderer;
+use Sassnowski\Arcanist\Assistant\Contracts\ResponseRenderer;
 use Sassnowski\Arcanist\Assistant\Contracts\AssistantRepository;
 use Sassnowski\Arcanist\Assistant\Exception\UnknownStepException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

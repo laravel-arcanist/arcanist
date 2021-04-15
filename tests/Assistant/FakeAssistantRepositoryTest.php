@@ -6,7 +6,7 @@ use Mockery as m;
 use Tests\TestCase;
 use Illuminate\Http\RedirectResponse;
 use Sassnowski\Arcanist\Assistant\AbstractAssistant;
-use Sassnowski\Arcanist\Assistant\Renderer\ResponseRenderer;
+use Sassnowski\Arcanist\Assistant\Contracts\ResponseRenderer;
 use Sassnowski\Arcanist\Assistant\Contracts\AssistantRepository;
 use Sassnowski\Arcanist\Assistant\Repository\FakeAssistantRepository;
 use Sassnowski\Arcanist\Assistant\Exception\AssistantNotFoundException;
