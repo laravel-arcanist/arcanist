@@ -158,9 +158,9 @@ abstract class AbstractWizard
     {
         $step = $this->loadFirstStep();
 
-        $data = $this->validate($request, $step->rules());
+        $result = $step->process($request);
 
-        $this->saveStepData($step, $data, $request);
+        $this->saveStepData($step, $result->payload(), $request);
 
         return $this->responseRenderer->redirect(
             $this->steps[1],
@@ -179,9 +179,10 @@ abstract class AbstractWizard
         $this->load($wizardId);
 
         $step = $this->loadStep($slug);
-        $data = $this->validate($request, $step->rules());
 
-        $this->saveStepData($step, $data, $request);
+        $result = $step->process($request);
+
+        $this->saveStepData($step, $result->payload(), $request);
 
         if ($this->isLastStep()) {
             event(new WizardFinishing($this));

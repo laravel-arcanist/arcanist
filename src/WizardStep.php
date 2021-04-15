@@ -2,11 +2,15 @@
 
 namespace Sassnowski\Arcanist;
 
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Validation\ValidationException;
 use function collect;
 use Illuminate\Http\Request;
 
 abstract class WizardStep
 {
+    use ValidatesRequests;
+
     /**
      * The name of the step that gets displayed in the step list.
      */
@@ -31,14 +35,6 @@ abstract class WizardStep
         return [];
     }
 
-    /**
-     * The validation rules for submitting the step's form.
-     */
-    public function rules(): array
-    {
-        return [];
-    }
-
     public function index(): int
     {
         return $this->index;
@@ -52,6 +48,34 @@ abstract class WizardStep
      * Checks if this step has already been completed.
      */
     abstract public function isComplete(): bool;
+
+    /**
+     * @throws ValidationException
+     */
+    public function process(Request $request): StepResult
+    {
+        $data = $this->validate($request, $this->rules());
+
+        return $this->success($data);
+    }
+
+    /**
+     * The validation rules for submitting the step's form.
+     */
+    protected function rules(): array
+    {
+        return [];
+    }
+
+    protected function success(array $payload = []): StepResult
+    {
+        return StepResult::success($payload);
+    }
+
+    protected function error(?string $message = null): StepResult
+    {
+        return StepResult::failed($message);
+    }
 
     /**
      * Checks if this step belongs to an existing wizard, i.e. a wizard

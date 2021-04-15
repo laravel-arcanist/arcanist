@@ -721,7 +721,7 @@ class TestStep extends WizardStep
     public string $name = '::step-1-name::';
     public string $slug = 'step-name';
 
-    public function rules(): array
+    protected function rules(): array
     {
         return [
             'first_name' => 'required',
