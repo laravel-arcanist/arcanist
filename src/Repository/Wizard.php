@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $class
  * @property array $data
  */
-class Assistant extends Model
+class Wizard extends Model
 {
     use HasFactory;
 

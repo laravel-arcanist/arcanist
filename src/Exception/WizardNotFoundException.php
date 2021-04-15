@@ -4,6 +4,6 @@ namespace Sassnowski\Arcanist\Exception;
 
 use Exception;
 
-class AssistantNotFoundException extends Exception
+class WizardNotFoundException extends Exception
 {
 }

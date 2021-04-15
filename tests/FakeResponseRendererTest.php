@@ -4,8 +4,8 @@ namespace Tests;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Arcanist\AssistantStep;
-use Sassnowski\Arcanist\AbstractAssistant;
+use Sassnowski\Arcanist\WizardStep;
+use Sassnowski\Arcanist\AbstractWizard;
 use Sassnowski\Arcanist\Renderer\FakeResponseRenderer;
 
 class FakeResponseRendererTest extends TestCase
@@ -14,11 +14,11 @@ class FakeResponseRendererTest extends TestCase
     public function it_records_what_step_was_rendered(): void
     {
         $renderer = new FakeResponseRenderer();
-        $assistant = m::mock(AbstractAssistant::class);
+        $wizard = m::mock(AbstractWizard::class);
 
         $renderer->renderStep(
-            new FakeStep($assistant, 1),
-            $assistant
+            new FakeStep($wizard, 1),
+            $wizard
         );
 
         self::assertTrue($renderer->stepWasRendered(FakeStep::class));
@@ -29,11 +29,11 @@ class FakeResponseRendererTest extends TestCase
     public function it_records_what_data_a_step_was_rendered_with(): void
     {
         $renderer = new FakeResponseRenderer();
-        $assistant = m::mock(AbstractAssistant::class);
+        $wizard = m::mock(AbstractWizard::class);
 
         $renderer->renderStep(
-            new FakeStep($assistant, 1),
-            $assistant,
+            new FakeStep($wizard, 1),
+            $wizard,
             ['foo' => 'bar'],
         );
 
@@ -43,18 +43,18 @@ class FakeResponseRendererTest extends TestCase
     /** @test */
     public function it_records_redirects(): void
     {
-        $assistant = m::mock(AbstractAssistant::class);
-        $step = new FakeStep($assistant, 1);
+        $wizard = m::mock(AbstractWizard::class);
+        $step = new FakeStep($wizard, 1);
         $renderer = new FakeResponseRenderer();
 
-        $renderer->redirect($step, $assistant);
+        $renderer->redirect($step, $wizard);
 
         self::assertTrue($renderer->didRedirectTo(FakeStep::class));
         self::assertFalse($renderer->didRedirectTo(AnotherFakeStep::class));
     }
 }
 
-class FakeStep extends AssistantStep
+class FakeStep extends WizardStep
 {
     public string $slug = 'step-slug';
 
@@ -64,7 +64,7 @@ class FakeStep extends AssistantStep
     }
 }
 
-class AnotherFakeStep extends AssistantStep
+class AnotherFakeStep extends WizardStep
 {
     public function isComplete(): bool
     {

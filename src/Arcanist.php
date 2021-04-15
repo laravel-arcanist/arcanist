@@ -6,38 +6,38 @@ use Illuminate\Support\Facades\Route;
 
 class Arcanist
 {
-    public static function boot(array $assistants): void
+    public static function boot(array $wizards): void
     {
-        foreach ($assistants as $assistant) {
-            static::registerRoutes($assistant);
+        foreach ($wizards as $wizard) {
+            static::registerRoutes($wizard);
         }
     }
 
-    private static function registerRoutes(string $assistant): void
+    private static function registerRoutes(string $wizard): void
     {
         Route::get(
-            "/assistant/{$assistant::$slug}",
-            "{$assistant}@create"
-        )->name("assistant.{$assistant::$slug}.create");
+            "/wizard/{$wizard::$slug}",
+            "{$wizard}@create"
+        )->name("wizard.{$wizard::$slug}.create");
 
         Route::post(
-            "/assistant/{$assistant::$slug}",
-            "{$assistant}@store"
-        )->name("assistant.{$assistant::$slug}.store");
+            "/wizard/{$wizard::$slug}",
+            "{$wizard}@store"
+        )->name("wizard.{$wizard::$slug}.store");
 
         Route::get(
-            "/assistant/{$assistant::$slug}/{assistantId}/{slug?}",
-            "{$assistant}@show"
-        )->name("assistant.{$assistant::$slug}.show");
+            "/wizard/{$wizard::$slug}/{wizardId}/{slug?}",
+            "{$wizard}@show"
+        )->name("wizard.{$wizard::$slug}.show");
 
         Route::post(
-            "/assistant/{$assistant::$slug}/{assistantId}/{slug}",
-            "{$assistant}@update"
-        )->name("assistant.{$assistant::$slug}.update");
+            "/wizard/{$wizard::$slug}/{wizardId}/{slug}",
+            "{$wizard}@update"
+        )->name("wizard.{$wizard::$slug}.update");
 
         Route::delete(
-            "/assistant/{$assistant::$slug}/{assistantId}",
-            "{$assistant}@destroy"
-        )->name("assistant.{$assistant::$slug}.delete");
+            "/wizard/{$wizard::$slug}/{wizardId}",
+            "{$wizard}@destroy"
+        )->name("wizard.{$wizard::$slug}.delete");
     }
 }

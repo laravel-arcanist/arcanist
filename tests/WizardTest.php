@@ -7,20 +7,20 @@ use Illuminate\Http\Request;
 use Illuminate\Testing\TestResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Event;
-use Sassnowski\Arcanist\AssistantStep;
-use Sassnowski\Arcanist\AbstractAssistant;
+use Sassnowski\Arcanist\WizardStep;
+use Sassnowski\Arcanist\AbstractWizard;
 use Illuminate\Validation\ValidationException;
-use Sassnowski\Arcanist\Event\AssistantLoaded;
-use Sassnowski\Arcanist\Event\AssistantSaving;
-use Sassnowski\Arcanist\Event\AssistantFinished;
-use Sassnowski\Arcanist\Event\AssistantFinishing;
+use Sassnowski\Arcanist\Event\WizardLoaded;
+use Sassnowski\Arcanist\Event\WizardSaving;
+use Sassnowski\Arcanist\Event\WizardFinished;
+use Sassnowski\Arcanist\Event\WizardFinishing;
 use Sassnowski\Arcanist\Contracts\ResponseRenderer;
 use Sassnowski\Arcanist\Renderer\FakeResponseRenderer;
 use Sassnowski\Arcanist\Exception\UnknownStepException;
-use Sassnowski\Arcanist\Repository\FakeAssistantRepository;
+use Sassnowski\Arcanist\Repository\FakeWizardRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class AssistantTest extends TestCase
+class WizardTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -33,15 +33,15 @@ class AssistantTest extends TestCase
     }
 
     /** @test */
-    public function it_renders_the_first_step_in_an_assistant(): void
+    public function it_renders_the_first_step_in_an_wizard(): void
     {
         $renderer = new FakeResponseRenderer();
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             $renderer
         );
 
-        $assistant->create(new Request());
+        $wizard->create(new Request());
 
         self::assertTrue($renderer->stepWasRendered(TestStep::class));
     }
@@ -51,21 +51,21 @@ class AssistantTest extends TestCase
     {
         $this->expectException(UnknownStepException::class);
 
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
-        $assistant->show(new Request(), 1, '::step-slug::');
+        $wizard->show(new Request(), 1, '::step-slug::');
     }
 
     /** @test */
     public function it_gets_the_view_data_from_the_step(): void
     {
         $renderer = new FakeResponseRenderer();
-        $assistant = new TestAssistant($this->createAssistantRepository(), $renderer);
+        $wizard = new TestWizard($this->createWizardRepository(), $renderer);
 
-        $assistant->show(new Request(), 1, 'step-with-view-data');
+        $wizard->show(new Request(), 1, 'step-with-view-data');
 
         self::assertTrue($renderer->stepWasRendered(TestStepWithViewData::class, [
             'foo' => 'bar'
@@ -80,12 +80,12 @@ class AssistantTest extends TestCase
         $request = Request::create('::url::', 'POST', [
             'first_name' => '::first-name::',
         ]);
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
-        $assistant->store($request);
+        $wizard->store($request);
     }
 
     /** @test */
@@ -95,25 +95,25 @@ class AssistantTest extends TestCase
             'first_name' => '::first-name::',
             'last_name' => '::last-name::',
         ]);
-        $repo = new FakeAssistantRepository();
-        $assistant = new TestAssistant($repo, new FakeResponseRenderer());
+        $repo = new FakeWizardRepository();
+        $wizard = new TestWizard($repo, new FakeResponseRenderer());
 
-        $assistant->store($request);
+        $wizard->store($request);
 
         self::assertEquals(
             [
                 'first_name' => '::first-name::',
                 'last_name' => '::last-name::',
             ],
-            $repo->loadData($assistant)
+            $repo->loadData($wizard)
         );
     }
 
     /** @test */
-    public function it_renders_a_step_for_an_existing_assistant_using_the_saved_data(): void
+    public function it_renders_a_step_for_an_existing_wizard_using_the_saved_data(): void
     {
-        $repo = new FakeAssistantRepository([
-            TestAssistant::class => [
+        $repo = new FakeWizardRepository([
+            TestWizard::class => [
                 1 => [
                     'first_name' => '::first-name::',
                     'last_name' => '::last-name::',
@@ -121,9 +121,9 @@ class AssistantTest extends TestCase
             ],
         ]);
         $renderer = new FakeResponseRenderer();
-        $assistant = new TestAssistant($repo, $renderer);
+        $wizard = new TestWizard($repo, $renderer);
 
-        $assistant->show(new Request(), 1, 'step-name');
+        $wizard->show(new Request(), 1, 'step-name');
 
         self::assertTrue($renderer->stepWasRendered(TestStep::class, [
             'first_name' => '::first-name::',
@@ -132,9 +132,9 @@ class AssistantTest extends TestCase
     }
 
     /** @test */
-    public function it_handles_the_form_submission_for_a_step_in_an_existing_assistant(): void
+    public function it_handles_the_form_submission_for_a_step_in_an_existing_wizard(): void
     {
-        $repo = $this->createAssistantRepository([
+        $repo = $this->createWizardRepository([
             'first_name' => '::old-first-name::',
             'last_name' => '::old-last-name::',
         ]);
@@ -142,75 +142,75 @@ class AssistantTest extends TestCase
             'first_name' => '::new-first-name::',
             'last_name' => '::old-last-name::',
         ]);
-        $assistant = new TestAssistant($repo, new FakeResponseRenderer());
+        $wizard = new TestWizard($repo, new FakeResponseRenderer());
 
-        $assistant->update($request, 1, 'step-name');
+        $wizard->update($request, 1, 'step-name');
 
         self::assertEquals([
             'first_name' => '::new-first-name::',
             'last_name' => '::old-last-name::',
-        ], $repo->loadData($assistant));
+        ], $repo->loadData($wizard));
     }
 
     /** @test */
-    public function it_redirects_to_the_next_step_after_submitting_a_new_assistant(): void
+    public function it_redirects_to_the_next_step_after_submitting_a_new_wizard(): void
     {
         $renderer = new FakeResponseRenderer();
         $request = Request::create('::url::', 'PUT', [
             'first_name' => '::new-first-name::',
             'last_name' => '::old-last-name::',
         ]);
-        $assistant = new TestAssistant($this->createAssistantRepository(), $renderer);
+        $wizard = new TestWizard($this->createWizardRepository(), $renderer);
 
-        $assistant->store($request);
+        $wizard->store($request);
 
         self::assertTrue($renderer->didRedirectTo(TestStepWithViewData::class));
     }
 
     /** @test */
-    public function it_redirects_to_the_next_step_after_submitting_an_existing_assistant(): void
+    public function it_redirects_to_the_next_step_after_submitting_an_existing_wizard(): void
     {
         $renderer = new FakeResponseRenderer();
         $request = Request::create('::url::', 'PUT', [
             'first_name' => '::new-first-name::',
             'last_name' => '::old-last-name::',
         ]);
-        $assistant = new TestAssistant($this->createAssistantRepository(), $renderer);
+        $wizard = new TestWizard($this->createWizardRepository(), $renderer);
 
-        $assistant->update($request, 1, 'step-name');
+        $wizard->update($request, 1, 'step-name');
 
         self::assertTrue($renderer->didRedirectTo(TestStepWithViewData::class));
     }
 
     /** @test */
-    public function it_returns_the_assistants_title(): void
+    public function it_returns_the_wizards_title(): void
     {
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
-        $summary = $assistant->summary();
+        $summary = $wizard->summary();
 
-        self::assertEquals('::assistant-name::', $summary['title']);
+        self::assertEquals('::wizard-name::', $summary['title']);
     }
 
     /**
      * @test
      * @dataProvider idProvider
      */
-    public function it_returns_the_assistants_id_in_the_summary(?int $id): void
+    public function it_returns_the_wizards_id_in_the_summary(?int $id): void
     {
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
         if ($id !== null) {
-            $assistant->setId($id);
+            $wizard->setId($id);
         }
 
-        $summary = $assistant->summary();
+        $summary = $wizard->summary();
 
         self::assertEquals($id, $summary['id']);
     }
@@ -224,27 +224,27 @@ class AssistantTest extends TestCase
     }
 
     /** @test */
-    public function it_returns_the_assistants_slug_in_the_summary(): void
+    public function it_returns_the_wizards_slug_in_the_summary(): void
     {
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
-        $summary = $assistant->summary();
+        $summary = $wizard->summary();
 
-        self::assertEquals($assistant::$slug, $summary['slug']);
+        self::assertEquals($wizard::$slug, $summary['slug']);
     }
 
     /** @test */
     public function it_returns_the_slug_of_each_step_in_the_summary(): void
     {
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
-        $summary = $assistant->summary();
+        $summary = $wizard->summary();
 
         self::assertEquals('step-name', $summary['steps'][0]['slug']);
         self::assertEquals('step-with-view-data', $summary['steps'][1]['slug']);
@@ -253,12 +253,12 @@ class AssistantTest extends TestCase
     /** @test */
     public function it_renders_information_about_the_completion_of_each_step(): void
     {
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
-        $summary = $assistant->summary();
+        $summary = $wizard->summary();
 
         self::assertTrue($summary['steps'][0]['isComplete']);
         self::assertFalse($summary['steps'][1]['isComplete']);
@@ -267,12 +267,12 @@ class AssistantTest extends TestCase
     /** @test */
     public function it_renders_the_title_of_each_step_in_the_summary(): void
     {
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
-        $summary = $assistant->summary();
+        $summary = $wizard->summary();
 
         self::assertEquals('::step-1-name::', $summary['steps'][0]['name']);
         self::assertEquals('::step-2-name::', $summary['steps'][1]['name']);
@@ -281,13 +281,13 @@ class AssistantTest extends TestCase
     /** @test */
     public function it_marks_the_first_step_as_active_on_the_create_route(): void
     {
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
-        $assistant->create(new Request());
+        $wizard->create(new Request());
 
-        $summary = $assistant->summary();
+        $summary = $wizard->summary();
 
         self::assertTrue($summary['steps'][0]['active']);
         self::assertFalse($summary['steps'][1]['active']);
@@ -296,13 +296,13 @@ class AssistantTest extends TestCase
     /** @test */
     public function it_marks_the_current_step_active_for_the_show_route(): void
     {
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
-        $assistant->show(new Request(), 1, 'step-with-view-data');
+        $wizard->show(new Request(), 1, 'step-with-view-data');
 
-        $summary = $assistant->summary();
+        $summary = $wizard->summary();
 
         self::assertFalse($summary['steps'][0]['active']);
         self::assertTrue($summary['steps'][1]['active']);
@@ -310,23 +310,23 @@ class AssistantTest extends TestCase
 
     /**
      * @test
-     * @dataProvider assistantExistsProvider
+     * @dataProvider wizardExistsProvider
      */
-    public function it_can_check_if_an_existing_assistant_is_being_edited(?int $id, bool $expected): void
+    public function it_can_check_if_an_existing_wizard_is_being_edited(?int $id, bool $expected): void
     {
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
         if ($id !== null) {
-            $assistant->setId($id);
+            $wizard->setId($id);
         }
 
-        self::assertEquals($expected, $assistant->exists());
+        self::assertEquals($expected, $wizard->exists());
     }
 
-    public function assistantExistsProvider(): Generator
+    public function wizardExistsProvider(): Generator
     {
         yield from [
             'does not exist' => [null, false],
@@ -337,41 +337,41 @@ class AssistantTest extends TestCase
     /** @test */
     public function it_includes_the_link_to_the_step_in_the_summary(): void
     {
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
-        $assistant->setId(1);
+        $wizard->setId(1);
 
-        $summary = $assistant->summary();
+        $summary = $wizard->summary();
 
-        self::assertEquals('/assistant/assistant-name/1/step-name', $summary['steps'][0]['url']);
-        self::assertEquals('/assistant/assistant-name/1/step-with-view-data', $summary['steps'][1]['url']);
+        self::assertEquals('/wizard/wizard-name/1/step-name', $summary['steps'][0]['url']);
+        self::assertEquals('/wizard/wizard-name/1/step-with-view-data', $summary['steps'][1]['url']);
     }
 
     /** @test */
-    public function it_does_not_include_the_step_urls_if_the_assistant_does_not_exist(): void
+    public function it_does_not_include_the_step_urls_if_the_wizard_does_not_exist(): void
     {
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
-        $summary = $assistant->summary();
+        $summary = $wizard->summary();
 
         self::assertNull($summary['steps'][0]['url']);
         self::assertNull($summary['steps'][1]['url']);
     }
 
     /** @test */
-    public function it_includes_the_assistants_cancel_button_text_in_the_summary(): void
+    public function it_includes_the_wizards_cancel_button_text_in_the_summary(): void
     {
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
-        $summary = $assistant->summary();
+        $summary = $wizard->summary();
 
         self::assertEquals('::cancel-text::', $summary['cancelText']);
     }
@@ -380,16 +380,16 @@ class AssistantTest extends TestCase
      * @test
      * @dataProvider sharedDataProvider
      */
-    public function it_includes_shared_data_in_the_view_response(callable $callAssistant): void
+    public function it_includes_shared_data_in_the_view_response(callable $callwizard): void
     {
         $renderer = new FakeResponseRenderer();
-        $repository = $this->createAssistantRepository(assistantClass:  SharedDataAssistant::class);
-        $assistant = new SharedDataAssistant(
+        $repository = $this->createWizardRepository(wizardClass:  SharedDataWizard::class);
+        $wizard = new SharedDataWizard(
             $repository,
             $renderer
         );
 
-        $callAssistant($assistant);
+        $callwizard($wizard);
 
         self::assertTrue($renderer->stepWasRendered(TestStep::class, [
             'first_name' => '',
@@ -403,14 +403,14 @@ class AssistantTest extends TestCase
     {
         yield from [
             'create' => [
-                function (AbstractAssistant $assistant) {
-                    $assistant->create(new Request());
+                function (AbstractWizard $wizard) {
+                    $wizard->create(new Request());
                 }
             ],
 
             'show' => [
-                function (AbstractAssistant $assistant) {
-                    $assistant->show(new Request(), 1, 'step-name');
+                function (AbstractWizard $wizard) {
+                    $wizard->show(new Request(), 1, 'step-name');
                 }
             ]
         ];
@@ -420,14 +420,14 @@ class AssistantTest extends TestCase
      * @test
      * @dataProvider beforeSaveProvider
      */
-    public function it_calls_the_before_save_hook_of_the_step_before_saving_the_data(callable $callAssistant): void
+    public function it_calls_the_before_save_hook_of_the_step_before_saving_the_data(callable $callwizard): void
     {
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
-        $callAssistant($assistant);
+        $callwizard($wizard);
 
         self::assertEquals(1, $_SERVER['__beforeSaving.called']);
     }
@@ -441,55 +441,55 @@ class AssistantTest extends TestCase
 
         yield from  [
             'store' => [
-                fn (AbstractAssistant $assistant) => $assistant->store($validRequest)
+                fn (AbstractWizard $wizard) => $wizard->store($validRequest)
             ],
             'update' => [
-                fn (AbstractAssistant $assistant) => $assistant->update($validRequest, 1, 'step-name')
+                fn (AbstractWizard $wizard) => $wizard->update($validRequest, 1, 'step-name')
             ]
         ];
     }
 
     /** @test */
-    public function it_fires_an_event_after_the_last_step_of_the_assistant_was_finished(): void
+    public function it_fires_an_event_after_the_last_step_of_the_wizard_was_finished(): void
     {
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
-        $assistant->update(new Request(), 1, 'step-with-view-data');
+        $wizard->update(new Request(), 1, 'step-with-view-data');
 
         Event::assertDispatched(
-            AssistantFinishing::class,
-            fn (AssistantFinishing $event) => $event->assistant === $assistant
+            WizardFinishing::class,
+            fn (WizardFinishing $event) => $event->wizard === $wizard
         );
     }
 
     /** @test */
     public function it_fires_an_event_after_the_onComplete_callback_was_ran(): void
     {
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
-        $assistant->update(new Request(), 1, 'step-with-view-data');
+        $wizard->update(new Request(), 1, 'step-with-view-data');
 
         Event::assertDispatched(
-            AssistantFinished::class,
-            fn (AssistantFinished $event) => $event->assistant === $assistant
+            WizardFinished::class,
+            fn (WizardFinished $event) => $event->wizard === $wizard
         );
     }
 
     /** @test */
-    public function it_calls_the_on_after_complete_hook_of_the_assistant(): void
+    public function it_calls_the_on_after_complete_hook_of_the_wizard(): void
     {
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
-        $assistant->update(new Request(), 1, 'step-with-view-data');
+        $wizard->update(new Request(), 1, 'step-with-view-data');
 
         self::assertEquals(1, $_SERVER['__onAfterComplete.called']);
     }
@@ -497,33 +497,33 @@ class AssistantTest extends TestCase
     /** @test */
     public function it_stores_additional_data_that_was_set_during_the_request(): void
     {
-        $repo = $this->createAssistantRepository();
-        $assistant = new TestAssistant(
+        $repo = $this->createWizardRepository();
+        $wizard = new TestWizard(
             $repo,
             new FakeResponseRenderer()
         );
 
-        $assistant->update(new Request(), 1, 'step-with-view-data');
+        $wizard->update(new Request(), 1, 'step-with-view-data');
 
-        self::assertEquals(['::key::' => '::value::'], $repo->loadData($assistant));
+        self::assertEquals(['::key::' => '::value::'], $repo->loadData($wizard));
     }
 
     /**
      * @test
      * @dataProvider beforeSaveProvider
      */
-    public function it_fires_an_event_before_the_assistant_gets_saved(callable $callAssistant): void
+    public function it_fires_an_event_before_the_wizard_gets_saved(callable $callwizard): void
     {
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
-        $callAssistant($assistant);
+        $callwizard($wizard);
 
         Event::assertDispatched(
-            AssistantSaving::class,
-            fn (AssistantSaving $e) => $e->assistant === $assistant
+            WizardSaving::class,
+            fn (WizardSaving $e) => $e->wizard === $wizard
         );
     }
 
@@ -531,18 +531,18 @@ class AssistantTest extends TestCase
      * @test
      * @dataProvider afterSaveProvider
      */
-    public function it_fires_an_event_after_an_assistant_was_loaded(callable $callAssistant): void
+    public function it_fires_an_event_after_an_wizard_was_loaded(callable $callwizard): void
     {
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
-        $callAssistant($assistant);
+        $callwizard($wizard);
 
         Event::assertDispatched(
-            AssistantLoaded::class,
-            fn (AssistantLoaded $e) => $e->assistant === $assistant
+            WizardLoaded::class,
+            fn (WizardLoaded $e) => $e->wizard === $wizard
         );
     }
 
@@ -550,14 +550,14 @@ class AssistantTest extends TestCase
     {
         yield from [
             'update' => [
-                function (AbstractAssistant $assistant) {
-                    $assistant->update(new Request(), 1, 'step-with-view-data');
+                function (AbstractWizard $wizard) {
+                    $wizard->update(new Request(), 1, 'step-with-view-data');
                 },
             ],
 
             'show' => [
-                function (AbstractAssistant $assistant) {
-                    $assistant->show(new Request(), 1, 'step-with-view-data');
+                function (AbstractWizard $wizard) {
+                    $wizard->show(new Request(), 1, 'step-with-view-data');
                 },
             ],
         ];
@@ -568,27 +568,27 @@ class AssistantTest extends TestCase
     {
         $this->expectException(NotFoundHttpException::class);
 
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
-        $assistant->destroy(new Request(), 1);
+        $wizard->destroy(new Request(), 1);
 
-        $assistant->show(new Request(), 1, 'step-name');
+        $wizard->show(new Request(), 1, 'step-name');
     }
 
     /** @test */
-    public function it_redirects_to_the_default_route_after_the_assistant_has_been_deleted(): void
+    public function it_redirects_to_the_default_route_after_the_wizard_has_been_deleted(): void
     {
         config(['arcanist.redirect_url' => '::redirect-url::']);
 
-        $assistant = new TestAssistant(
-            $this->createAssistantRepository(),
+        $wizard = new TestWizard(
+            $this->createWizardRepository(),
             new FakeResponseRenderer()
         );
 
-        $response = new TestResponse($assistant->destroy(new Request(), 1));
+        $response = new TestResponse($wizard->destroy(new Request(), 1));
 
         $response->assertRedirect('::redirect-url::');
     }
@@ -596,37 +596,37 @@ class AssistantTest extends TestCase
     /** @test */
     public function it_redirects_to_the_correct_url_if_the_default_url_was_overwritten(): void
     {
-        $assistant = new SharedDataAssistant(
-            $this->createAssistantRepository(assistantClass: SharedDataAssistant::class),
+        $wizard = new SharedDataWizard(
+            $this->createWizardRepository(wizardClass: SharedDataWizard::class),
             new FakeResponseRenderer()
         );
 
-        $response = new TestResponse($assistant->destroy(new Request(), 1));
+        $response = new TestResponse($wizard->destroy(new Request(), 1));
 
         $response->assertRedirect('::other-route::');
     }
 
     /**
      * @test
-     * @dataProvider resumeAssistantProvider
+     * @dataProvider resumeWizardProvider
      */
-    public function it_redirects_to_the_next_uncompleted_step_if_no_step_slug_was_given(callable $createAssistant, string $expectedStep): void
+    public function it_redirects_to_the_next_uncompleted_step_if_no_step_slug_was_given(callable $createwizard, string $expectedStep): void
     {
         $renderer = new FakeResponseRenderer();
-        $assistant = $createAssistant($renderer);
+        $wizard = $createwizard($renderer);
 
-        $assistant->show(new Request(), 1);
+        $wizard->show(new Request(), 1);
 
         self::assertTrue($renderer->didRedirectTo($expectedStep));
     }
 
-    public function resumeAssistantProvider(): Generator
+    public function resumeWizardProvider(): Generator
     {
         yield from [
             [
                 function (ResponseRenderer $renderer) {
-                    return new TestAssistant(
-                        $this->createAssistantRepository(),
+                    return new TestWizard(
+                        $this->createWizardRepository(),
                         $renderer
                     );
                 },
@@ -634,8 +634,8 @@ class AssistantTest extends TestCase
             ],
             [
                 function (ResponseRenderer $renderer) {
-                    return new MultiStepAssistant(
-                        $this->createAssistantRepository(assistantClass: MultiStepAssistant::class),
+                    return new MultiStepWizard(
+                        $this->createWizardRepository(wizardClass: MultiStepWizard::class),
                         $renderer
                     );
                 },
@@ -644,20 +644,20 @@ class AssistantTest extends TestCase
         ];
     }
 
-    private function createAssistantRepository(array $data = [], ?string $assistantClass = null)
+    private function createWizardRepository(array $data = [], ?string $wizardClass = null)
     {
-        return new FakeAssistantRepository([
-            $assistantClass ?: TestAssistant::class => [
+        return new FakeWizardRepository([
+            $wizardClass ?: TestWizard::class => [
                 1 => $data
             ],
         ]);
     }
 }
 
-class TestAssistant extends AbstractAssistant
+class TestWizard extends AbstractWizard
 {
-    public static string $slug = 'assistant-name';
-    public static string $title = '::assistant-name::';
+    public static string $slug = 'wizard-name';
+    public static string $title = '::wizard-name::';
 
     protected array $steps = [
         TestStep::class,
@@ -682,7 +682,7 @@ class TestAssistant extends AbstractAssistant
     }
 }
 
-class MultiStepAssistant extends AbstractAssistant
+class MultiStepWizard extends AbstractWizard
 {
     protected array $steps = [
         TestStep::class,
@@ -691,7 +691,7 @@ class MultiStepAssistant extends AbstractAssistant
     ];
 }
 
-class SharedDataAssistant extends AbstractAssistant
+class SharedDataWizard extends AbstractWizard
 {
     protected array $steps = [
         TestStep::class,
@@ -716,7 +716,7 @@ class SharedDataAssistant extends AbstractAssistant
     }
 }
 
-class TestStep extends AssistantStep
+class TestStep extends WizardStep
 {
     public string $name = '::step-1-name::';
     public string $slug = 'step-name';
@@ -748,7 +748,7 @@ class TestStep extends AssistantStep
     }
 }
 
-class TestStepWithViewData extends AssistantStep
+class TestStepWithViewData extends WizardStep
 {
     public string $name = '::step-2-name::';
     public string $slug = 'step-with-view-data';
@@ -769,7 +769,7 @@ class TestStepWithViewData extends AssistantStep
     }
 }
 
-class DummyStep extends AssistantStep
+class DummyStep extends WizardStep
 {
     public function isComplete(): bool
     {

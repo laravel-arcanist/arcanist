@@ -4,8 +4,8 @@ namespace Sassnowski\Arcanist\Renderer;
 
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
-use Sassnowski\Arcanist\AssistantStep;
-use Sassnowski\Arcanist\AbstractAssistant;
+use Sassnowski\Arcanist\WizardStep;
+use Sassnowski\Arcanist\AbstractWizard;
 use Illuminate\Contracts\Support\Responsable;
 use Sassnowski\Arcanist\Contracts\ResponseRenderer;
 
@@ -15,8 +15,8 @@ class FakeResponseRenderer implements ResponseRenderer
     private ?string $redirect = null;
 
     public function renderStep(
-        AssistantStep $step,
-        AbstractAssistant $assistant,
+        WizardStep $step,
+        AbstractWizard $wizard,
         array $data = []
     ): Response | Responsable {
         $this->renderedSteps[get_class($step)] = $data;
@@ -24,7 +24,7 @@ class FakeResponseRenderer implements ResponseRenderer
         return new Response();
     }
 
-    public function redirect(AssistantStep $step, AbstractAssistant $assistant): RedirectResponse
+    public function redirect(WizardStep $step, AbstractWizard $wizard): RedirectResponse
     {
         $this->redirect = get_class($step);
 

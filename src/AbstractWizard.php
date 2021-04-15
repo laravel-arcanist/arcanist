@@ -13,51 +13,51 @@ use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Validation\ValidationException;
-use Sassnowski\Arcanist\Event\AssistantLoaded;
-use Sassnowski\Arcanist\Event\AssistantSaving;
-use Sassnowski\Arcanist\Event\AssistantFinished;
-use Sassnowski\Arcanist\Event\AssistantFinishing;
+use Sassnowski\Arcanist\Event\WizardLoaded;
+use Sassnowski\Arcanist\Event\WizardSaving;
+use Sassnowski\Arcanist\Event\WizardFinished;
+use Sassnowski\Arcanist\Event\WizardFinishing;
 use Sassnowski\Arcanist\Contracts\ResponseRenderer;
-use Sassnowski\Arcanist\Contracts\AssistantRepository;
+use Sassnowski\Arcanist\Contracts\WizardRepository;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Sassnowski\Arcanist\Exception\UnknownStepException;
-use Sassnowski\Arcanist\Exception\AssistantNotFoundException;
+use Sassnowski\Arcanist\Exception\WizardNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-abstract class AbstractAssistant
+abstract class AbstractWizard
 {
     use ValidatesRequests;
 
     /**
-     * The display name of this assistant.
+     * The display name of this wizard.
      */
-    public static string $title = 'New Assistant';
+    public static string $title = 'New wizard';
 
     /**
-     * The slug of this assistant that gets used in the URL.
+     * The slug of this wizard that gets used in the URL.
      */
-    public static string $slug = 'new-assistant';
+    public static string $slug = 'new-wizard';
 
     /**
-     * The description of the assistant that gets shown in the action card.
+     * The description of the wizard that gets shown in the action card.
      */
-    public static string $description = 'A brand new assistant';
+    public static string $description = 'A brand new wizard';
 
     /**
      * The action that gets executed after the last step of the
-     * assistant is completed.
+     * wizard is completed.
      */
     public string $onCompleteAction = NullAction::class;
 
-    protected string $cancelText = 'Cancel assistant';
+    protected string $cancelText = 'Cancel wizard';
 
     /**
-     * The steps this assistant consists of.
+     * The steps this wizard consists of.
      */
     protected array $steps = [];
 
     /**
-     * The assistant's id in the database.
+     * The wizard's id in the database.
      */
     protected ?int $id = null;
 
@@ -67,23 +67,23 @@ abstract class AbstractAssistant
     protected int $currentStep = 0;
 
     /**
-     * The assistant's stored data.
+     * The wizard's stored data.
      */
     protected array $data = [];
 
     /**
-     * URL to redirect to after the assistant was deleted.
+     * URL to redirect to after the wizard was deleted.
      */
     protected string $redirectTo;
 
     /**
      * Additional data that was set during the request. This will
-     * be merged with $data before the assistant gets saved.
+     * be merged with $data before the wizard gets saved.
      */
     protected array $additionalData = [];
 
     public function __construct(
-        private AssistantRepository $assistantRepository,
+        private WizardRepository $wizardRepository,
         private ResponseRenderer $responseRenderer
     ) {
         $this->redirectTo = config('arcanist.redirect_url', '/home');
@@ -96,7 +96,7 @@ abstract class AbstractAssistant
     {
         $slug = static::$slug;
 
-        return route("assistant.{$slug}.create");
+        return route("wizard.{$slug}.create");
     }
 
     public function getId(): ?int
@@ -111,7 +111,7 @@ abstract class AbstractAssistant
 
     /**
      * Data that should be shared with every step in this
-     * assistant. This data gets merged with a step's view data.
+     * wizard. This data gets merged with a step's view data.
      */
     public function sharedData(Request $request): array
     {
@@ -119,7 +119,7 @@ abstract class AbstractAssistant
     }
 
     /**
-     * Renders the template of the first step of this assistant.
+     * Renders the template of the first step of this wizard.
      */
     public function create(Request $request): Responsable | Response
     {
@@ -131,14 +131,14 @@ abstract class AbstractAssistant
      *
      * @throws UnknownStepException
      */
-    public function show(Request $request, int $assistantId, ?string $slug = null): Responsable | Response | RedirectResponse
+    public function show(Request $request, int $wizardId, ?string $slug = null): Responsable | Response | RedirectResponse
     {
-        $this->load($assistantId);
+        $this->load($wizardId);
 
         if ($slug === null) {
-            /** @var AssistantStep $lastCompletedStep */
+            /** @var WizardStep $lastCompletedStep */
             $lastCompletedStep = collect($this->steps)
-                ->last(fn (AssistantStep $s) => $s->isComplete());
+                ->last(fn (WizardStep $s) => $s->isComplete());
 
             return $this->responseRenderer->redirect(
                 $this->steps[$lastCompletedStep->index() + 1],
@@ -169,14 +169,14 @@ abstract class AbstractAssistant
     }
 
     /**
-     * Handles the form submission of a step in an existing assistant.
+     * Handles the form submission of a step in an existing wizard.
      *
      * @throws UnknownStepException
      * @throws ValidationException
      */
-    public function update(Request $request, int $assistantId, string $slug): RedirectResponse
+    public function update(Request $request, int $wizardId, string $slug): RedirectResponse
     {
-        $this->load($assistantId);
+        $this->load($wizardId);
 
         $step = $this->loadStep($slug);
         $data = $this->validate($request, $step->rules());
@@ -184,11 +184,11 @@ abstract class AbstractAssistant
         $this->saveStepData($step, $data, $request);
 
         if ($this->isLastStep()) {
-            event(new AssistantFinishing($this));
+            event(new WizardFinishing($this));
 
             $response = $this->onAfterComplete();
 
-            event(new AssistantFinished($this));
+            event(new WizardFinished($this));
 
             return $response;
         }
@@ -199,13 +199,13 @@ abstract class AbstractAssistant
         );
     }
 
-    public function destroy(Request $request, int $assistantId): RedirectResponse
+    public function destroy(Request $request, int $wizardId): RedirectResponse
     {
-        $this->load($assistantId);
+        $this->load($wizardId);
 
         $this->beforeDelete($request);
 
-        $this->assistantRepository->deleteAssistant($this);
+        $this->wizardRepository->deletewizard($this);
 
         return redirect()->to($this->redirectTo());
     }
@@ -216,7 +216,7 @@ abstract class AbstractAssistant
     }
 
     /**
-     * Fetch any previously stored data for this assistant.
+     * Fetch any previously stored data for this wizard.
      */
     public function data(?string $key = null, mixed $default = null): mixed
     {
@@ -228,7 +228,7 @@ abstract class AbstractAssistant
     }
 
     /**
-     * Checks if this assistant already exists or is being created
+     * Checks if this wizard already exists or is being created
      * for the first time.
      */
     public function exists(): bool
@@ -237,7 +237,7 @@ abstract class AbstractAssistant
     }
 
     /**
-     * Returns a summary about the current assistant and its steps.
+     * Returns a summary about the current wizard and its steps.
      */
     public function summary(): array
     {
@@ -248,29 +248,29 @@ abstract class AbstractAssistant
             'slug' => static::$slug,
             'title' => $this->title(),
             'cancelText' => $this->cancelText(),
-            'steps' => collect($this->steps)->map(fn (AssistantStep $step) => [
+            'steps' => collect($this->steps)->map(fn (WizardStep $step) => [
                 'slug' => $step->slug,
                 'isComplete' => $step->isComplete(),
                 'name' => $step->name,
                 'active' => $step->index() === $current->index(),
                 'url' => $this->exists()
-                    ? '/assistant/' . static::$slug . '/' . $this->id . '/' . $step->slug
+                    ? '/wizard/' . static::$slug . '/' . $this->id . '/' . $step->slug
                     : null,
             ])->all()
         ];
     }
 
     /**
-     * Return a structured object of the assistant's data that will be
-     * passed to the action after the assistant is completed.
+     * Return a structured object of the wizard's data that will be
+     * passed to the action after the wizard is completed.
      */
-    public function transformAssistantData(): mixed
+    public function transformWizardData(): mixed
     {
         return $this->data();
     }
 
     /**
-     * Gets called after the last step in the assistant is finished.
+     * Gets called after the last step in the wizard is finished.
      */
     protected function onAfterComplete(): RedirectResponse
     {
@@ -278,9 +278,9 @@ abstract class AbstractAssistant
     }
 
     /**
-     * Hook that gets called before the assistant is deleted. This is
+     * Hook that gets called before the wizard is deleted. This is
      * a good place to free up any resources that might have been
-     * reserved by the assistant.
+     * reserved by the wizard.
      */
     protected function beforeDelete(Request $request): void
     {
@@ -293,7 +293,7 @@ abstract class AbstractAssistant
     }
 
     /**
-     * Returns the assistant's title that gets displayed in the frontend.
+     * Returns the wizard's title that gets displayed in the frontend.
      */
     protected function title(): string
     {
@@ -308,15 +308,15 @@ abstract class AbstractAssistant
     /**
      * @throws UnknownStepException
      */
-    private function loadStep(string $slug): AssistantStep
+    private function loadStep(string $slug): WizardStep
     {
-        /** @var ?AssistantStep $step */
+        /** @var ?WizardStep $step */
         $step = collect($this->steps)
-            ->first(fn (AssistantStep $step) => $step->slug === $slug);
+            ->first(fn (WizardStep $step) => $step->slug === $slug);
 
         if ($step === null) {
             throw new UnknownStepException(sprintf(
-                'No step with slug [%s] exists for assistant [%s]',
+                'No step with slug [%s] exists for wizard [%s]',
                 $slug,
                 static::class,
             ));
@@ -327,20 +327,20 @@ abstract class AbstractAssistant
         return $step;
     }
 
-    private function load(int $assistantId): void
+    private function load(int $wizardId): void
     {
-        $this->id = $assistantId;
+        $this->id = $wizardId;
 
         try {
-            $this->data = $this->assistantRepository->loadData($this);
-        } catch (AssistantNotFoundException $e) {
+            $this->data = $this->wizardRepository->loadData($this);
+        } catch (WizardNotFoundException $e) {
             throw new NotFoundHttpException(previous: $e);
         }
 
-        event(new AssistantLoaded($this));
+        event(new WizardLoaded($this));
     }
 
-    private function renderStep(Request $request, AssistantStep $step): Responsable | Response
+    private function renderStep(Request $request, WizardStep $step): Responsable | Response
     {
         return $this->responseRenderer->renderStep(
             $step,
@@ -349,7 +349,7 @@ abstract class AbstractAssistant
         );
     }
 
-    private function buildViewData(Request $request, AssistantStep $step): array
+    private function buildViewData(Request $request, WizardStep $step): array
     {
         return array_merge(
             $step->viewData($request),
@@ -357,28 +357,28 @@ abstract class AbstractAssistant
         );
     }
 
-    private function saveStepData(AssistantStep $step, array $data, Request $request): void
+    private function saveStepData(WizardStep $step, array $data, Request $request): void
     {
-        event(new AssistantSaving($this));
+        event(new WizardSaving($this));
 
         $step->beforeSaving($request, $data);
 
         $data = array_merge($data, $this->additionalData);
 
-        $this->assistantRepository->saveData($this, $data);
+        $this->wizardRepository->saveData($this, $data);
     }
 
-    private function nextStep(): AssistantStep
+    private function nextStep(): WizardStep
     {
         return $this->steps[$this->currentStep + 1];
     }
 
-    private function loadFirstStep(): AssistantStep
+    private function loadFirstStep(): WizardStep
     {
         return $this->steps[0];
     }
 
-    private function currentStep(): AssistantStep
+    private function currentStep(): WizardStep
     {
         return $this->steps[$this->currentStep ?? 0];
     }

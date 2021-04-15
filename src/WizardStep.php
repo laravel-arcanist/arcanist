@@ -5,7 +5,7 @@ namespace Sassnowski\Arcanist;
 use function collect;
 use Illuminate\Http\Request;
 
-abstract class AssistantStep
+abstract class WizardStep
 {
     /**
      * The name of the step that gets displayed in the step list.
@@ -13,12 +13,12 @@ abstract class AssistantStep
     public string $name = 'New Step';
 
     /**
-     * The slug of the assistant that is used in the URL.
+     * The slug of the wizard that is used in the URL.
      */
     public string $slug = 'new-step';
 
     public function __construct(
-        private AbstractAssistant $assistant,
+        private AbstractWizard $wizard,
         private int $index
     ) {
     }
@@ -54,17 +54,17 @@ abstract class AssistantStep
     abstract public function isComplete(): bool;
 
     /**
-     * Checks if this step belongs to an existing assistant, i.e. an assistant
+     * Checks if this step belongs to an existing wizard, i.e. a wizard
      * that has already been saved at least once.
      */
     protected function exists(): bool
     {
-        return $this->assistant->exists();
+        return $this->wizard->exists();
     }
 
-    protected function assistantId(): ?int
+    protected function wizardId(): ?int
     {
-        return $this->assistant->getId();
+        return $this->wizard->getId();
     }
 
     /**
@@ -84,11 +84,11 @@ abstract class AssistantStep
 
     protected function data(?string $key = null, mixed $default = null): mixed
     {
-        return $this->assistant->data($key, $default);
+        return $this->wizard->data($key, $default);
     }
 
     protected function setData(string $key, mixed $value): void
     {
-        $this->assistant->setData($key, $value);
+        $this->wizard->setData($key, $value);
     }
 }

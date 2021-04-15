@@ -4,20 +4,20 @@ namespace Sassnowski\Arcanist\Contracts;
 
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
-use Sassnowski\Arcanist\AssistantStep;
-use Sassnowski\Arcanist\AbstractAssistant;
+use Sassnowski\Arcanist\WizardStep;
+use Sassnowski\Arcanist\AbstractWizard;
 use Illuminate\Contracts\Support\Responsable;
 
 interface ResponseRenderer
 {
     public function renderStep(
-        AssistantStep $step,
-        AbstractAssistant $assistant,
+        WizardStep $step,
+        AbstractWizard $wizard,
         array $data = []
     ): Response | Responsable;
 
     public function redirect(
-        AssistantStep $step,
-        AbstractAssistant $assistant
+        WizardStep $step,
+        AbstractWizard $wizard
     ): RedirectResponse;
 }

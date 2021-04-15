@@ -4,9 +4,9 @@ namespace Tests\Fixtures;
 
 use function redirect;
 use Illuminate\Http\RedirectResponse;
-use Sassnowski\Arcanist\AbstractAssistant;
+use Sassnowski\Arcanist\AbstractWizard;
 
-class AssistantB extends AbstractAssistant
+class WizardB extends AbstractWizard
 {
     protected function onAfterComplete(): RedirectResponse
     {
