@@ -19,15 +19,12 @@ use Illuminate\Validation\ValidationException;
 use Sassnowski\Arcanist\Event\WizardFinishing;
 use Sassnowski\Arcanist\Contracts\ResponseRenderer;
 use Sassnowski\Arcanist\Contracts\WizardRepository;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Sassnowski\Arcanist\Exception\UnknownStepException;
 use Sassnowski\Arcanist\Exception\WizardNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 abstract class AbstractWizard
 {
-    use ValidatesRequests;
-
     /**
      * The display name of this wizard.
      */
