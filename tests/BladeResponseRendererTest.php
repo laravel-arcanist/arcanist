@@ -45,8 +45,8 @@ class BladeResponseRendererTest extends TestCase
             []
         );
 
-        $this->assertInstanceOf(View::class, $response);
-        $this->assertEquals("wizards.{$this->wizard::$slug}.{$this->step->slug}", $response->name());
+        self::assertInstanceOf(View::class, $response);
+        self::assertEquals("wizards.{$this->wizard::$slug}.{$this->step->slug}", $response->name());
     }
 
     /** @test */
@@ -58,7 +58,7 @@ class BladeResponseRendererTest extends TestCase
             ['::key::' => '::value::']
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             ['::key::' => '::value::'],
             $response->getData()['data']
         );
@@ -73,7 +73,7 @@ class BladeResponseRendererTest extends TestCase
             []
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             ['::summary::'],
             $response->getData()['wizard']
         );
