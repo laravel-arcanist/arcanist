@@ -3,7 +3,6 @@
 namespace Sassnowski\Arcanist;
 
 use function database_path;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Sassnowski\Arcanist\Contracts\ResponseRenderer;
 use Sassnowski\Arcanist\Contracts\WizardRepository;
@@ -32,9 +31,7 @@ class ArcanistServiceProvider extends ServiceProvider
 
         $this->app->bind(
             WizardRepository::class,
-            function (Application $app) {
-                return $app['config']['arcanist']['wizard_repository'];
-            }
+            $this->app['config']['arcanist']['wizard_repository']
         );
 
         $this->app->bind(ResponseRenderer::class, $this->app['config']['arcanist']['renderers']['renderer']);
