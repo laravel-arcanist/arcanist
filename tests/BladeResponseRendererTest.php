@@ -26,7 +26,10 @@ class BladeResponseRendererTest extends TestCase
 
         config(['view.paths' => [__DIR__ . '/views']]);
 
-        $this->wizard = m::mock(BladeTestWizard::class)->makePartial();
+        $wizard = m::mock(BladeTestWizard::class)->makePartial();
+        $wizard->allows('summary')
+            ->andReturns(['::summary::']);
+        $this->wizard = $wizard->makePartial();
         $this->step = m::mock(BladeStep::class)->makePartial();
         $this->renderer = app(BladeResponseRenderer::class);
 
@@ -57,7 +60,22 @@ class BladeResponseRendererTest extends TestCase
 
         $this->assertEquals(
             ['::key::' => '::value::'],
-            $response->getData()
+            $response->getData()['data']
+        );
+    }
+
+    /** @test */
+    public function it_provides_the_wizard_summary_to_every_view(): void
+    {
+        $response = $this->renderer->renderStep(
+            $this->step,
+            $this->wizard,
+            []
+        );
+
+        $this->assertEquals(
+            ['::summary::'],
+            $response->getData()['wizard']
         );
     }
 

@@ -25,7 +25,10 @@ class BladeResponseRenderer implements ResponseRenderer
     ): Response | Responsable | Renderable {
         $viewName = $this->viewBasePath . '.' . $wizard::$slug . '.' . $step->slug;
 
-        return $this->factory->make($viewName, $data);
+        return $this->factory->make($viewName, [
+            'wizard' => $wizard->summary(),
+            'data' => $data,
+        ]);
     }
 
     public function redirect(WizardStep $step, AbstractWizard $wizard): RedirectResponse
