@@ -54,7 +54,7 @@ abstract class AbstractWizard
     /**
      * The wizard's id in the database.
      */
-    protected ?int $id = null;
+    protected mixed $id = null;
 
     /**
      * The index of the currently active step.
@@ -94,12 +94,12 @@ abstract class AbstractWizard
         return route("wizard.{$slug}.create");
     }
 
-    public function getId(): ?int
+    public function getId(): mixed
     {
         return $this->id;
     }
 
-    public function setId(?int $id): void
+    public function setId(mixed $id): void
     {
         $this->id = $id;
     }
