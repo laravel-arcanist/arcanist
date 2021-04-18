@@ -46,8 +46,6 @@ abstract class AbstractWizard
      */
     public string $onCompleteAction = NullAction::class;
 
-    protected string $cancelText = 'Cancel wizard';
-
     /**
      * The steps this wizard consists of.
      */
@@ -219,7 +217,7 @@ abstract class AbstractWizard
 
         $this->beforeDelete($request);
 
-        $this->wizardRepository->deletewizard($this);
+        $this->wizardRepository->deleteWizard($this);
 
         return redirect()->to($this->redirectTo());
     }
@@ -261,7 +259,6 @@ abstract class AbstractWizard
             'id' => $this->id,
             'slug' => static::$slug,
             'title' => $this->title(),
-            'cancelText' => $this->cancelText(),
             'steps' => collect($this->steps)->map(fn (WizardStep $step) => [
                 'slug' => $step->slug,
                 'isComplete' => $step->isComplete(),

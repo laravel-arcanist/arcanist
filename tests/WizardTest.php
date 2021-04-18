@@ -364,19 +364,6 @@ class WizardTest extends TestCase
         self::assertNull($summary['steps'][1]['url']);
     }
 
-    /** @test */
-    public function it_includes_the_wizards_cancel_button_text_in_the_summary(): void
-    {
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
-
-        $summary = $wizard->summary();
-
-        self::assertEquals('::cancel-text::', $summary['cancelText']);
-    }
-
     /**
      * @test
      * @dataProvider sharedDataProvider
