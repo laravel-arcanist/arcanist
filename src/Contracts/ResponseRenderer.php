@@ -6,6 +6,7 @@ use Illuminate\Http\Response;
 use Sassnowski\Arcanist\WizardStep;
 use Illuminate\Http\RedirectResponse;
 use Sassnowski\Arcanist\AbstractWizard;
+use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\Responsable;
 
 interface ResponseRenderer
@@ -14,7 +15,7 @@ interface ResponseRenderer
         WizardStep $step,
         AbstractWizard $wizard,
         array $data = []
-    ): Response | Responsable;
+    ): Response | Responsable | Renderable;
 
     public function redirect(
         WizardStep $step,

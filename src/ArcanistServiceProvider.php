@@ -3,7 +3,10 @@
 namespace Sassnowski\Arcanist;
 
 use function database_path;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Sassnowski\Arcanist\Contracts\WizardRepository;
+use Sassnowski\Arcanist\Renderer\BladeResponseRenderer;
 
 class ArcanistServiceProvider extends ServiceProvider
 {
@@ -25,5 +28,16 @@ class ArcanistServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/arcanist.php', 'arcanist');
+
+        $this->app->bind(
+            WizardRepository::class,
+            function (Application $app) {
+                return $app['config']['arcanist']['wizard_repository'];
+            }
+        );
+
+        $this->app->when(BladeResponseRenderer::class)
+            ->needs('$viewBasePath')
+            ->giveConfig('arcanist.renderers.blade.view_base_path');
     }
 }
