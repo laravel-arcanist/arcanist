@@ -8,35 +8,37 @@ class Arcanist
 {
     public static function boot(array $wizards): void
     {
+        $routePrefix = config('arcanist.route_prefix');
+
         foreach ($wizards as $wizard) {
-            static::registerRoutes($wizard);
+            static::registerRoutes($wizard, $routePrefix);
         }
     }
 
-    private static function registerRoutes(string $wizard): void
+    private static function registerRoutes(string $wizard, string $routePrefix): void
     {
         Route::get(
-            "/wizard/{$wizard::$slug}",
+            "/{$routePrefix}/{$wizard::$slug}",
             "{$wizard}@create"
         )->name("wizard.{$wizard::$slug}.create");
 
         Route::post(
-            "/wizard/{$wizard::$slug}",
+            "/{$routePrefix}/{$wizard::$slug}",
             "{$wizard}@store"
         )->name("wizard.{$wizard::$slug}.store");
 
         Route::get(
-            "/wizard/{$wizard::$slug}/{wizardId}/{slug?}",
+            "/{$routePrefix}/{$wizard::$slug}/{wizardId}/{slug?}",
             "{$wizard}@show"
         )->name("wizard.{$wizard::$slug}.show");
 
         Route::post(
-            "/wizard/{$wizard::$slug}/{wizardId}/{slug}",
+            "/{$routePrefix}/{$wizard::$slug}/{wizardId}/{slug}",
             "{$wizard}@update"
         )->name("wizard.{$wizard::$slug}.update");
 
         Route::delete(
-            "/wizard/{$wizard::$slug}/{wizardId}",
+            "/{$routePrefix}/{$wizard::$slug}/{wizardId}",
             "{$wizard}@destroy"
         )->name("wizard.{$wizard::$slug}.delete");
     }

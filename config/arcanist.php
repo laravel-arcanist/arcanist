@@ -59,4 +59,15 @@ return [
             'view_base_path' => 'wizards',
         ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Route Prefix
+    |--------------------------------------------------------------------------
+    |
+    | Here you can change the route prefix that gets added
+    | to the URLs of each wizard.
+    |
+    */
+    'route_prefix' => 'wizard',
 ];
