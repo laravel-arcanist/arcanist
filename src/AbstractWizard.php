@@ -13,6 +13,7 @@ use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
 use Sassnowski\Arcanist\Event\WizardLoaded;
 use Sassnowski\Arcanist\Event\WizardSaving;
+use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\Responsable;
 use Sassnowski\Arcanist\Event\WizardFinished;
 use Illuminate\Validation\ValidationException;
@@ -116,7 +117,7 @@ abstract class AbstractWizard
     /**
      * Renders the template of the first step of this wizard.
      */
-    public function create(Request $request): Responsable | Response
+    public function create(Request $request): Responsable | Response | Renderable
     {
         return $this->renderStep($request, $this->steps[0]);
     }
@@ -126,7 +127,7 @@ abstract class AbstractWizard
      *
      * @throws UnknownStepException
      */
-    public function show(Request $request, int $wizardId, ?string $slug = null): Responsable | Response | RedirectResponse
+    public function show(Request $request, int $wizardId, ?string $slug = null): Responsable | Response | Renderable | RedirectResponse
     {
         $this->load($wizardId);
 
@@ -351,7 +352,7 @@ abstract class AbstractWizard
         event(new WizardLoaded($this));
     }
 
-    private function renderStep(Request $request, WizardStep $step): Responsable | Response
+    private function renderStep(Request $request, WizardStep $step): Responsable | Response | Renderable
     {
         return $this->responseRenderer->renderStep(
             $step,
