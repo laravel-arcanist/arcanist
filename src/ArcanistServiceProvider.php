@@ -5,6 +5,7 @@ namespace Sassnowski\Arcanist;
 use function database_path;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Sassnowski\Arcanist\Contracts\ResponseRenderer;
 use Sassnowski\Arcanist\Contracts\WizardRepository;
 use Sassnowski\Arcanist\Renderer\BladeResponseRenderer;
 
@@ -35,6 +36,8 @@ class ArcanistServiceProvider extends ServiceProvider
                 return $app['config']['arcanist']['wizard_repository'];
             }
         );
+
+        $this->app->bind(ResponseRenderer::class, $this->app['config']['arcanist']['renderers']['renderer']);
 
         $this->app->when(BladeResponseRenderer::class)
             ->needs('$viewBasePath')
