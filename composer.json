@@ -14,7 +14,7 @@
     },
     "require": {
         "php": "^8.0",
-        "laravel/framework": "^8.0",
+        "laravel/framework": "^8.37",
         "facade/ignition-contracts": "^1.0"
     },
     "require-dev": {
