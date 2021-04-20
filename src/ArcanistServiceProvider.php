@@ -38,6 +38,6 @@ class ArcanistServiceProvider extends ServiceProvider
 
         $this->app->when(BladeResponseRenderer::class)
             ->needs('$viewBasePath')
-            ->giveConfig('arcanist.renderers.blade.view_base_path');
+            ->give($this->app['config']['arcanist']['renderers']['blade']['view_base_path']);
     }
 }
