@@ -299,6 +299,10 @@ abstract class AbstractWizard
         //
     }
 
+    /**
+     * The route that gets redirected to after completing the last
+     * step of the wizard.
+     */
     protected function redirectTo(): string
     {
         return $this->redirectTo;
@@ -310,11 +314,6 @@ abstract class AbstractWizard
     protected function title(): string
     {
         return static::$title;
-    }
-
-    protected function cancelText(): string
-    {
-        return $this->cancelText;
     }
 
     /**
