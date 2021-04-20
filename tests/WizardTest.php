@@ -4,6 +4,7 @@ namespace Tests;
 
 use Generator;
 use Illuminate\Http\Request;
+use Sassnowski\Arcanist\Arcanist;
 use Sassnowski\Arcanist\StepResult;
 use Sassnowski\Arcanist\WizardStep;
 use Illuminate\Testing\TestResponse;
@@ -31,6 +32,13 @@ class WizardTest extends TestCase
         $_SERVER['__beforeSaving.called'] = 0;
         $_SERVER['__onAfterComplete.called'] = 0;
         $_SERVER['__beforeDelete.called'] = 0;
+
+        Arcanist::boot([
+            TestWizard::class,
+            MultiStepWizard::class,
+            SharedDataWizard::class,
+            ErrorWizard::class,
+        ]);
     }
 
     /** @test */
@@ -346,8 +354,14 @@ class WizardTest extends TestCase
 
         $summary = $wizard->summary();
 
-        self::assertEquals('/wizard/wizard-name/1/step-name', $summary['steps'][0]['url']);
-        self::assertEquals('/wizard/wizard-name/1/step-with-view-data', $summary['steps'][1]['url']);
+        self::assertEquals(
+            route('wizard.' . $wizard::$slug . '.show', [1, 'step-name']),
+            $summary['steps'][0]['url']
+        );
+        self::assertEquals(
+            route('wizard.' . $wizard::$slug . '.show', [1, 'step-with-view-data']),
+            $summary['steps'][1]['url']
+        );
     }
 
     /** @test */

@@ -1,0 +1,10 @@
+- Add ability to define dependencies between steps (e.g. changing Step A should invalidate Step B)
+- Add generator command for Wizard and Step
+- Call action from inside wizard instead of listener. Can grab return value of action this way.
+  - Maybe add custom action class to handle success/failure states (?)
+- Make route middleware group configurable for each wizard
+- Think about way to have "non-persistent" wizards. Something tied to only the current session or something like that?
+- Add job to clean up unfinished wizards
+  - Make TTL configurable
+- Think of way to extend Wizards with custom fields (headings, modals, etc.)
+  - maybe a "beforeRender" hook?

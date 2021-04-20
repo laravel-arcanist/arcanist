@@ -266,7 +266,7 @@ abstract class AbstractWizard
                 'name' => $step->name,
                 'active' => $step->index() === $current->index(),
                 'url' => $this->exists()
-                    ? '/wizard/' . static::$slug . '/' . $this->id . '/' . $step->slug
+                    ? route('wizard.' . static::$slug . '.show', [$this->getId(), $step->slug])
                     : null,
             ])->all()
         ];
