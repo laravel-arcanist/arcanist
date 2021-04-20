@@ -5,12 +5,14 @@ namespace Sassnowski\Arcanist\Renderer;
 use function redirect;
 use Illuminate\View\Factory;
 use Illuminate\Http\Response;
+use InvalidArgumentException;
 use Sassnowski\Arcanist\WizardStep;
 use Illuminate\Http\RedirectResponse;
 use Sassnowski\Arcanist\AbstractWizard;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\Responsable;
 use Sassnowski\Arcanist\Contracts\ResponseRenderer;
+use Sassnowski\Arcanist\Exception\StepTemplateNotFoundException;
 
 class BladeResponseRenderer implements ResponseRenderer
 {
@@ -25,10 +27,14 @@ class BladeResponseRenderer implements ResponseRenderer
     ): Response | Responsable | Renderable {
         $viewName = $this->viewBasePath . '.' . $wizard::$slug . '.' . $step->slug;
 
-        return $this->factory->make($viewName, [
+        try {
+            return $this->factory->make($viewName, [
             'wizard' => $wizard->summary(),
             'data' => $data,
         ]);
+        } catch (InvalidArgumentException) {
+            throw StepTemplateNotFoundException::forStep($step);
+        }
     }
 
     public function redirect(WizardStep $step, AbstractWizard $wizard): RedirectResponse

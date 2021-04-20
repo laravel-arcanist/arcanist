@@ -6,16 +6,18 @@ use Generator;
 use function app;
 use Mockery as m;
 use function route;
-use InvalidArgumentException;
 use Sassnowski\Arcanist\Arcanist;
 use Illuminate\Contracts\View\View;
 use Sassnowski\Arcanist\WizardStep;
 use Illuminate\Testing\TestResponse;
 use Sassnowski\Arcanist\AbstractWizard;
+use Sassnowski\Arcanist\Contracts\ResponseRenderer;
 use Sassnowski\Arcanist\Renderer\BladeResponseRenderer;
 
 class BladeResponseRendererTest extends TestCase
 {
+    use ResponseRendererContractTests;
+
     private AbstractWizard $wizard;
     private WizardStep $step;
     private BladeResponseRenderer $renderer;
@@ -79,21 +81,6 @@ class BladeResponseRendererTest extends TestCase
         );
     }
 
-    /** @test */
-    public function it_throws_an_exception_if_no_view_exists_for_the_step(): void
-    {
-        $this->step->slug = 'different-slug';
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('View [wizards.blade-wizard.different-slug] not found.');
-
-        $this->renderer->renderStep(
-            $this->step,
-            $this->wizard,
-            []
-        );
-    }
-
     /**
      * @test
      * @dataProvider redirectToStepProvider
@@ -124,24 +111,9 @@ class BladeResponseRendererTest extends TestCase
         ];
     }
 
-    /** @test */
-    public function it_redirects_to_the_first_step_if_the_wizard_does_not_exist_yet(): void
+    protected function makeRenderer(): ResponseRenderer
     {
-        $response = new TestResponse($this->renderer->redirect($this->step, $this->wizard));
-
-        $response->assertRedirect(route('wizard.blade-wizard.create'));
-    }
-
-    /** @test */
-    public function it_redirects_with_an_error(): void
-    {
-        $this->wizard->setId(1);
-
-        $response = new TestResponse(
-            $this->renderer->redirectWithError($this->step, $this->wizard, '::message::')
-        );
-
-        $response->assertSessionHasErrors('wizard');
+        return app(BladeResponseRenderer::class);
     }
 }
 
