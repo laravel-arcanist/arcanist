@@ -47,7 +47,7 @@ abstract class AbstractWizard
      * The action that gets executed after the last step of the
      * wizard is completed.
      */
-    public string $onCompleteAction = NullAction::class;
+    protected string $onCompleteAction = NullAction::class;
 
     /**
      * The steps this wizard consists of.
@@ -273,7 +273,7 @@ abstract class AbstractWizard
      * Return a structured object of the wizard's data that will be
      * passed to the action after the wizard is completed.
      */
-    public function transformWizardData(): mixed
+    protected function transformWizardData(): mixed
     {
         return $this->data();
     }
