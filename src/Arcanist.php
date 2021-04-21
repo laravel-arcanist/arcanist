@@ -17,29 +17,31 @@ class Arcanist
 
     private static function registerRoutes(string $wizard, string $routePrefix): void
     {
-        Route::get(
-            "/{$routePrefix}/{$wizard::$slug}",
-            "{$wizard}@create"
-        )->name("wizard.{$wizard::$slug}.create");
+        Route::middleware('web')->group(function () use ($wizard, $routePrefix) {
+            Route::get(
+                "/{$routePrefix}/{$wizard::$slug}",
+                "{$wizard}@create"
+            )->name("wizard.{$wizard::$slug}.create");
 
-        Route::post(
-            "/{$routePrefix}/{$wizard::$slug}",
-            "{$wizard}@store"
-        )->name("wizard.{$wizard::$slug}.store");
+            Route::post(
+                "/{$routePrefix}/{$wizard::$slug}",
+                "{$wizard}@store"
+            )->name("wizard.{$wizard::$slug}.store");
 
-        Route::get(
-            "/{$routePrefix}/{$wizard::$slug}/{wizardId}/{slug?}",
-            "{$wizard}@show"
-        )->name("wizard.{$wizard::$slug}.show");
+            Route::get(
+                "/{$routePrefix}/{$wizard::$slug}/{wizardId}/{slug?}",
+                "{$wizard}@show"
+            )->name("wizard.{$wizard::$slug}.show");
 
-        Route::post(
-            "/{$routePrefix}/{$wizard::$slug}/{wizardId}/{slug}",
-            "{$wizard}@update"
-        )->name("wizard.{$wizard::$slug}.update");
+            Route::post(
+                "/{$routePrefix}/{$wizard::$slug}/{wizardId}/{slug}",
+                "{$wizard}@update"
+            )->name("wizard.{$wizard::$slug}.update");
 
-        Route::delete(
-            "/{$routePrefix}/{$wizard::$slug}/{wizardId}",
-            "{$wizard}@destroy"
-        )->name("wizard.{$wizard::$slug}.delete");
+            Route::delete(
+                "/{$routePrefix}/{$wizard::$slug}/{wizardId}",
+                "{$wizard}@destroy"
+            )->name("wizard.{$wizard::$slug}.delete");
+        });
     }
 }
