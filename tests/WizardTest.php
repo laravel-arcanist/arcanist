@@ -3,13 +3,16 @@
 namespace Tests;
 
 use Generator;
+use Mockery as m;
 use Illuminate\Http\Request;
 use Sassnowski\Arcanist\Arcanist;
+use Sassnowski\Arcanist\NullAction;
 use Sassnowski\Arcanist\StepResult;
 use Sassnowski\Arcanist\WizardStep;
 use Illuminate\Testing\TestResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Event;
+use Sassnowski\Arcanist\WizardAction;
 use Sassnowski\Arcanist\AbstractWizard;
 use Sassnowski\Arcanist\Event\WizardLoaded;
 use Sassnowski\Arcanist\Event\WizardSaving;
@@ -17,7 +20,9 @@ use Sassnowski\Arcanist\Event\WizardFinished;
 use Illuminate\Validation\ValidationException;
 use Sassnowski\Arcanist\Event\WizardFinishing;
 use Sassnowski\Arcanist\Contracts\ResponseRenderer;
+use Sassnowski\Arcanist\Contracts\WizardRepository;
 use Sassnowski\Arcanist\Renderer\FakeResponseRenderer;
+use Sassnowski\Arcanist\Contracts\WizardActionResolver;
 use Sassnowski\Arcanist\Exception\UnknownStepException;
 use Sassnowski\Arcanist\Repository\FakeWizardRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -45,9 +50,10 @@ class WizardTest extends TestCase
     public function it_renders_the_first_step_in_an_wizard(): void
     {
         $renderer = new FakeResponseRenderer();
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            $renderer
+        $wizard = $this->createWizard(
+            TestWizard::class,
+            repository: $this->createWizardRepository(),
+            renderer: $renderer
         );
 
         $wizard->create(new Request());
@@ -468,6 +474,24 @@ class WizardTest extends TestCase
     }
 
     /** @test */
+    public function it_calls_the_on_after_complete_action_after_the_last_step_was_submitted(): void
+    {
+        $actionSpy = m::spy(WizardAction::class);
+        $actionResolver = m::mock(WizardActionResolver::class);
+        $actionResolver
+            ->allows('resolveAction')
+            ->with(NullAction::class)
+            ->andReturn($actionSpy);
+        $wizard = $this->createWizard(TestWizard::class, resolver: $actionResolver);
+
+        $wizard->update(new Request(), 1, 'step-with-view-data');
+
+        $actionSpy->shouldHaveReceived('execute')
+                ->with($wizard->transformWizardData())
+                ->once();
+    }
+
+    /** @test */
     public function it_fires_an_event_after_the_onComplete_callback_was_ran(): void
     {
         $wizard = new TestWizard(
@@ -486,9 +510,9 @@ class WizardTest extends TestCase
     /** @test */
     public function it_calls_the_on_after_complete_hook_of_the_wizard(): void
     {
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
+        $wizard = $this->createWizard(
+            TestWizard::class,
+            repository: $this->createWizardRepository(),
         );
 
         $wizard->update(new Request(), 1, 'step-with-view-data');
@@ -680,6 +704,24 @@ class WizardTest extends TestCase
                 }
             ]
         ];
+    }
+
+    private function createWizard(
+        string $wizardClass,
+        ?WizardRepository $repository = null,
+        ?ResponseRenderer $renderer = null,
+        ?WizardActionResolver $resolver = null
+    ): AbstractWizard {
+        $repository ??= $this->createWizardRepository(wizardClass: $wizardClass);
+        $renderer ??= new FakeResponseRenderer();
+        $resolver ??= new class implements WizardActionResolver {
+            public function resolveAction(string $actionClass): WizardAction
+            {
+                return m::spy(WizardAction::class);
+            }
+        };
+
+        return new $wizardClass($repository, $renderer, $resolver);
     }
 
     private function createWizardRepository(array $data = [], ?string $wizardClass = null)

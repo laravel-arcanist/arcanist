@@ -20,6 +20,7 @@ use Illuminate\Validation\ValidationException;
 use Sassnowski\Arcanist\Event\WizardFinishing;
 use Sassnowski\Arcanist\Contracts\ResponseRenderer;
 use Sassnowski\Arcanist\Contracts\WizardRepository;
+use Sassnowski\Arcanist\Contracts\WizardActionResolver;
 use Sassnowski\Arcanist\Exception\UnknownStepException;
 use Sassnowski\Arcanist\Exception\WizardNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -80,7 +81,8 @@ abstract class AbstractWizard
 
     public function __construct(
         private WizardRepository $wizardRepository,
-        private ResponseRenderer $responseRenderer
+        private ResponseRenderer $responseRenderer,
+        private WizardActionResolver $actionResolver
     ) {
         $this->redirectTo = config('arcanist.redirect_url', '/home');
         $this->steps = collect($this->steps)
@@ -198,6 +200,10 @@ abstract class AbstractWizard
 
         if ($this->isLastStep()) {
             event(new WizardFinishing($this));
+
+            $action = $this->actionResolver->resolveAction($this->onCompleteAction);
+
+            $action->execute($this->transformWizardData());
 
             $response = $this->onAfterComplete();
 
