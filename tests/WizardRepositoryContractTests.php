@@ -8,6 +8,7 @@ use Tests\Fixtures\WizardB;
 use Sassnowski\Arcanist\AbstractWizard;
 use Sassnowski\Arcanist\Contracts\ResponseRenderer;
 use Sassnowski\Arcanist\Contracts\WizardRepository;
+use Sassnowski\Arcanist\Contracts\WizardActionResolver;
 use Sassnowski\Arcanist\Exception\WizardNotFoundException;
 
 trait WizardRepositoryContractTests
@@ -213,7 +214,11 @@ trait WizardRepositoryContractTests
 
     private function makeWizard(string $class, WizardRepository $repository, ?int $id = null): AbstractWizard
     {
-        $wizard = new $class($repository, m::mock(ResponseRenderer::class));
+        $wizard = new $class(
+            $repository,
+            m::mock(ResponseRenderer::class),
+            m::mock(WizardActionResolver::class)
+        );
 
         if ($id !== null) {
             $wizard->setId($id);

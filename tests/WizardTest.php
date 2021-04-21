@@ -66,10 +66,7 @@ class WizardTest extends TestCase
     {
         $this->expectException(UnknownStepException::class);
 
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
 
         $wizard->show(new Request(), 1, '::step-slug::');
     }
@@ -78,7 +75,7 @@ class WizardTest extends TestCase
     public function it_gets_the_view_data_from_the_step(): void
     {
         $renderer = new FakeResponseRenderer();
-        $wizard = new TestWizard($this->createWizardRepository(), $renderer);
+        $wizard = $this->createWizard(TestWizard::class, renderer: $renderer);
 
         $wizard->show(new Request(), 1, 'step-with-view-data');
 
@@ -95,10 +92,7 @@ class WizardTest extends TestCase
         $request = Request::create('::url::', 'POST', [
             'first_name' => '::first-name::',
         ]);
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
 
         $wizard->store($request);
     }
@@ -111,7 +105,7 @@ class WizardTest extends TestCase
             'last_name' => '::last-name::',
         ]);
         $repo = new FakeWizardRepository();
-        $wizard = new TestWizard($repo, new FakeResponseRenderer());
+        $wizard = $this->createWizard(TestWizard::class, repository: $repo);
 
         $wizard->store($request);
 
@@ -136,7 +130,7 @@ class WizardTest extends TestCase
             ],
         ]);
         $renderer = new FakeResponseRenderer();
-        $wizard = new TestWizard($repo, $renderer);
+        $wizard = $this->createWizard(TestWizard::class, repository: $repo, renderer: $renderer);
 
         $wizard->show(new Request(), 1, 'step-name');
 
@@ -157,7 +151,7 @@ class WizardTest extends TestCase
             'first_name' => '::new-first-name::',
             'last_name' => '::old-last-name::',
         ]);
-        $wizard = new TestWizard($repo, new FakeResponseRenderer());
+        $wizard = $this->createWizard(TestWizard::class, repository: $repo);
 
         $wizard->update($request, 1, 'step-name');
 
@@ -175,7 +169,7 @@ class WizardTest extends TestCase
             'first_name' => '::new-first-name::',
             'last_name' => '::old-last-name::',
         ]);
-        $wizard = new TestWizard($this->createWizardRepository(), $renderer);
+        $wizard = $this->createWizard(TestWizard::class, renderer: $renderer);
 
         $wizard->store($request);
 
@@ -190,7 +184,7 @@ class WizardTest extends TestCase
             'first_name' => '::new-first-name::',
             'last_name' => '::old-last-name::',
         ]);
-        $wizard = new TestWizard($this->createWizardRepository(), $renderer);
+        $wizard = $this->createWizard(TestWizard::class, renderer: $renderer);
 
         $wizard->update($request, 1, 'step-name');
 
@@ -200,10 +194,7 @@ class WizardTest extends TestCase
     /** @test */
     public function it_returns_the_wizards_title(): void
     {
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
 
         $summary = $wizard->summary();
 
@@ -216,10 +207,7 @@ class WizardTest extends TestCase
      */
     public function it_returns_the_wizards_id_in_the_summary(?int $id): void
     {
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
 
         if ($id !== null) {
             $wizard->setId($id);
@@ -241,10 +229,7 @@ class WizardTest extends TestCase
     /** @test */
     public function it_returns_the_wizards_slug_in_the_summary(): void
     {
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
 
         $summary = $wizard->summary();
 
@@ -254,10 +239,7 @@ class WizardTest extends TestCase
     /** @test */
     public function it_returns_the_slug_of_each_step_in_the_summary(): void
     {
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
 
         $summary = $wizard->summary();
 
@@ -268,10 +250,7 @@ class WizardTest extends TestCase
     /** @test */
     public function it_renders_information_about_the_completion_of_each_step(): void
     {
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
 
         $summary = $wizard->summary();
 
@@ -282,10 +261,7 @@ class WizardTest extends TestCase
     /** @test */
     public function it_renders_the_title_of_each_step_in_the_summary(): void
     {
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
 
         $summary = $wizard->summary();
 
@@ -296,10 +272,7 @@ class WizardTest extends TestCase
     /** @test */
     public function it_marks_the_first_step_as_active_on_the_create_route(): void
     {
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
         $wizard->create(new Request());
 
         $summary = $wizard->summary();
@@ -311,10 +284,7 @@ class WizardTest extends TestCase
     /** @test */
     public function it_marks_the_current_step_active_for_the_show_route(): void
     {
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
         $wizard->show(new Request(), 1, 'step-with-view-data');
 
         $summary = $wizard->summary();
@@ -329,10 +299,7 @@ class WizardTest extends TestCase
      */
     public function it_can_check_if_an_existing_wizard_is_being_edited(?int $id, bool $expected): void
     {
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
 
         if ($id !== null) {
             $wizard->setId($id);
@@ -352,10 +319,7 @@ class WizardTest extends TestCase
     /** @test */
     public function it_includes_the_link_to_the_step_in_the_summary(): void
     {
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
         $wizard->setId(1);
 
         $summary = $wizard->summary();
@@ -373,10 +337,7 @@ class WizardTest extends TestCase
     /** @test */
     public function it_does_not_include_the_step_urls_if_the_wizard_does_not_exist(): void
     {
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
 
         $summary = $wizard->summary();
 
@@ -391,10 +352,10 @@ class WizardTest extends TestCase
     public function it_includes_shared_data_in_the_view_response(callable $callwizard): void
     {
         $renderer = new FakeResponseRenderer();
-        $repository = $this->createWizardRepository(wizardClass:  SharedDataWizard::class);
-        $wizard = new SharedDataWizard(
-            $repository,
-            $renderer
+        $wizard = $this->createWizard(
+            SharedDataWizard::class,
+            repository: $this->createWizardRepository(wizardClass:  SharedDataWizard::class),
+            renderer: $renderer
         );
 
         $callwizard($wizard);
@@ -430,10 +391,7 @@ class WizardTest extends TestCase
      */
     public function it_calls_the_before_save_hook_of_the_step_before_saving_the_data(callable $callwizard): void
     {
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
 
         $callwizard($wizard);
 
@@ -460,10 +418,7 @@ class WizardTest extends TestCase
     /** @test */
     public function it_fires_an_event_after_the_last_step_of_the_wizard_was_finished(): void
     {
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
 
         $wizard->update(new Request(), 1, 'step-with-view-data');
 
@@ -494,10 +449,7 @@ class WizardTest extends TestCase
     /** @test */
     public function it_fires_an_event_after_the_onComplete_callback_was_ran(): void
     {
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
 
         $wizard->update(new Request(), 1, 'step-with-view-data');
 
@@ -524,10 +476,7 @@ class WizardTest extends TestCase
     public function it_stores_additional_data_that_was_set_during_the_request(): void
     {
         $repo = $this->createWizardRepository();
-        $wizard = new TestWizard(
-            $repo,
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class, repository: $repo);
 
         $wizard->update(new Request(), 1, 'step-with-view-data');
 
@@ -540,10 +489,7 @@ class WizardTest extends TestCase
      */
     public function it_fires_an_event_before_the_wizard_gets_saved(callable $callwizard): void
     {
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
 
         $callwizard($wizard);
 
@@ -559,10 +505,7 @@ class WizardTest extends TestCase
      */
     public function it_fires_an_event_after_an_wizard_was_loaded(callable $callwizard): void
     {
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
 
         $callwizard($wizard);
 
@@ -594,10 +537,7 @@ class WizardTest extends TestCase
     {
         $this->expectException(NotFoundHttpException::class);
 
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
 
         $wizard->destroy(new Request(), 1);
 
@@ -609,10 +549,7 @@ class WizardTest extends TestCase
     {
         config(['arcanist.redirect_url' => '::redirect-url::']);
 
-        $wizard = new TestWizard(
-            $this->createWizardRepository(),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(TestWizard::class);
 
         $response = new TestResponse($wizard->destroy(new Request(), 1));
 
@@ -622,10 +559,7 @@ class WizardTest extends TestCase
     /** @test */
     public function it_redirects_to_the_correct_url_if_the_default_url_was_overwritten(): void
     {
-        $wizard = new SharedDataWizard(
-            $this->createWizardRepository(wizardClass: SharedDataWizard::class),
-            new FakeResponseRenderer()
-        );
+        $wizard = $this->createWizard(SharedDataWizard::class);
 
         $response = new TestResponse($wizard->destroy(new Request(), 1));
 
@@ -651,19 +585,13 @@ class WizardTest extends TestCase
         yield from [
             [
                 function (ResponseRenderer $renderer) {
-                    return new TestWizard(
-                        $this->createWizardRepository(),
-                        $renderer
-                    );
+                    return $this->createWizard(TestWizard::class, renderer: $renderer);
                 },
                 TestStepWithViewData::class,
             ],
             [
                 function (ResponseRenderer $renderer) {
-                    return new MultiStepWizard(
-                        $this->createWizardRepository(wizardClass: MultiStepWizard::class),
-                        $renderer
-                    );
+                    return $this->createWizard(MultiStepWizard::class, renderer: $renderer);
                 },
                 TestStepWithViewData::class,
             ]
@@ -677,10 +605,7 @@ class WizardTest extends TestCase
     public function it_redirects_to_the_same_step_with_an_error_if_the_step_was_not_completed_successfully(callable $callWizard): void
     {
         $renderer = new FakeResponseRenderer();
-        $wizard = new ErrorWizard(
-            $this->createWizardRepository(wizardClass: ErrorWizard::class),
-            $renderer
-        );
+        $wizard = $this->createWizard(ErrorWizard::class, renderer: $renderer);
 
         $callWizard($wizard);
 
