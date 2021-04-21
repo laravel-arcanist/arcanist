@@ -433,6 +433,7 @@ class WizardTest extends TestCase
     public function it_calls_the_on_after_complete_action_after_the_last_step_was_submitted(): void
     {
         $actionSpy = m::spy(WizardAction::class);
+        $actionSpy->allows('execute')->andReturns(ActionResult::success());
         $actionResolver = m::mock(WizardActionResolver::class);
         $actionResolver
             ->allows('resolveAction')
@@ -612,6 +613,27 @@ class WizardTest extends TestCase
         );
     }
 
+    /** @test */
+    public function it_redirects_back_to_last_step_with_an_error_if_the_action_was_not_successful(): void
+    {
+        $renderer = new FakeResponseRenderer();
+        $resolver = m::mock(WizardActionResolver::class);
+        $resolver->allows('resolveAction')
+            ->andReturns(new class extends WizardAction {
+                public function execute(mixed $payload): ActionResult
+                {
+                    return $this->failure('::message::');
+                }
+            });
+        $wizard = $this->createWizard(TestWizard::class, renderer: $renderer, resolver: $resolver);
+
+        $wizard->update(new Request(), 1, 'step-with-view-data');
+
+        self::assertTrue(
+            $renderer->didRedirectWithError(TestStepWithViewData::class, '::message::')
+        );
+    }
+
     public function errorWizardProvider()
     {
         yield from [
@@ -640,7 +662,10 @@ class WizardTest extends TestCase
         $resolver ??= new class implements WizardActionResolver {
             public function resolveAction(string $actionClass): WizardAction
             {
-                return m::spy(WizardAction::class);
+                $action = m::mock(WizardAction::class);
+                $action->allows('execute')->andReturn(ActionResult::success());
+
+                return $action;
             }
         };
 

@@ -206,6 +206,14 @@ abstract class AbstractWizard
                 ->resolveAction($this->onCompleteAction)
                 ->execute($this->transformWizardData());
 
+            if (!$result->successful()) {
+                return $this->responseRenderer->redirectWithError(
+                    $step,
+                    $this,
+                    $result->error()
+                );
+            }
+
             $response = $this->onAfterComplete($result);
 
             event(new WizardFinished($this));
