@@ -444,7 +444,6 @@ class WizardTest extends TestCase
         $wizard->update(new Request(), 1, 'step-with-view-data');
 
         $actionSpy->shouldHaveReceived('execute')
-                ->with($wizard->transformWizardData())
                 ->once();
     }
 
