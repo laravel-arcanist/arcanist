@@ -1,10 +1,23 @@
+Before Release
+==============
+[ ] Make route middleware group configurable
+    - globally in config (`["web"]` is probably a good default)
+    - for a single wizard
+[ ] Call action from inside wizard instead of listener. Can grab return value of action this way.
+    - Maybe add custom action class to handle success/failure states (?)
+[ ] Add generator command for Wizard and Step
+[ ] Add job to clean up unfinished wizards
+    - Make TTL configurable
+
+ Thoughts
+ ========
+
+ - Some sort of auth layer for existing wizards? So I can't just randomly open other people's wizards.
+   - Needs to be fairly flexible since it'll be different for every application
+
+Future Versions
+==============
 - Add ability to define dependencies between steps (e.g. changing Step A should invalidate Step B)
-- Add generator command for Wizard and Step
-- Call action from inside wizard instead of listener. Can grab return value of action this way.
-  - Maybe add custom action class to handle success/failure states (?)
-- Make route middleware group configurable for each wizard
 - Think about way to have "non-persistent" wizards. Something tied to only the current session or something like that?
-- Add job to clean up unfinished wizards
-  - Make TTL configurable
 - Think of way to extend Wizards with custom fields (headings, modals, etc.)
   - maybe a "beforeRender" hook?
