@@ -2,6 +2,7 @@
 
 use Sassnowski\Arcanist\Renderer\BladeResponseRenderer;
 use Sassnowski\Arcanist\Repository\DatabaseWizardRepository;
+use Sassnowski\Arcanist\Resolver\ContainerWizardActionResolver;
 
 return [
     /*
@@ -41,6 +42,18 @@ return [
     |
     */
     'wizard_repository' => DatabaseWizardRepository::class,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Wizard Action Resolver
+    |--------------------------------------------------------------------------
+    |
+    | By default, Arcanist resolves all action out of the Laravel
+    | service container. If you need a different behavior, you
+    | can provide a different implementation here.
+    |
+    */
+    'action_resolver' => ContainerWizardActionResolver::class,
 
     /*
     |--------------------------------------------------------------------------

@@ -6,6 +6,7 @@ use function database_path;
 use Illuminate\Support\ServiceProvider;
 use Sassnowski\Arcanist\Contracts\ResponseRenderer;
 use Sassnowski\Arcanist\Contracts\WizardRepository;
+use Sassnowski\Arcanist\Contracts\WizardActionResolver;
 use Sassnowski\Arcanist\Renderer\BladeResponseRenderer;
 
 class ArcanistServiceProvider extends ServiceProvider
@@ -34,7 +35,15 @@ class ArcanistServiceProvider extends ServiceProvider
             $this->app['config']['arcanist']['wizard_repository']
         );
 
-        $this->app->bind(ResponseRenderer::class, $this->app['config']['arcanist']['renderers']['renderer']);
+        $this->app->bind(
+            ResponseRenderer::class,
+            $this->app['config']['arcanist']['renderers']['renderer']
+        );
+
+        $this->app->bind(
+            WizardActionResolver::class,
+            $this->app['config']['arcanist']['action_resolver']
+        );
 
         $this->app->when(BladeResponseRenderer::class)
             ->needs('$viewBasePath')
