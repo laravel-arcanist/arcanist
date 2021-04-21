@@ -200,25 +200,7 @@ abstract class AbstractWizard
         $this->saveStepData($step, $result->payload(), $request);
 
         if ($this->isLastStep()) {
-            event(new WizardFinishing($this));
-
-            $result = $this->actionResolver
-                ->resolveAction($this->onCompleteAction)
-                ->execute($this->transformWizardData());
-
-            if (!$result->successful()) {
-                return $this->responseRenderer->redirectWithError(
-                    $step,
-                    $this,
-                    $result->error()
-                );
-            }
-
-            $response = $this->onAfterComplete($result);
-
-            event(new WizardFinished($this));
-
-            return $response;
+            return $this->processLastStep($step);
         }
 
         return $this->responseRenderer->redirect(
@@ -392,6 +374,29 @@ abstract class AbstractWizard
         $data = array_merge($data, $this->additionalData);
 
         $this->wizardRepository->saveData($this, $data);
+    }
+
+    private function processLastStep(WizardStep $step): RedirectResponse
+    {
+        event(new WizardFinishing($this));
+
+        $result = $this->actionResolver
+            ->resolveAction($this->onCompleteAction)
+            ->execute($this->transformWizardData());
+
+        if (!$result->successful()) {
+            return $this->responseRenderer->redirectWithError(
+                $step,
+                $this,
+                $result->error()
+            );
+        }
+
+        $response = $this->onAfterComplete($result);
+
+        event(new WizardFinished($this));
+
+        return $response;
     }
 
     private function nextStep(): WizardStep
