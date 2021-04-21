@@ -8,7 +8,7 @@ use Sassnowski\Arcanist\AbstractWizard;
 
 class WizardA extends AbstractWizard
 {
-    protected function onAfterComplete(): RedirectResponse
+    protected function onAfterComplete(\Sassnowski\Arcanist\Action\ActionResult $result): RedirectResponse
     {
         return redirect();
     }

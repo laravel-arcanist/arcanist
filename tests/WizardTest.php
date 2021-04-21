@@ -16,6 +16,7 @@ use Sassnowski\Arcanist\WizardAction;
 use Sassnowski\Arcanist\AbstractWizard;
 use Sassnowski\Arcanist\Event\WizardLoaded;
 use Sassnowski\Arcanist\Event\WizardSaving;
+use Sassnowski\Arcanist\Action\ActionResult;
 use Sassnowski\Arcanist\Event\WizardFinished;
 use Illuminate\Validation\ValidationException;
 use Sassnowski\Arcanist\Event\WizardFinishing;
@@ -462,10 +463,7 @@ class WizardTest extends TestCase
     /** @test */
     public function it_calls_the_on_after_complete_hook_of_the_wizard(): void
     {
-        $wizard = $this->createWizard(
-            TestWizard::class,
-            repository: $this->createWizardRepository(),
-        );
+        $wizard = $this->createWizard(TestWizard::class);
 
         $wizard->update(new Request(), 1, 'step-with-view-data');
 
@@ -669,7 +667,7 @@ class TestWizard extends AbstractWizard
         TestStepWithViewData::class,
     ];
 
-    protected function onAfterComplete(): RedirectResponse
+    protected function onAfterComplete(ActionResult $result): RedirectResponse
     {
         $_SERVER['__onAfterComplete.called']++;
 
@@ -710,7 +708,7 @@ class SharedDataWizard extends AbstractWizard
         ];
     }
 
-    protected function onAfterComplete(): RedirectResponse
+    protected function onAfterComplete(ActionResult $result): RedirectResponse
     {
         return redirect();
     }

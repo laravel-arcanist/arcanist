@@ -14,6 +14,7 @@ use Illuminate\Http\RedirectResponse;
 use Sassnowski\Arcanist\Event\WizardLoaded;
 use Sassnowski\Arcanist\Event\WizardSaving;
 use Illuminate\Contracts\Support\Renderable;
+use Sassnowski\Arcanist\Action\ActionResult;
 use Illuminate\Contracts\Support\Responsable;
 use Sassnowski\Arcanist\Event\WizardFinished;
 use Illuminate\Validation\ValidationException;
@@ -201,11 +202,11 @@ abstract class AbstractWizard
         if ($this->isLastStep()) {
             event(new WizardFinishing($this));
 
-            $this->actionResolver
+            $result = $this->actionResolver
                 ->resolveAction($this->onCompleteAction)
                 ->execute($this->transformWizardData());
 
-            $response = $this->onAfterComplete();
+            $response = $this->onAfterComplete($result);
 
             event(new WizardFinished($this));
 
@@ -290,7 +291,7 @@ abstract class AbstractWizard
     /**
      * Gets called after the last step in the wizard is finished.
      */
-    protected function onAfterComplete(): RedirectResponse
+    protected function onAfterComplete(ActionResult $result): RedirectResponse
     {
         return redirect()->to($this->redirectTo());
     }
