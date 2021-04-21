@@ -201,9 +201,9 @@ abstract class AbstractWizard
         if ($this->isLastStep()) {
             event(new WizardFinishing($this));
 
-            $action = $this->actionResolver->resolveAction($this->onCompleteAction);
-
-            $action->execute($this->transformWizardData());
+            $this->actionResolver
+                ->resolveAction($this->onCompleteAction)
+                ->execute($this->transformWizardData());
 
             $response = $this->onAfterComplete();
 

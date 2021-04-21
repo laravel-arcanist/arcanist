@@ -6,7 +6,7 @@ use Sassnowski\Arcanist\Action\ActionResult;
 
 abstract class WizardAction
 {
-    abstract public function execute(mixed $payload = null): ActionResult;
+    abstract public function execute(mixed $payload): ActionResult;
 
     protected function success(array $payload = []): ActionResult
     {

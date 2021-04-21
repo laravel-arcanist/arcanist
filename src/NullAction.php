@@ -2,9 +2,11 @@
 
 namespace Sassnowski\Arcanist;
 
-final class NullAction
+use Sassnowski\Arcanist\Action\ActionResult;
+
+final class NullAction extends WizardAction
 {
-    public function execute(): void
+    public function execute(mixed $payload): ActionResult
     {
     }
 }
