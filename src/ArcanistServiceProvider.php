@@ -4,10 +4,12 @@ namespace Sassnowski\Arcanist;
 
 use function database_path;
 use Illuminate\Support\ServiceProvider;
+use Sassnowski\Arcanist\Event\WizardFinished;
 use Sassnowski\Arcanist\Contracts\ResponseRenderer;
 use Sassnowski\Arcanist\Contracts\WizardRepository;
 use Sassnowski\Arcanist\Contracts\WizardActionResolver;
 use Sassnowski\Arcanist\Renderer\BladeResponseRenderer;
+use Sassnowski\Arcanist\Listener\RemoveCompletedWizardListener;
 
 class ArcanistServiceProvider extends ServiceProvider
 {
@@ -29,6 +31,11 @@ class ArcanistServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/arcanist.php', 'arcanist');
+
+        $this->app['events']->listen(
+            WizardFinished::class,
+            RemoveCompletedWizardListener::class
+        );
 
         $this->app->bind(
             WizardRepository::class,
