@@ -6,6 +6,7 @@ Before Release
 [ ] Call action from inside wizard instead of listener. Can grab return value of action this way.
     - Maybe add custom action class to handle success/failure states (?)
 [ ] Add generator command for Wizard and Step
+[ ] Hook up event listeners
 [ ] Add job to clean up unfinished wizards
     - Make TTL configurable
 
@@ -14,6 +15,9 @@ Before Release
 
  - Some sort of auth layer for existing wizards? So I can't just randomly open other people's wizards.
    - Needs to be fairly flexible since it'll be different for every application
+ - How to make sure that any resources a wizard has reserved are freed up again? For example if the
+   wizard is deleted by the cron job.
+   - Maybe `onBeforeDelete` hook or something similar that only gets called when cleaned up by job
 
 Future Versions
 ==============
