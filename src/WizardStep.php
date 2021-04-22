@@ -124,7 +124,7 @@ abstract class WizardStep
     private function rules(): array
     {
         return collect($this->fields())
-            ->mapWithKeys(fn (Field $field) => [$field->getName() => $field->getRules()])
+            ->mapWithKeys(fn (Field $field) => [$field->name => $field->rules])
             ->all();
     }
 }

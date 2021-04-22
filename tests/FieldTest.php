@@ -11,7 +11,7 @@ class FieldTest extends \PHPUnit\Framework\TestCase
     {
         $field = Field::make('::name::');
 
-        self::assertEquals('::name::', $field->getName());
+        self::assertEquals('::name::', $field->name);
     }
 
     /** @test */
@@ -20,7 +20,7 @@ class FieldTest extends \PHPUnit\Framework\TestCase
         $field = Field::make('::name::')
             ->rules(['::something::']);
 
-        self::assertEquals(['::something::'], $field->getRules());
+        self::assertEquals(['::something::'], $field->rules);
     }
 
     /** @test */
@@ -28,7 +28,7 @@ class FieldTest extends \PHPUnit\Framework\TestCase
     {
         $field = Field::make('::name::');
 
-        self::assertEmpty($field->getRules());
+        self::assertEmpty($field->rules);
     }
 
     /** @test */
@@ -36,7 +36,7 @@ class FieldTest extends \PHPUnit\Framework\TestCase
     {
         $field = Field::make('::name::');
 
-        self::assertCount(0, $field->getDependencies());
+        self::assertCount(0, $field->dependencies);
     }
 
     /** @test */
@@ -48,6 +48,6 @@ class FieldTest extends \PHPUnit\Framework\TestCase
         self::assertEquals([
             '::field-1::',
             '::field-2::',
-        ], $field->getDependencies());
+        ], $field->dependencies);
     }
 }
