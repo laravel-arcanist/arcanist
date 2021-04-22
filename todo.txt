@@ -1,13 +1,13 @@
 Before Release
 ==============
 [ ] Inject services into steps
+[ ] Add ability to define dependencies between steps (e.g. changing Step A should invalidate Step B)
 [ ] Make route middleware group configurable
     - globally in config (`["web"]` is probably a good default)
     - for a single wizard
 [ ] Add generator command for Wizard and Step
 [ ] Add job to clean up unfinished wizards
     - Make TTL configurable
-[ ] Swap order of arguments in `createWizardRepository` so Marco is happy
 
  Thoughts
  ========
@@ -17,10 +17,11 @@ Before Release
  - How to make sure that any resources a wizard has reserved are freed up again? For example if the
    wizard is deleted by the cron job.
    - Maybe `onBeforeDelete` hook or something similar that only gets called when cleaned up by job
+   - `onExpire()`?
 
 Future Versions
 ==============
-- Add ability to define dependencies between steps (e.g. changing Step A should invalidate Step B)
+
 - Think about way to have "non-persistent" wizards. Something tied to only the current session or something like that?
 - Think of way to extend Wizards with custom fields (headings, modals, etc.)
   - maybe a "beforeRender" hook?
