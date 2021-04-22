@@ -22,14 +22,13 @@ use Sassnowski\Arcanist\Event\WizardFinished;
 use Illuminate\Validation\ValidationException;
 use Sassnowski\Arcanist\Event\WizardFinishing;
 use Sassnowski\Arcanist\Contracts\ResponseRenderer;
-use Sassnowski\Arcanist\Contracts\WizardRepository;
 use Sassnowski\Arcanist\Renderer\FakeResponseRenderer;
 use Sassnowski\Arcanist\Contracts\WizardActionResolver;
 use Sassnowski\Arcanist\Exception\UnknownStepException;
 use Sassnowski\Arcanist\Repository\FakeWizardRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class WizardTest extends TestCase
+class WizardTest extends WizardTestCase
 {
     protected function setUp(): void
     {
@@ -649,36 +648,6 @@ class WizardTest extends TestCase
                 }
             ]
         ];
-    }
-
-    private function createWizard(
-        string $wizardClass,
-        ?WizardRepository $repository = null,
-        ?ResponseRenderer $renderer = null,
-        ?WizardActionResolver $resolver = null
-    ): AbstractWizard {
-        $repository ??= $this->createWizardRepository(wizardClass: $wizardClass);
-        $renderer ??= new FakeResponseRenderer();
-        $resolver ??= new class implements WizardActionResolver {
-            public function resolveAction(string $actionClass): WizardAction
-            {
-                $action = m::mock(WizardAction::class);
-                $action->allows('execute')->andReturn(ActionResult::success());
-
-                return $action;
-            }
-        };
-
-        return new $wizardClass($repository, $renderer, $resolver);
-    }
-
-    private function createWizardRepository(array $data = [], ?string $wizardClass = null)
-    {
-        return new FakeWizardRepository([
-            $wizardClass ?: TestWizard::class => [
-                1 => $data
-            ],
-        ]);
     }
 }
 
