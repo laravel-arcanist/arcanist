@@ -1,12 +1,10 @@
 Before Release
 ==============
+[ ] Inject services into steps
 [ ] Make route middleware group configurable
     - globally in config (`["web"]` is probably a good default)
     - for a single wizard
-[ ] Call action from inside wizard instead of listener. Can grab return value of action this way.
-    - Maybe add custom action class to handle success/failure states (?)
 [ ] Add generator command for Wizard and Step
-[ ] Hook up event listeners
 [ ] Add job to clean up unfinished wizards
     - Make TTL configurable
 [ ] Swap order of arguments in `createWizardRepository` so Marco is happy
