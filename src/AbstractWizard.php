@@ -199,14 +199,12 @@ abstract class AbstractWizard
 
         $this->saveStepData($step, $result->payload(), $request);
 
-        if ($this->isLastStep()) {
-            return $this->processLastStep($step);
-        }
-
-        return $this->responseRenderer->redirect(
-            $this->nextStep(),
-            $this
-        );
+        return $this->isLastStep()
+            ? $this->processLastStep($step)
+            : $this->responseRenderer->redirect(
+                $this->nextStep(),
+                $this
+            );
     }
 
     public function destroy(Request $request, int $wizardId): RedirectResponse
