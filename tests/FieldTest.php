@@ -30,4 +30,24 @@ class FieldTest extends \PHPUnit\Framework\TestCase
 
         self::assertEmpty($field->getRules());
     }
+
+    /** @test */
+    public function it_does_not_have_dependencies_by_default(): void
+    {
+        $field = Field::make('::name::');
+
+        self::assertCount(0, $field->getDependencies());
+    }
+
+    /** @test */
+    public function it_can_specify_dependencies(): void
+    {
+        $field = Field::make('::name::')
+            ->dependsOn('::field-1::', '::field-2::');
+
+        self::assertEquals([
+            '::field-1::',
+            '::field-2::',
+        ], $field->getDependencies());
+    }
 }

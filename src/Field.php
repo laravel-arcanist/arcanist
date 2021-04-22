@@ -5,6 +5,7 @@ namespace Sassnowski\Arcanist;
 class Field
 {
     private array $rules = [];
+    private array $dependencies = [];
 
     private function __construct(private string $name)
     {
@@ -30,5 +31,17 @@ class Field
     public function getRules(): array
     {
         return $this->rules;
+    }
+
+    public function dependsOn(string ...$fields): self
+    {
+        $this->dependencies = $fields;
+
+        return $this;
+    }
+
+    public function getDependencies(): array
+    {
+        return $this->dependencies;
     }
 }
