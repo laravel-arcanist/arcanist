@@ -4,7 +4,7 @@ namespace Sassnowski\Arcanist;
 
 class Field
 {
-    public array $rules = [];
+    public array $rules = ['nullable'];
     public array $dependencies = [];
 
     private function __construct(public string $name)

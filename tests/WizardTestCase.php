@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Mockery as m;
+use Illuminate\Support\Facades\Event;
 use Sassnowski\Arcanist\WizardAction;
 use Sassnowski\Arcanist\AbstractWizard;
 use Sassnowski\Arcanist\Action\ActionResult;
@@ -14,6 +15,13 @@ use Sassnowski\Arcanist\Repository\FakeWizardRepository;
 
 class WizardTestCase extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Event::fake();
+    }
+
     protected function createWizard(
         string $wizardClass,
         ?WizardRepository $repository = null,

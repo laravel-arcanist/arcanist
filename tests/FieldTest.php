@@ -24,11 +24,11 @@ class FieldTest extends \PHPUnit\Framework\TestCase
     }
 
     /** @test */
-    public function it_does_not_have_validation_rules_by_default(): void
+    public function it_is_nullable_by_default(): void
     {
         $field = Field::make('::name::');
 
-        self::assertEmpty($field->rules);
+        self::assertEquals(['nullable'], $field->rules);
     }
 
     /** @test */
@@ -49,5 +49,13 @@ class FieldTest extends \PHPUnit\Framework\TestCase
             '::field-1::',
             '::field-2::',
         ], $field->dependencies);
+    }
+
+    /** @test */
+    public function specifying_dependencies_turns_field_into_dependent_field(): void
+    {
+        $field = Field::make('::name::')->dependsOn('::field-1::');
+
+        self::assertInstanceOf(DependentField::class, $field);
     }
 }

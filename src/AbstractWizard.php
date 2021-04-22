@@ -189,6 +189,22 @@ abstract class AbstractWizard
 
         $result = $step->process($request);
 
+        $changedFields = collect($result->payload())
+            ->filter(fn (mixed $value, string $key) => $this->data($key) !== $value)
+            ->keys();
+        $dependentFields = collect($this->steps)
+            ->flatMap(fn (WizardStep $step) => $step->dependentFields())
+            ->unique();
+
+        $dependentFields
+            ->only($changedFields)
+            ->values()
+            ->flatten()
+            ->unique()
+            ->each(function (string $fieldName) {
+                $this->setData($fieldName, null);
+            });
+
         if (!$result->successful()) {
             return $this->responseRenderer->redirectWithError(
                 $this->steps[0],

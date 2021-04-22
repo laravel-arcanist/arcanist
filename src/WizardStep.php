@@ -59,6 +59,22 @@ abstract class WizardStep
         return $this->handle($request, $data);
     }
 
+    public function dependentFields(): array
+    {
+        return [
+            '::normal-field-1::' => [
+                '::dependent-field-1::',
+            ],
+            '::normal-field-2::' => [
+                '::dependent-field-1::',
+                '::dependent-field-2::',
+            ],
+            '::normal-field-3::' => [
+                '::dependent-field-3::',
+            ]
+        ];
+    }
+
     protected function handle(Request $request, array $payload): StepResult
     {
         return $this->success($payload);
