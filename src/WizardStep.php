@@ -64,10 +64,7 @@ abstract class WizardStep
         return $this->success($payload);
     }
 
-    /**
-     * The validation rules for submitting the step's form.
-     */
-    protected function rules(): array
+    protected function fields(): array
     {
         return [];
     }
@@ -119,5 +116,15 @@ abstract class WizardStep
     protected function setData(string $key, mixed $value): void
     {
         $this->wizard->setData($key, $value);
+    }
+
+    /**
+     * The validation rules for submitting the step's form.
+     */
+    private function rules(): array
+    {
+        return collect($this->fields())
+            ->mapWithKeys(fn (Field $field) => [$field->getName() => $field->getRules()])
+            ->all();
     }
 }

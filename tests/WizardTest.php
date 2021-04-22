@@ -5,6 +5,7 @@ namespace Tests;
 use Generator;
 use Mockery as m;
 use Illuminate\Http\Request;
+use Sassnowski\Arcanist\Field;
 use Sassnowski\Arcanist\Arcanist;
 use Sassnowski\Arcanist\NullAction;
 use Sassnowski\Arcanist\StepResult;
@@ -755,11 +756,14 @@ class TestStep extends WizardStep
     public string $name = '::step-1-name::';
     public string $slug = 'step-name';
 
-    protected function rules(): array
+    protected function fields(): array
     {
         return [
-            'first_name' => 'required',
-            'last_name' => 'required',
+            Field::make('first_name')
+                ->rules(['required']),
+
+            Field::make('last_name')
+                ->rules(['required']),
         ];
     }
 
