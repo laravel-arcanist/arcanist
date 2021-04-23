@@ -40,10 +40,6 @@ abstract class WizardStep
         return $this->index;
     }
 
-    public function beforeSaving(Request $request, array $data): void
-    {
-    }
-
     /**
      * Checks if this step has already been completed.
      */
@@ -113,11 +109,6 @@ abstract class WizardStep
     protected function data(?string $key = null, mixed $default = null): mixed
     {
         return $this->wizard->data($key, $default);
-    }
-
-    protected function setData(string $key, mixed $value): void
-    {
-        $this->wizard->setData($key, $value);
     }
 
     /**

@@ -74,12 +74,6 @@ abstract class AbstractWizard
      */
     protected string $redirectTo;
 
-    /**
-     * Additional data that was set during the request. This will
-     * be merged with $data before the wizard gets saved.
-     */
-    protected array $additionalData = [];
-
     public function __construct(
         private WizardRepository $wizardRepository,
         private ResponseRenderer $responseRenderer,
@@ -167,7 +161,7 @@ abstract class AbstractWizard
             );
         }
 
-        $this->saveStepData($step, $result->payload(), $request);
+        $this->saveStepData($result->payload());
 
         return $this->responseRenderer->redirect(
             $this->steps[1],
@@ -197,8 +191,9 @@ abstract class AbstractWizard
             );
         }
 
-        $this->invalidateDependentFields($result);
-        $this->saveStepData($step, $result->payload(), $request);
+        $this->saveStepData(
+            $this->invalidateDependentFields($result->payload())
+        );
 
         return $this->isLastStep()
             ? $this->processLastStep($step)
@@ -219,21 +214,16 @@ abstract class AbstractWizard
         return redirect()->to($this->redirectTo());
     }
 
-    public function setData(string $key, mixed $value): void
-    {
-        $this->additionalData[$key] = $value;
-    }
-
     /**
      * Fetch any previously stored data for this wizard.
      */
     public function data(?string $key = null, mixed $default = null): mixed
     {
         if ($key === null) {
-            return array_merge($this->data, $this->additionalData);
+            return $this->data;
         }
 
-        return data_get($this->additionalData, $key) ?: data_get($this->data, $key, $default);
+        return data_get($this->data, $key, $default);
     }
 
     /**
@@ -364,13 +354,9 @@ abstract class AbstractWizard
         );
     }
 
-    private function saveStepData(WizardStep $step, array $data, Request $request): void
+    private function saveStepData(array $data): void
     {
         event(new WizardSaving($this));
-
-        $step->beforeSaving($request, $data);
-
-        $data = array_merge($data, $this->additionalData);
 
         $this->wizardRepository->saveData($this, $data);
     }
@@ -418,20 +404,22 @@ abstract class AbstractWizard
         return $this->currentStep + 1 === count($this->steps);
     }
 
-    private function invalidateDependentFields(StepResult $result): void
+    private function invalidateDependentFields(array $payload): array
     {
-        $changedFields = collect($result->payload())
+        $changedFields = collect($payload)
             ->filter(fn (mixed $value, string $key) => $this->data($key) !== $value)
             ->keys()
             ->all();
 
-        collect($this->steps)
+        return collect($this->steps)
             ->flatMap(fn (WizardStep $step) => $step->dependentFields())
             ->filter(fn (Field $field) => $field->shouldInvalidate($changedFields))
             ->map->name
             ->unique()
-            ->each(function (string $fieldName) {
-                $this->setData($fieldName, null);
-            });
+            ->reduce(function (array $payload, string $fieldName) {
+                $payload[$fieldName] = null;
+
+                return $payload;
+            }, $payload);
     }
 }

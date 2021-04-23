@@ -35,7 +35,6 @@ class WizardTest extends WizardTestCase
         parent::setUp();
 
         Event::fake();
-        $_SERVER['__beforeSaving.called'] = 0;
         $_SERVER['__onAfterComplete.called'] = 0;
         $_SERVER['__beforeDelete.called'] = 0;
 
@@ -386,19 +385,6 @@ class WizardTest extends WizardTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider beforeSaveProvider
-     */
-    public function it_calls_the_before_save_hook_of_the_step_before_saving_the_data(callable $callwizard): void
-    {
-        $wizard = $this->createWizard(TestWizard::class);
-
-        $callwizard($wizard);
-
-        self::assertEquals(1, $_SERVER['__beforeSaving.called']);
-    }
-
     public function beforeSaveProvider(): Generator
     {
         $validRequest = Request::create('::uri::', 'POST', [
@@ -468,17 +454,6 @@ class WizardTest extends WizardTestCase
         $wizard->update(new Request(), 1, 'step-with-view-data');
 
         self::assertEquals(1, $_SERVER['__onAfterComplete.called']);
-    }
-
-    /** @test */
-    public function it_stores_additional_data_that_was_set_during_the_request(): void
-    {
-        $repo = $this->createWizardRepository();
-        $wizard = $this->createWizard(TestWizard::class, repository: $repo);
-
-        $wizard->update(new Request(), 1, 'step-with-view-data');
-
-        self::assertEquals(['::key::' => '::value::'], $repo->loadData($wizard));
     }
 
     /**
