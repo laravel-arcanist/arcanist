@@ -52,10 +52,29 @@ class FieldTest extends \PHPUnit\Framework\TestCase
     }
 
     /** @test */
-    public function specifying_dependencies_turns_field_into_dependent_field(): void
+    public function it_should_not_change_if_none_of_its_dependencies_changed(): void
     {
-        $field = Field::make('::name::')->dependsOn('::field-1::');
+        $field = Field::make('::dependent-field::')
+            ->dependsOn('::field::');
 
-        self::assertInstanceOf(DependentField::class, $field);
+        self::assertFalse($field->shouldInvalidate(['::another-field::']));
+    }
+
+    /** @test */
+    public function it_should_invalidate_if_its_dependency_changed(): void
+    {
+        $field = Field::make('::dependent-field::')
+            ->dependsOn('::field::');
+
+        self::assertTrue($field->shouldInvalidate(['::field::']));
+    }
+
+    /** @test */
+    public function it_should_invalidate_if_any_one_of_its_dependencies_changed(): void
+    {
+        $field = Field::make('::dependent-field::')
+            ->dependsOn('::field-1::', '::field-2::');
+
+        self::assertTrue($field->shouldInvalidate(['::field-2::']));
     }
 }

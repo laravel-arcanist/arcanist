@@ -61,18 +61,9 @@ abstract class WizardStep
 
     public function dependentFields(): array
     {
-        return [
-            '::normal-field-1::' => [
-                '::dependent-field-1::',
-            ],
-            '::normal-field-2::' => [
-                '::dependent-field-1::',
-                '::dependent-field-2::',
-            ],
-            '::normal-field-3::' => [
-                '::dependent-field-3::',
-            ]
-        ];
+        return collect($this->fields())
+            ->filter(fn (Field $field) => count($field->dependencies) > 0)
+            ->all();
     }
 
     protected function handle(Request $request, array $payload): StepResult

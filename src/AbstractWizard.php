@@ -191,15 +191,13 @@ abstract class AbstractWizard
 
         $changedFields = collect($result->payload())
             ->filter(fn (mixed $value, string $key) => $this->data($key) !== $value)
-            ->keys();
-        $dependentFields = collect($this->steps)
-            ->flatMap(fn (WizardStep $step) => $step->dependentFields())
-            ->unique();
+            ->keys()
+            ->all();
 
-        $dependentFields
-            ->only($changedFields)
-            ->values()
-            ->flatten()
+        collect($this->steps)
+            ->flatMap(fn (WizardStep $step) => $step->dependentFields())
+            ->filter(fn (Field $field) => $field->shouldInvalidate($changedFields))
+            ->map->name
             ->unique()
             ->each(function (string $fieldName) {
                 $this->setData($fieldName, null);

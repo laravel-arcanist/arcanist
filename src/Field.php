@@ -4,11 +4,11 @@ namespace Sassnowski\Arcanist;
 
 class Field
 {
-    public array $rules = ['nullable'];
-    public array $dependencies = [];
-
-    private function __construct(public string $name)
-    {
+    public function __construct(
+        public string $name,
+        public array $rules = ['nullable'],
+        public array $dependencies = []
+    ) {
     }
 
     public static function make(string $name): Field
@@ -28,5 +28,10 @@ class Field
         $this->dependencies = $fields;
 
         return $this;
+    }
+
+    public function shouldInvalidate(array $changedFieldNames): bool
+    {
+        return count(array_intersect($this->dependencies, $changedFieldNames)) > 0;
     }
 }
