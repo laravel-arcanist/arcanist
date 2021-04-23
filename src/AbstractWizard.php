@@ -189,20 +189,6 @@ abstract class AbstractWizard
 
         $result = $step->process($request);
 
-        $changedFields = collect($result->payload())
-            ->filter(fn (mixed $value, string $key) => $this->data($key) !== $value)
-            ->keys()
-            ->all();
-
-        collect($this->steps)
-            ->flatMap(fn (WizardStep $step) => $step->dependentFields())
-            ->filter(fn (Field $field) => $field->shouldInvalidate($changedFields))
-            ->map->name
-            ->unique()
-            ->each(function (string $fieldName) {
-                $this->setData($fieldName, null);
-            });
-
         if (!$result->successful()) {
             return $this->responseRenderer->redirectWithError(
                 $this->steps[0],
@@ -211,6 +197,7 @@ abstract class AbstractWizard
             );
         }
 
+        $this->invalidateDependentFields($result);
         $this->saveStepData($step, $result->payload(), $request);
 
         return $this->isLastStep()
@@ -429,5 +416,22 @@ abstract class AbstractWizard
     private function isLastStep(): bool
     {
         return $this->currentStep + 1 === count($this->steps);
+    }
+
+    private function invalidateDependentFields(StepResult $result): void
+    {
+        $changedFields = collect($result->payload())
+            ->filter(fn (mixed $value, string $key) => $this->data($key) !== $value)
+            ->keys()
+            ->all();
+
+        collect($this->steps)
+            ->flatMap(fn (WizardStep $step) => $step->dependentFields())
+            ->filter(fn (Field $field) => $field->shouldInvalidate($changedFields))
+            ->map->name
+            ->unique()
+            ->each(function (string $fieldName) {
+                $this->setData($fieldName, null);
+            });
     }
 }

@@ -4,6 +4,7 @@ namespace Tests;
 
 use Illuminate\Http\Request;
 use Sassnowski\Arcanist\Field;
+use Sassnowski\Arcanist\StepResult;
 use Sassnowski\Arcanist\WizardStep;
 use Sassnowski\Arcanist\AbstractWizard;
 
@@ -96,6 +97,22 @@ class InvalidateDependentFieldsTest extends WizardTestCase
         self::assertNull($repo->loadData($wizard)['::dependent-field-1::']);
         self::assertNull($repo->loadData($wizard)['::dependent-field-3::']);
     }
+
+    /** @test */
+    public function it_does_not_invalidate_dependent_fields_if_the_step_was_unsuccessful(): void
+    {
+        $repo = $this->createWizardRepository([
+            '::normal-field-1::' => '::normal-field-1-value::',
+            '::dependent-field-1::' => '::dependent-field-1-value::',
+        ], FailingStepWizard::class);
+        $wizard = $this->createWizard(FailingStepWizard::class, repository: $repo);
+
+        $wizard->update(Request::create('::uri::', 'POST', [
+            '::normal-field-1::' => '::new-value::',
+        ]), 1, 'failing-step');
+
+        self::assertEquals('::dependent-field-1-value::', $repo->loadData($wizard)['::dependent-field-1::']);
+    }
 }
 
 class DependentStepWizard extends AbstractWizard
@@ -115,6 +132,14 @@ class MultiDependentStepWizard extends AbstractWizard
     ];
 }
 
+class FailingStepWizard extends AbstractWizard
+{
+    protected array $steps = [
+        FailingStep::class,
+        StepWithDependentField::class,
+    ];
+}
+
 class RegularStep extends WizardStep
 {
     public string $slug = 'regular-step';
@@ -131,6 +156,28 @@ class RegularStep extends WizardStep
             Field::make('::normal-field-2::'),
             Field::make('::normal-field-3::'),
         ];
+    }
+}
+
+class FailingStep extends WizardStep
+{
+    public string $slug = 'failing-step';
+
+    public function isComplete(): bool
+    {
+        return false;
+    }
+
+    protected function fields(): array
+    {
+        return [
+            Field::make('::normal-field-1::')
+        ];
+    }
+
+    protected function handle(Request $request, array $payload): StepResult
+    {
+        return $this->error('Whoops');
     }
 }
 
