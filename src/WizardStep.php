@@ -95,11 +95,6 @@ abstract class WizardStep
         return $this->wizard->exists();
     }
 
-    protected function wizardId(): ?int
-    {
-        return $this->wizard->getId();
-    }
-
     /**
      * Convenience method to include the fields specified in the `rules`
      * in the view data.
