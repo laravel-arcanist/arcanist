@@ -81,7 +81,7 @@ abstract class AbstractWizard
     ) {
         $this->redirectTo = config('arcanist.redirect_url', '/home');
         $this->steps = collect($this->steps)
-            ->map(fn ($step, $i) => new $step($this, $i))
+            ->map(fn ($step, $i) => app($step)->init($this, $i))
             ->all();
     }
 

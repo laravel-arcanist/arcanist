@@ -21,10 +21,18 @@ abstract class WizardStep
      */
     public string $slug = 'new-step';
 
-    public function __construct(
-        private AbstractWizard $wizard,
-        private int $index
-    ) {
+    private AbstractWizard $wizard;
+    private int $index;
+
+    public function init(AbstractWizard $wizard, int $index): self
+    {
+        // @TODO: I _hate_ this but I want to "free up" the constructor to enable dependency
+        // injection in the step. All other solution would take quite a bit more time to
+        // implement than I currently want to invest.
+        $this->wizard = $wizard;
+        $this->index = $index;
+
+        return $this;
     }
 
     /**
