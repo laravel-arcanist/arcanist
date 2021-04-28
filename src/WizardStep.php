@@ -51,7 +51,10 @@ abstract class WizardStep
     /**
      * Checks if this step has already been completed.
      */
-    abstract public function isComplete(): bool;
+    public function isComplete(): bool
+    {
+        return (bool) $this->data("_arcanist.{$this->slug}", false);
+    }
 
     /**
      * @throws ValidationException

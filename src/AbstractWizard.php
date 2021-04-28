@@ -161,7 +161,7 @@ abstract class AbstractWizard
             );
         }
 
-        $this->saveStepData($result->payload());
+        $this->saveStepData($step, $result->payload());
 
         return $this->responseRenderer->redirect(
             $this->steps[1],
@@ -192,6 +192,7 @@ abstract class AbstractWizard
         }
 
         $this->saveStepData(
+            $step,
             $this->invalidateDependentFields($result->payload())
         );
 
@@ -354,9 +355,11 @@ abstract class AbstractWizard
         );
     }
 
-    private function saveStepData(array $data): void
+    private function saveStepData(WizardStep $step, array $data): void
     {
         event(new WizardSaving($this));
+
+        $data['_arcanist'] = array_merge($this->data['_arcanist'] ?? [], [$step->slug => true]);
 
         $this->wizardRepository->saveData($this, $data);
     }

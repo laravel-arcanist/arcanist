@@ -4,6 +4,7 @@ namespace Tests;
 
 use Generator;
 use Mockery as m;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Sassnowski\Arcanist\Field;
 use Sassnowski\Arcanist\Arcanist;
@@ -114,7 +115,7 @@ class WizardTest extends WizardTestCase
                 'first_name' => '::first-name::',
                 'last_name' => '::last-name::',
             ],
-            $repo->loadData($wizard)
+            Arr::except($repo->loadData($wizard), '_arcanist')
         );
     }
 
@@ -158,7 +159,7 @@ class WizardTest extends WizardTestCase
         self::assertEquals([
             'first_name' => '::new-first-name::',
             'last_name' => '::old-last-name::',
-        ], $repo->loadData($wizard));
+        ], Arr::except($repo->loadData($wizard), '_arcanist'));
     }
 
     /** @test */
@@ -624,6 +625,53 @@ class WizardTest extends WizardTestCase
             ]
         ];
     }
+
+    /** @test */
+    public function it_marks_a_step_as_completed_if_it_was_submitted_successfully_once(): void
+    {
+        $repo = $this->createWizardRepository();
+        $wizard = $this->createWizard(TestWizard::class, repository: $repo);
+        $request = Request::create('::uri::', 'POST', [
+            'first_name' => '::first-name::',
+            'last_name' => '::first-name::',
+        ]);
+
+        $wizard->update($request, 1, 'step-name');
+
+        self::assertTrue($repo->loadData($wizard)['_arcanist']['step-name']);
+    }
+
+    /** @test */
+    public function it_does_not_mark_a_step_as_complete_if_it_failed(): void
+    {
+        $repo = $this->createWizardRepository(wizardClass: ErrorWizard::class);
+        $wizard = $this->createWizard(ErrorWizard::class, repository: $repo);
+
+        $wizard->update(new Request(), 1, '::error-step::');
+
+        self::assertNull(
+            $repo->loadData($wizard)['_arcanist']['::error-step::'] ?? null
+        );
+    }
+
+    /** @test */
+    public function it_merges_information_with_information_about_already_completed_steps(): void
+    {
+        $repo = $this->createWizardRepository([
+            '_arcanist' => [
+                'regular-step' => true,
+            ]
+        ]);
+        $wizard = $this->createWizard(TestWizard::class, repository: $repo);
+        $wizard->setId(1);
+
+        $wizard->update(new Request(), 1, 'step-with-view-data');
+
+        self::assertEquals([
+            'regular-step' => true,
+            'step-with-view-data' => true,
+        ], $repo->loadData($wizard)['_arcanist']);
+    }
 }
 
 class TestWizard extends AbstractWizard
@@ -744,11 +792,6 @@ class TestStepWithViewData extends WizardStep
     {
         $this->setData('::key::', '::value::');
     }
-
-    public function isComplete(): bool
-    {
-        return false;
-    }
 }
 
 class DummyStep extends WizardStep
@@ -762,11 +805,6 @@ class DummyStep extends WizardStep
 class ErrorStep extends WizardStep
 {
     public string $slug = '::error-step::';
-
-    public function isComplete(): bool
-    {
-        return false;
-    }
 
     protected function handle(Request $request, array $payload): StepResult
     {

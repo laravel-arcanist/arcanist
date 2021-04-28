@@ -113,6 +113,33 @@ class InvalidateDependentFieldsTest extends WizardTestCase
 
         self::assertEquals('::dependent-field-1-value::', $repo->loadData($wizard)['::dependent-field-1::']);
     }
+
+    /** @test */
+    public function it_marks_the_step_as_unfinished_if_any_of_its_fields_got_invalidated(): void
+    {
+        $repo = $this->createWizardRepository([
+            '::normal-field-1::' => '::value-1::',
+            '::dependent-field-1::' => '::value-2::',
+            '_arcanist' => [
+                '::step-with-dependent-field-slug::' => true,
+            ]
+        ], DependentStepWizard::class);
+        $wizard = $this->createWizard(DependentStepWizard::class, repository: $repo);
+        $wizard->setId(1);
+
+        // Sanity check
+        self::assertTrue(
+            $repo->loadData($wizard)['_arcanist']['::step-with-dependent-field-slug::'] ?? false
+        );
+
+        $wizard->update(Request::create('::uri::', 'POST', [
+            '::normal-field-1::' => '::new-value::',
+        ]), 1, 'regular-step');
+
+        self::assertNull(
+            $repo->loadData($wizard)['_arcanist']['::step-with-dependent-field-slug::'] ?? null
+        );
+    }
 }
 
 class DependentStepWizard extends AbstractWizard
@@ -183,6 +210,8 @@ class FailingStep extends WizardStep
 
 class StepWithDependentField extends WizardStep
 {
+    public string $slug = '::step-with-dependent-field-slug::';
+
     public function isComplete(): bool
     {
         return $this->data('::dependent-field-1::') !== null;
