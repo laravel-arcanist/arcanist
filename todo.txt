@@ -1,18 +1,13 @@
 Before Release
 ==============
 [ ] Add generator command for Wizard and Step
-[ ] Add job to clean up unfinished wizards
-    - Make TTL configurable
 
  Thoughts
  ========
 
  - Some sort of auth layer for existing wizards? So I can't just randomly open other people's wizards.
    - Needs to be fairly flexible since it'll be different for every application
- - How to make sure that any resources a wizard has reserved are freed up again? For example if the
-   wizard is deleted by the cron job.
-   - Maybe `onBeforeDelete` hook or something similar that only gets called when cleaned up by job
-   - `onExpire()`?
+   - Could probably be implemented in user-land via middleware
 
 Future Versions
 ==============
