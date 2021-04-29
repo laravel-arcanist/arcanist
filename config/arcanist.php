@@ -83,4 +83,20 @@ return [
     |
     */
     'route_prefix' => 'wizard',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Wizard Middleware
+    |--------------------------------------------------------------------------
+    |
+    | This is where you can default the default middleware group
+    | that gets applied to all routes of all wizards. You can
+    | customize it inside each wizard by overwriting the static
+    | `middleware` method.
+    |
+    | Note: Any middleware defined on a wizard gets *merged* with
+    | this middleware instead of replacing it.
+    |
+    */
+    'middleware' => ['web'],
 ];

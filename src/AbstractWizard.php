@@ -93,6 +93,16 @@ abstract class AbstractWizard
         return route("wizard.{$slug}.create");
     }
 
+    /**
+     * Here you can define additional middleware for a wizard
+     * that gets merged together with the global middleware
+     * defined in the config.
+     */
+    public static function middleware(): array
+    {
+        return [];
+    }
+
     public function getId(): mixed
     {
         return $this->id;

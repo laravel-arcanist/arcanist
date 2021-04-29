@@ -18,9 +18,8 @@ trait ResponseRendererContractTests
     /** @test */
     public function throws_an_exception_if_the_template_does_not_exist(): void
     {
-        $wizard = m::mock(AbstractWizard::class);
+        $wizard = m::mock(AbstractWizard::class)->makePartial();
         $wizard->allows('summary')->andReturns(['::summary::']);
-        $wizard = $wizard->makePartial();
         $wizard::$slug = 'wizard-slug';
         $step = m::mock(WizardStep::class)->makePartial();
         $step->slug = 'step-with-non-existent-template';
@@ -35,7 +34,7 @@ trait ResponseRendererContractTests
     /** @test */
     public function it_redirects_to_the_first_step_if_the_wizard_does_not_exist_yet(): void
     {
-        $wizard = m::mock(AbstractWizard::class);
+        $wizard = m::mock(AbstractWizard::class)->makePartial();
         $wizard::$slug = '::wizard::';
         $wizard->allows('exists')->andReturnFalse();
         $step = m::mock(WizardStep::class);

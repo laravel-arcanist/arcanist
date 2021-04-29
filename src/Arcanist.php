@@ -9,39 +9,43 @@ class Arcanist
     public static function boot(array $wizards): void
     {
         $routePrefix = config('arcanist.route_prefix');
+        $defaultMiddleware = config('arcanist.middleware', []);
 
         foreach ($wizards as $wizard) {
-            static::registerRoutes($wizard, $routePrefix);
+            static::registerRoutes($wizard, $routePrefix, $defaultMiddleware);
         }
     }
 
-    private static function registerRoutes(string $wizard, string $routePrefix): void
+    private static function registerRoutes(string $wizard, string $routePrefix, array $defaultMiddleware): void
     {
-        Route::middleware('web')->group(function () use ($wizard, $routePrefix) {
-            Route::get(
-                "/{$routePrefix}/{$wizard::$slug}",
-                "{$wizard}@create"
-            )->name("wizard.{$wizard::$slug}.create");
+        $middleware = array_merge($defaultMiddleware, $wizard::middleware());
 
-            Route::post(
-                "/{$routePrefix}/{$wizard::$slug}",
-                "{$wizard}@store"
-            )->name("wizard.{$wizard::$slug}.store");
+        Route::middleware($middleware)
+            ->group(function () use ($wizard, $routePrefix) {
+                Route::get(
+                    "/{$routePrefix}/{$wizard::$slug}",
+                    "{$wizard}@create"
+                )->name("wizard.{$wizard::$slug}.create");
 
-            Route::get(
-                "/{$routePrefix}/{$wizard::$slug}/{wizardId}/{slug?}",
-                "{$wizard}@show"
-            )->name("wizard.{$wizard::$slug}.show");
+                Route::post(
+                    "/{$routePrefix}/{$wizard::$slug}",
+                    "{$wizard}@store"
+                )->name("wizard.{$wizard::$slug}.store");
 
-            Route::post(
-                "/{$routePrefix}/{$wizard::$slug}/{wizardId}/{slug}",
-                "{$wizard}@update"
-            )->name("wizard.{$wizard::$slug}.update");
+                Route::get(
+                    "/{$routePrefix}/{$wizard::$slug}/{wizardId}/{slug?}",
+                    "{$wizard}@show"
+                )->name("wizard.{$wizard::$slug}.show");
 
-            Route::delete(
-                "/{$routePrefix}/{$wizard::$slug}/{wizardId}",
-                "{$wizard}@destroy"
-            )->name("wizard.{$wizard::$slug}.delete");
-        });
+                Route::post(
+                    "/{$routePrefix}/{$wizard::$slug}/{wizardId}/{slug}",
+                    "{$wizard}@update"
+                )->name("wizard.{$wizard::$slug}.update");
+
+                Route::delete(
+                    "/{$routePrefix}/{$wizard::$slug}/{wizardId}",
+                    "{$wizard}@destroy"
+                )->name("wizard.{$wizard::$slug}.delete");
+            });
     }
 }

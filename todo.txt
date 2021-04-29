@@ -1,10 +1,5 @@
 Before Release
 ==============
-[ ] Inject services into steps
-[ ] Add ability to define dependencies between steps (e.g. changing Step A should invalidate Step B)
-[ ] Make route middleware group configurable
-    - globally in config (`["web"]` is probably a good default)
-    - for a single wizard
 [ ] Add generator command for Wizard and Step
 [ ] Add job to clean up unfinished wizards
     - Make TTL configurable
