@@ -5,12 +5,9 @@ namespace Tests;
 use Illuminate\Routing\Router;
 use PHPUnit\Framework\Assert as PHPUnitAssert;
 use Sassnowski\Arcanist\ArcanistServiceProvider;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
-    use RefreshDatabase;
-
     protected function getPackageProviders($app)
     {
         return [

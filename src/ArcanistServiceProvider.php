@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use Sassnowski\Arcanist\Event\WizardFinished;
 use Sassnowski\Arcanist\Contracts\ResponseRenderer;
 use Sassnowski\Arcanist\Contracts\WizardRepository;
+use Sassnowski\Arcanist\Commands\CleanupExpiredWizards;
 use Sassnowski\Arcanist\Contracts\WizardActionResolver;
 use Sassnowski\Arcanist\Renderer\BladeResponseRenderer;
 use Sassnowski\Arcanist\Listener\RemoveCompletedWizardListener;
@@ -15,6 +16,10 @@ class ArcanistServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
+        if ($this->app->runningInConsole()) {
+            $this->commands([CleanupExpiredWizards::class]);
+        }
+
         $this->publishes([
             __DIR__ . '/../database/migrations/' => database_path('migrations'),
         ], ['migrations', 'arcanist-migrations']);
@@ -55,5 +60,9 @@ class ArcanistServiceProvider extends ServiceProvider
         $this->app->when(BladeResponseRenderer::class)
             ->needs('$viewBasePath')
             ->give($this->app['config']['arcanist']['renderers']['blade']['view_base_path']);
+
+        $this->app->when(CleanupExpiredWizards::class)
+            ->needs(TTL::class)
+            ->give(fn () => TTL::fromSeconds($this->app['config']['arcanist']['wizard_expiration']));
     }
 }

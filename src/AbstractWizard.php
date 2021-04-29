@@ -103,6 +103,16 @@ abstract class AbstractWizard
         return [];
     }
 
+    /**
+     * This method is called when a wizard has expired, i.e. hasn't
+     * been updated in longer than the configured TTL. This is a good
+     * place to perform any cleanup steps necessary, such as deleting
+     * uploaded images or freeing resources that might have been allocated.
+     */
+    public static function onExpire(array $data): void
+    {
+    }
+
     public function getId(): mixed
     {
         return $this->id;

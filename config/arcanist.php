@@ -33,6 +33,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Wizards Expiration
+    |--------------------------------------------------------------------------
+    |
+    | This setting determines how much time is allowed to pass (in seconds)
+    | without an update before a wizard is considered `expired` and can
+    | be deleted.
+    |
+    | Note: This is only uses when running the `arcanist:clean-expired`
+    |       console command.
+    |
+    */
+    'wizard_expiration' => 24 * 60 * 60,
+
+    /*
+    |--------------------------------------------------------------------------
     | Wizard Repository
     |--------------------------------------------------------------------------
     |
