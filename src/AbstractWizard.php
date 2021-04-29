@@ -10,6 +10,7 @@ use function data_get;
 use function redirect;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Http\RedirectResponse;
 use Sassnowski\Arcanist\Event\WizardLoaded;
 use Sassnowski\Arcanist\Event\WizardSaving;
@@ -359,7 +360,11 @@ abstract class AbstractWizard
     {
         event(new WizardSaving($this));
 
-        $data['_arcanist'] = array_merge($this->data['_arcanist'] ?? [], [$step->slug => true]);
+        $data['_arcanist'] = array_merge(
+            $this->data['_arcanist'] ?? [],
+            [$step->slug => true],
+            $data['_arcanist'] ?? []
+        );
 
         $this->wizardRepository->saveData($this, $data);
     }
@@ -414,9 +419,25 @@ abstract class AbstractWizard
             ->keys()
             ->all();
 
-        return collect($this->steps)
-            ->flatMap(fn (WizardStep $step) => $step->dependentFields())
-            ->filter(fn (Field $field) => $field->shouldInvalidate($changedFields))
+        $fields = collect($this->steps)
+            ->mapWithKeys(fn (WizardStep $step) => [
+                $step->slug => collect($step->dependentFields())
+                    ->filter(fn (Field $field) => $field->shouldInvalidate($changedFields))
+            ])
+            ->filter(fn (Collection $fields) => $fields->isNotEmpty());
+
+        // Mark all steps that had at least one of their fields
+        // invalidated as incomplete.
+        $payload = $fields->keys()
+            ->reduce(function (array $payload, string $stepSlug) {
+                $payload['_arcanist'][$stepSlug] = null;
+
+                return $payload;
+            }, $payload);
+
+        // Unset data for all fields that should be invalidated.
+        return $fields->values()
+            ->flatten()
             ->map->name
             ->unique()
             ->reduce(function (array $payload, string $fieldName) {
