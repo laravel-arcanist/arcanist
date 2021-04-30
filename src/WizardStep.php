@@ -40,7 +40,7 @@ abstract class WizardStep
      */
     public function viewData(Request $request): array
     {
-        return [];
+        return $this->withFormData();
     }
 
     public function index(): int
