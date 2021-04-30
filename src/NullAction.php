@@ -8,5 +8,6 @@ final class NullAction extends WizardAction
 {
     public function execute(mixed $payload): ActionResult
     {
+        return $this->success();
     }
 }
