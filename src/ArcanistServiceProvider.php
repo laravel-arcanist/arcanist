@@ -62,8 +62,6 @@ class ArcanistServiceProvider extends ServiceProvider
             ->needs('$viewBasePath')
             ->give(config('arcanist.renderers.blade.view_base_path'));
 
-        $this->app->when(CleanupExpiredWizards::class)
-            ->needs(TTL::class)
-            ->give(fn () => TTL::fromSeconds(config('arcanist.storage.ttl')));
+        $this->app->singleton(TTL::class, fn () => TTL::fromSeconds(config('arcanist.storage.ttl')));
     }
 }
