@@ -44,7 +44,7 @@ class ArcanistServiceProvider extends ServiceProvider
 
         $this->app->bind(
             WizardRepository::class,
-            $this->app['config']['arcanist']['wizard_repository']
+            $this->app['config']['arcanist']['storage']['driver']
         );
 
         $this->app->bind(
@@ -63,6 +63,6 @@ class ArcanistServiceProvider extends ServiceProvider
 
         $this->app->when(CleanupExpiredWizards::class)
             ->needs(TTL::class)
-            ->give(fn () => TTL::fromSeconds($this->app['config']['arcanist']['wizard_expiration']));
+            ->give(fn () => TTL::fromSeconds($this->app['config']['arcanist']['storage']['ttl']));
     }
 }

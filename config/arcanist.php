@@ -36,9 +36,6 @@ return [
     | Wizards Expiration
     |--------------------------------------------------------------------------
     |
-    | This setting determines how much time is allowed to pass (in seconds)
-    | without an update before a wizard is considered `expired` and can
-    | be deleted.
     |
     | Note: This is only uses when running the `arcanist:clean-expired`
     |       console command.
@@ -55,8 +52,15 @@ return [
     | to save and retrieve a wizard's state between steps. This
     | package ships with an Eloquent-based implementation.
     |
+    | The `ttl` setting determines how much time is allowed to pass (in seconds)
+    | without an update before a wizard is considered `expired` and can
+    | be deleted.
+    |
     */
-    'wizard_repository' => DatabaseWizardRepository::class,
+    'storage' => [
+        'driver' => DatabaseWizardRepository::class,
+        'ttl' => 24 * 60 * 60,
+    ],
 
     /*
     |--------------------------------------------------------------------------
