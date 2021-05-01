@@ -13,7 +13,10 @@ use Sassnowski\Arcanist\Exception\WizardNotFoundException;
 
 trait WizardRepositoryContractTests
 {
-    /** @test */
+    /**
+     * @test
+     * @group WizardRepository
+     */
     public function it_can_save_and_retrieve_wizard_data(): void
     {
         /** @var AbstractWizard $wizard */
@@ -30,7 +33,10 @@ trait WizardRepositoryContractTests
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group WizardRepository
+     */
     public function it_throws_an_exception_when_trying_to_load_a_wizard_that_doesnt_exist(): void
     {
         $repository = $this->createRepository();
@@ -43,7 +49,10 @@ trait WizardRepositoryContractTests
         $repository->loadData($wizard);
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group WizardRepository
+     */
     public function it_creates_a_new_wizard_if_saving_for_the_first_time(): void
     {
         /** @var AbstractWizard $wizard */
@@ -55,7 +64,10 @@ trait WizardRepositoryContractTests
         self::assertNotNull($wizard->getId());
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group WizardRepository
+     */
     public function it_updates_an_existing_wizard(): void
     {
         $repository = $this->createRepository();
@@ -80,7 +92,10 @@ trait WizardRepositoryContractTests
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group WizardRepository
+     */
     public function it_keeps_track_of_each_wizard_data_separately(): void
     {
         $repository = $this->createRepository();
@@ -97,7 +112,10 @@ trait WizardRepositoryContractTests
         self::assertEquals(['foo' => 'baz'], $repository->loadData($wizard2));
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group WizardRepository
+     */
     public function it_merges_new_data_with_the_existing_data(): void
     {
         $repository = $this->createRepository();
@@ -121,7 +139,10 @@ trait WizardRepositoryContractTests
         ], $repository->loadData($wizard));
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group WizardRepository
+     */
     public function it_deletes_a_wizard(): void
     {
         $repository = $this->createRepository();
@@ -139,7 +160,10 @@ trait WizardRepositoryContractTests
         $repository->loadData($wizard);
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group WizardRepository
+     */
     public function it_unsets_the_wizard_id_after_deleting_it(): void
     {
         $repository = $this->createRepository();
@@ -156,7 +180,10 @@ trait WizardRepositoryContractTests
         $this->assertNull($wizard->getId());
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group WizardRepository
+     */
     public function it_throws_an_exception_when_trying_to_load_a_wizard_but_the_id_and_class_dont_match(): void
     {
         $repository = $this->createRepository();
@@ -174,7 +201,10 @@ trait WizardRepositoryContractTests
         $repository->loadData($wizardB);
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group WizardRepository
+     */
     public function it_throws_an_exception_when_trying_to_save_a_wizard_but_a_wizard_with_the_same_id_but_different_class_already_exists(): void
     {
         $repository = $this->createRepository();
@@ -192,7 +222,10 @@ trait WizardRepositoryContractTests
         $repository->saveData($wizardB, []);
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group WizardRepository
+     */
     public function it_throws_an_exception_when_trying_to_delete_a_wizard_but_the_id_and_class_dont_match(): void
     {
         $repository = $this->createRepository();
