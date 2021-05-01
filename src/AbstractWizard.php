@@ -25,6 +25,7 @@ use Sassnowski\Arcanist\Contracts\WizardRepository;
 use Sassnowski\Arcanist\Contracts\WizardActionResolver;
 use Sassnowski\Arcanist\Exception\UnknownStepException;
 use Sassnowski\Arcanist\Exception\WizardNotFoundException;
+use Sassnowski\Arcanist\Exception\CannotUpdateStepException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 abstract class AbstractWizard
@@ -150,17 +151,22 @@ abstract class AbstractWizard
         $this->load($wizardId);
 
         if ($slug === null) {
-            /** @var WizardStep $lastCompletedStep */
-            $lastCompletedStep = collect($this->steps)
-                ->last(fn (WizardStep $s) => $s->isComplete());
-
             return $this->responseRenderer->redirect(
-                $this->steps[$lastCompletedStep->index() + 1],
+                $this->firstIncompleteStep(),
                 $this
             );
         }
 
-        return $this->renderStep($request, $this->loadStep($slug));
+        $targetStep = $this->loadStep($slug);
+
+        if (!$this->stepCanBeEdited($targetStep)) {
+            return $this->responseRenderer->redirect(
+                $this->firstIncompleteStep(),
+                $this
+            );
+        }
+
+        return $this->renderStep($request, $targetStep);
     }
 
     /**
@@ -201,6 +207,10 @@ abstract class AbstractWizard
         $this->load($wizardId);
 
         $step = $this->loadStep($slug);
+
+        if (!$this->stepCanBeEdited($step)) {
+            throw new CannotUpdateStepException();
+        }
 
         $result = $step->process($request);
 
@@ -432,6 +442,11 @@ abstract class AbstractWizard
         return $this->currentStep + 1 === count($this->steps);
     }
 
+    private function firstIncompleteStep(): WizardStep
+    {
+        return collect($this->steps)->first(fn (WizardStep $step) => !$step->isComplete());
+    }
+
     private function invalidateDependentFields(array $payload): array
     {
         $changedFields = collect($payload)
@@ -465,5 +480,18 @@ abstract class AbstractWizard
 
                 return $payload;
             }, $payload);
+    }
+
+    private function stepCanBeEdited(WizardStep $intendedStep): bool
+    {
+        if ($intendedStep->isComplete()) {
+            return true;
+        }
+
+        /** @var WizardStep $firstIncompleteStep */
+        $firstIncompleteStep = collect($this->steps)
+            ->first(fn (WizardStep $step) => !$step->isComplete());
+
+        return $intendedStep->slug === $firstIncompleteStep->slug;
     }
 }

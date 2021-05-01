@@ -350,7 +350,7 @@ class WizardTest extends WizardTestCase
      * @test
      * @dataProvider sharedDataProvider
      */
-    public function it_includes_shared_data_in_the_view_response(callable $callwizard): void
+    public function it_includes_shared_data_in_the_view_response(callable $callWizard): void
     {
         $renderer = new FakeResponseRenderer();
         $wizard = $this->createWizard(
@@ -359,7 +359,7 @@ class WizardTest extends WizardTestCase
             renderer: $renderer
         );
 
-        $callwizard($wizard);
+        $callWizard($wizard);
 
         self::assertTrue($renderer->stepWasRendered(TestStep::class, [
             'first_name' => '',
