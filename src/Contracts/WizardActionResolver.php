@@ -2,7 +2,7 @@
 
 namespace Sassnowski\Arcanist\Contracts;
 
-use Sassnowski\Arcanist\WizardAction;
+use Sassnowski\Arcanist\Action\WizardAction;
 
 interface WizardActionResolver
 {

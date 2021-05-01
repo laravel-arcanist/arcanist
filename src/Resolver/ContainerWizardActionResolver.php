@@ -2,7 +2,7 @@
 
 namespace Sassnowski\Arcanist\Resolver;
 
-use Sassnowski\Arcanist\WizardAction;
+use Sassnowski\Arcanist\Action\WizardAction;
 use Sassnowski\Arcanist\Contracts\WizardActionResolver;
 
 class ContainerWizardActionResolver implements WizardActionResolver

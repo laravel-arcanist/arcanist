@@ -4,9 +4,9 @@ namespace Tests;
 
 use Mockery as m;
 use Illuminate\Support\Facades\Event;
-use Sassnowski\Arcanist\WizardAction;
 use Sassnowski\Arcanist\AbstractWizard;
 use Sassnowski\Arcanist\Action\ActionResult;
+use Sassnowski\Arcanist\Action\WizardAction;
 use Sassnowski\Arcanist\Contracts\ResponseRenderer;
 use Sassnowski\Arcanist\Contracts\WizardRepository;
 use Sassnowski\Arcanist\Renderer\FakeResponseRenderer;

@@ -3,7 +3,7 @@
 namespace Tests;
 
 use Mockery as m;
-use Sassnowski\Arcanist\WizardAction;
+use Sassnowski\Arcanist\Action\WizardAction;
 use Sassnowski\Arcanist\Contracts\WizardActionResolver;
 use Sassnowski\Arcanist\Resolver\ContainerWizardActionResolver;
 

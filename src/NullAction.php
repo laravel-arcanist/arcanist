@@ -3,6 +3,7 @@
 namespace Sassnowski\Arcanist;
 
 use Sassnowski\Arcanist\Action\ActionResult;
+use Sassnowski\Arcanist\Action\WizardAction;
 
 final class NullAction extends WizardAction
 {

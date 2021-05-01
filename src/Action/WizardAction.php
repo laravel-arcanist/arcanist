@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist;
-
-use Sassnowski\Arcanist\Action\ActionResult;
+namespace Sassnowski\Arcanist\Action;
 
 abstract class WizardAction
 {
