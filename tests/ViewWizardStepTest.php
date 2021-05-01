@@ -16,7 +16,7 @@ class ViewWizardStepTest extends WizardTestCase
         $renderer = new FakeResponseRenderer();
         $wizard = $this->createWizard(IncompleteStepWizard::class, renderer:  $renderer);
 
-        $wizard->show(new Request(), 1, 'incomplete-step-2');
+        $wizard->show(new Request(), '1', 'incomplete-step-2');
 
         self::assertTrue($renderer->didRedirectTo(IncompleteStep::class));
     }
@@ -27,7 +27,7 @@ class ViewWizardStepTest extends WizardTestCase
         $renderer = new FakeResponseRenderer();
         $wizard = $this->createWizard(IncompleteStepWizard::class, renderer:  $renderer);
 
-        $wizard->show(new Request(), 1, 'complete-step-2');
+        $wizard->show(new Request(), '1', 'complete-step-2');
 
         self::assertTrue($renderer->stepWasRendered(AnotherCompleteStep::class));
     }
@@ -40,7 +40,7 @@ class ViewWizardStepTest extends WizardTestCase
 
         $this->expectException(CannotUpdateStepException::class);
 
-        $wizard->update(new Request(), 1, 'incomplete-step-2');
+        $wizard->update(new Request(), '1', 'incomplete-step-2');
     }
 }
 

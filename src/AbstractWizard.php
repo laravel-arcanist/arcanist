@@ -136,7 +136,7 @@ abstract class AbstractWizard
      *
      * @throws UnknownStepException
      */
-    public function show(Request $request, int $wizardId, ?string $slug = null): Responsable | Response | Renderable | RedirectResponse
+    public function show(Request $request, string $wizardId, ?string $slug = null): Responsable | Response | Renderable | RedirectResponse
     {
         $this->load($wizardId);
 
@@ -192,7 +192,7 @@ abstract class AbstractWizard
      * @throws UnknownStepException
      * @throws ValidationException
      */
-    public function update(Request $request, int $wizardId, string $slug): RedirectResponse
+    public function update(Request $request, string $wizardId, string $slug): RedirectResponse
     {
         $this->load($wizardId);
 
@@ -225,7 +225,7 @@ abstract class AbstractWizard
             );
     }
 
-    public function destroy(Request $request, int $wizardId): RedirectResponse
+    public function destroy(Request $request, string $wizardId): RedirectResponse
     {
         $this->load($wizardId);
 
@@ -346,7 +346,7 @@ abstract class AbstractWizard
         return $step;
     }
 
-    private function load(int $wizardId): void
+    private function load(string $wizardId): void
     {
         $this->id = $wizardId;
 

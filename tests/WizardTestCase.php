@@ -47,7 +47,7 @@ class WizardTestCase extends TestCase
     {
         return new FakeWizardRepository([
             $wizardClass ?: TestWizard::class => [
-                1 => $data
+                '1' => $data
             ],
         ]);
     }

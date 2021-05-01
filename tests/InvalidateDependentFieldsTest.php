@@ -21,7 +21,7 @@ class InvalidateDependentFieldsTest extends WizardTestCase
 
         $wizard->update(Request::create('::uri::', 'POST', [
             '::normal-field-1::' => '::new-value::',
-        ]), 1, 'regular-step');
+        ]), '1', 'regular-step');
 
         self::assertNull($repo->loadData($wizard)['::dependent-field-1::']);
     }
@@ -37,7 +37,7 @@ class InvalidateDependentFieldsTest extends WizardTestCase
 
         $wizard->update(Request::create('::uri::', 'POST', [
             '::normal-field-1::' => '::value-1::',
-        ]), 1, 'regular-step');
+        ]), '1', 'regular-step');
 
         self::assertEquals('::value-2::', $repo->loadData($wizard)['::dependent-field-1::']);
     }
@@ -55,7 +55,7 @@ class InvalidateDependentFieldsTest extends WizardTestCase
         $wizard->update(Request::create('::uri::', 'POST', [
             '::normal-field-1::' => '::value-1::',
             '::normal-field-2::' => '::new-value::',
-        ]), 1, 'regular-step');
+        ]), '1', 'regular-step');
 
         self::assertNull($repo->loadData($wizard)['::dependent-field-1::']);
     }
@@ -72,7 +72,7 @@ class InvalidateDependentFieldsTest extends WizardTestCase
 
         $wizard->update(Request::create('::uri::', 'POST', [
             '::normal-field-2::' => '::new-value::',
-        ]), 1, 'regular-step');
+        ]), '1', 'regular-step');
 
         self::assertNull($repo->loadData($wizard)['::dependent-field-1::']);
         self::assertNull($repo->loadData($wizard)['::dependent-field-2::']);
@@ -92,7 +92,7 @@ class InvalidateDependentFieldsTest extends WizardTestCase
         $wizard->update(Request::create('::uri::', 'POST', [
             '::normal-field-1::' => '::new-value::',
             '::normal-field-3::' => '::new-value::',
-        ]), 1, 'regular-step');
+        ]), '1', 'regular-step');
 
         self::assertNull($repo->loadData($wizard)['::dependent-field-1::']);
         self::assertNull($repo->loadData($wizard)['::dependent-field-3::']);
@@ -109,7 +109,7 @@ class InvalidateDependentFieldsTest extends WizardTestCase
 
         $wizard->update(Request::create('::uri::', 'POST', [
             '::normal-field-1::' => '::new-value::',
-        ]), 1, 'failing-step');
+        ]), '1', 'failing-step');
 
         self::assertEquals('::dependent-field-1-value::', $repo->loadData($wizard)['::dependent-field-1::']);
     }
@@ -134,7 +134,7 @@ class InvalidateDependentFieldsTest extends WizardTestCase
 
         $wizard->update(Request::create('::uri::', 'POST', [
             '::normal-field-1::' => '::new-value::',
-        ]), 1, 'regular-step');
+        ]), '1', 'regular-step');
 
         self::assertNull(
             $repo->loadData($wizard)['_arcanist']['::step-with-dependent-field-slug::'] ?? null

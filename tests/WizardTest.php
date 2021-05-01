@@ -69,7 +69,7 @@ class WizardTest extends WizardTestCase
 
         $wizard = $this->createWizard(TestWizard::class);
 
-        $wizard->show(new Request(), 1, '::step-slug::');
+        $wizard->show(new Request(), '1', '::step-slug::');
     }
 
     /** @test */
@@ -78,7 +78,7 @@ class WizardTest extends WizardTestCase
         $renderer = new FakeResponseRenderer();
         $wizard = $this->createWizard(TestWizard::class, renderer: $renderer);
 
-        $wizard->show(new Request(), 1, 'step-with-view-data');
+        $wizard->show(new Request(), '1', 'step-with-view-data');
 
         self::assertTrue($renderer->stepWasRendered(TestStepWithViewData::class, [
             'foo' => 'bar'
@@ -133,7 +133,7 @@ class WizardTest extends WizardTestCase
         $renderer = new FakeResponseRenderer();
         $wizard = $this->createWizard(TestWizard::class, repository: $repo, renderer: $renderer);
 
-        $wizard->show(new Request(), 1, 'step-name');
+        $wizard->show(new Request(), '1', 'step-name');
 
         self::assertTrue($renderer->stepWasRendered(TestStep::class, [
             'first_name' => '::first-name::',
@@ -154,7 +154,7 @@ class WizardTest extends WizardTestCase
         ]);
         $wizard = $this->createWizard(TestWizard::class, repository: $repo);
 
-        $wizard->update($request, 1, 'step-name');
+        $wizard->update($request, '1', 'step-name');
 
         self::assertEquals([
             'first_name' => '::new-first-name::',
@@ -187,7 +187,7 @@ class WizardTest extends WizardTestCase
         ]);
         $wizard = $this->createWizard(TestWizard::class, renderer: $renderer);
 
-        $wizard->update($request, 1, 'step-name');
+        $wizard->update($request, '1', 'step-name');
 
         self::assertTrue($renderer->didRedirectTo(TestStepWithViewData::class));
     }
@@ -286,7 +286,7 @@ class WizardTest extends WizardTestCase
     public function it_marks_the_current_step_active_for_the_show_route(): void
     {
         $wizard = $this->createWizard(TestWizard::class);
-        $wizard->show(new Request(), 1, 'step-with-view-data');
+        $wizard->show(new Request(), '1', 'step-with-view-data');
 
         $summary = $wizard->summary();
 
@@ -380,7 +380,7 @@ class WizardTest extends WizardTestCase
 
             'show' => [
                 function (AbstractWizard $wizard) {
-                    $wizard->show(new Request(), 1, 'step-name');
+                    $wizard->show(new Request(), '1', 'step-name');
                 }
             ]
         ];
@@ -398,7 +398,7 @@ class WizardTest extends WizardTestCase
                 fn (AbstractWizard $wizard) => $wizard->store($validRequest)
             ],
             'update' => [
-                fn (AbstractWizard $wizard) => $wizard->update($validRequest, 1, 'step-name')
+                fn (AbstractWizard $wizard) => $wizard->update($validRequest, '1', 'step-name')
             ]
         ];
     }
@@ -408,7 +408,7 @@ class WizardTest extends WizardTestCase
     {
         $wizard = $this->createWizard(TestWizard::class);
 
-        $wizard->update(new Request(), 1, 'step-with-view-data');
+        $wizard->update(new Request(), '1', 'step-with-view-data');
 
         Event::assertDispatched(
             WizardFinishing::class,
@@ -428,7 +428,7 @@ class WizardTest extends WizardTestCase
             ->andReturn($actionSpy);
         $wizard = $this->createWizard(TestWizard::class, resolver: $actionResolver);
 
-        $wizard->update(new Request(), 1, 'step-with-view-data');
+        $wizard->update(new Request(), '1', 'step-with-view-data');
 
         $actionSpy->shouldHaveReceived('execute')
                 ->once();
@@ -439,7 +439,7 @@ class WizardTest extends WizardTestCase
     {
         $wizard = $this->createWizard(TestWizard::class);
 
-        $wizard->update(new Request(), 1, 'step-with-view-data');
+        $wizard->update(new Request(), '1', 'step-with-view-data');
 
         Event::assertDispatched(
             WizardFinished::class,
@@ -452,7 +452,7 @@ class WizardTest extends WizardTestCase
     {
         $wizard = $this->createWizard(TestWizard::class);
 
-        $wizard->update(new Request(), 1, 'step-with-view-data');
+        $wizard->update(new Request(), '1', 'step-with-view-data');
 
         self::assertEquals(1, $_SERVER['__onAfterComplete.called']);
     }
@@ -494,13 +494,13 @@ class WizardTest extends WizardTestCase
         yield from [
             'update' => [
                 function (AbstractWizard $wizard) {
-                    $wizard->update(new Request(), 1, 'step-with-view-data');
+                    $wizard->update(new Request(), '1', 'step-with-view-data');
                 },
             ],
 
             'show' => [
                 function (AbstractWizard $wizard) {
-                    $wizard->show(new Request(), 1, 'step-with-view-data');
+                    $wizard->show(new Request(), '1', 'step-with-view-data');
                 },
             ],
         ];
@@ -513,9 +513,9 @@ class WizardTest extends WizardTestCase
 
         $wizard = $this->createWizard(TestWizard::class);
 
-        $wizard->destroy(new Request(), 1);
+        $wizard->destroy(new Request(), '1');
 
-        $wizard->show(new Request(), 1, 'step-name');
+        $wizard->show(new Request(), '1', 'step-name');
     }
 
     /** @test */
@@ -525,7 +525,7 @@ class WizardTest extends WizardTestCase
 
         $wizard = $this->createWizard(TestWizard::class);
 
-        $response = new TestResponse($wizard->destroy(new Request(), 1));
+        $response = new TestResponse($wizard->destroy(new Request(), '1'));
 
         $response->assertRedirect('::redirect-url::');
     }
@@ -535,7 +535,7 @@ class WizardTest extends WizardTestCase
     {
         $wizard = $this->createWizard(SharedDataWizard::class);
 
-        $response = new TestResponse($wizard->destroy(new Request(), 1));
+        $response = new TestResponse($wizard->destroy(new Request(), '1'));
 
         $response->assertRedirect('::other-route::');
     }
@@ -549,7 +549,7 @@ class WizardTest extends WizardTestCase
         $renderer = new FakeResponseRenderer();
         $wizard = $createwizard($renderer);
 
-        $wizard->show(new Request(), 1);
+        $wizard->show(new Request(), '1');
 
         self::assertTrue($renderer->didRedirectTo($expectedStep));
     }
@@ -602,7 +602,7 @@ class WizardTest extends WizardTestCase
             });
         $wizard = $this->createWizard(TestWizard::class, renderer: $renderer, resolver: $resolver);
 
-        $wizard->update(new Request(), 1, 'step-with-view-data');
+        $wizard->update(new Request(), '1', 'step-with-view-data');
 
         self::assertTrue(
             $renderer->didRedirectWithError(TestStepWithViewData::class, '::message::')
@@ -620,7 +620,7 @@ class WizardTest extends WizardTestCase
 
             'update' => [
                 function (AbstractWizard $wizard) {
-                    $wizard->update(new Request(), 1, '::error-step::');
+                    $wizard->update(new Request(), '1', '::error-step::');
                 }
             ]
         ];
@@ -636,7 +636,7 @@ class WizardTest extends WizardTestCase
             'last_name' => '::first-name::',
         ]);
 
-        $wizard->update($request, 1, 'step-name');
+        $wizard->update($request, '1', 'step-name');
 
         self::assertTrue($repo->loadData($wizard)['_arcanist']['step-name']);
     }
@@ -647,7 +647,7 @@ class WizardTest extends WizardTestCase
         $repo = $this->createWizardRepository(wizardClass: ErrorWizard::class);
         $wizard = $this->createWizard(ErrorWizard::class, repository: $repo);
 
-        $wizard->update(new Request(), 1, '::error-step::');
+        $wizard->update(new Request(), '1', '::error-step::');
 
         self::assertNull(
             $repo->loadData($wizard)['_arcanist']['::error-step::'] ?? null
@@ -665,7 +665,7 @@ class WizardTest extends WizardTestCase
         $wizard = $this->createWizard(TestWizard::class, repository: $repo);
         $wizard->setId(1);
 
-        $wizard->update(new Request(), 1, 'step-with-view-data');
+        $wizard->update(new Request(), '1', 'step-with-view-data');
 
         self::assertEquals([
             'regular-step' => true,
