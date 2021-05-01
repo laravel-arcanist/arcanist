@@ -31,7 +31,7 @@ trait WizardRepositoryContractTests
     }
 
     /** @test */
-    public function it_throws_an_exception_when_trying_to_load_an_wizard_that_doesnt_exist(): void
+    public function it_throws_an_exception_when_trying_to_load_a_wizard_that_doesnt_exist(): void
     {
         $repository = $this->createRepository();
         /** @var AbstractWizard $wizard */
@@ -122,7 +122,7 @@ trait WizardRepositoryContractTests
     }
 
     /** @test */
-    public function it_deletes_an_wizard(): void
+    public function it_deletes_a_wizard(): void
     {
         $repository = $this->createRepository();
         /** @var AbstractWizard $wizard */
@@ -157,7 +157,7 @@ trait WizardRepositoryContractTests
     }
 
     /** @test */
-    public function it_throws_an_exception_when_trying_to_load_an_wizard_but_the_id_and_class_dont_match(): void
+    public function it_throws_an_exception_when_trying_to_load_a_wizard_but_the_id_and_class_dont_match(): void
     {
         $repository = $this->createRepository();
 
@@ -175,7 +175,7 @@ trait WizardRepositoryContractTests
     }
 
     /** @test */
-    public function it_throws_an_exception_when_trying_to_save_an_wizard_but_an_wizard_with_the_same_id_but_different_class_already_exists(): void
+    public function it_throws_an_exception_when_trying_to_save_a_wizard_but_a_wizard_with_the_same_id_but_different_class_already_exists(): void
     {
         $repository = $this->createRepository();
 
@@ -193,7 +193,7 @@ trait WizardRepositoryContractTests
     }
 
     /** @test */
-    public function it_throws_an_exception_when_trying_to_delete_an_wizard_but_the_id_and_class_dont_match(): void
+    public function it_throws_an_exception_when_trying_to_delete_a_wizard_but_the_id_and_class_dont_match(): void
     {
         $repository = $this->createRepository();
 
