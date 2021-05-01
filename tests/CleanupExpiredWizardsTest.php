@@ -40,19 +40,4 @@ class CleanupExpiredWizardsTest extends TestCase
         Artisan::call('arcanist:clean-expired');
         $this->assertDatabaseMissing('wizards', ['id' => $wizard->id]);
     }
-
-    /** @test */
-    public function it_calls_the_on_expire_callback_of_the_wizard(): void
-    {
-        $data = ['::data::'];
-        $wizard = m::mock('alias:AbstractWizard');
-        $wizard->expects('onExpire')->once()->with($data);
-        Wizard::create([
-            'class' => $wizard::class,
-            'updated_at' => now()->subDay(),
-            'data' => $data
-        ]);
-
-        Artisan::call('arcanist:clean-expired');
-    }
 }

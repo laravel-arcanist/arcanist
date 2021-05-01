@@ -22,11 +22,6 @@ class CleanupExpiredWizards extends Command
     public function handle(): void
     {
         Wizard::where('updated_at', '<=', $this->ttl->expiresAfter())
-           ->get()
-           ->each(function (Wizard $wizard) {
-               $wizard->class::onExpire($wizard->data);
-
-               $wizard->delete();
-           });
+            ->delete();
     }
 }
