@@ -2,7 +2,9 @@
 
 namespace Sassnowski\Arcanist;
 
+use Carbon\Carbon;
 use function database_path;
+use Illuminate\Support\Str;
 use Illuminate\Support\ServiceProvider;
 use Sassnowski\Arcanist\Event\WizardFinished;
 use Sassnowski\Arcanist\Contracts\ResponseRenderer;
@@ -20,9 +22,10 @@ class ArcanistServiceProvider extends ServiceProvider
             $this->commands([CleanupExpiredWizards::class]);
         }
 
+        $now = Carbon::now();
         $this->publishes([
-            __DIR__ . '/../database/migrations/' => database_path('migrations'),
-        ], ['migrations', 'arcanist-migrations']);
+            __DIR__ . '/../database/migrations/create_wizards_table.php.stub' => database_path('migrations/' . $now->addSecond()->format('Y_m_d_His') . '_' . Str::of('create_wizards_table')->snake()->finish('.php')),
+        ], 'arcanist-migrations');
 
         $this->publishes([
             __DIR__ . '/../config/arcanist.php' => config_path('arcanist.php'),
@@ -42,25 +45,25 @@ class ArcanistServiceProvider extends ServiceProvider
 
         $this->app->bind(
             WizardRepository::class,
-            $this->app['config']['arcanist']['storage']['driver']
+            config('arcanist.storage.driver')
         );
 
         $this->app->bind(
             ResponseRenderer::class,
-            $this->app['config']['arcanist']['renderers']['renderer']
+            config('arcanist.renderers.renderer')
         );
 
         $this->app->bind(
             WizardActionResolver::class,
-            $this->app['config']['arcanist']['action_resolver']
+            config('arcanist.action_resolver')
         );
 
         $this->app->when(BladeResponseRenderer::class)
             ->needs('$viewBasePath')
-            ->give($this->app['config']['arcanist']['renderers']['blade']['view_base_path']);
+            ->give(config('arcanist.renderers.blade.view_base_path'));
 
         $this->app->when(CleanupExpiredWizards::class)
             ->needs(TTL::class)
-            ->give(fn () => TTL::fromSeconds($this->app['config']['arcanist']['storage']['ttl']));
+            ->give(fn () => TTL::fromSeconds(config('arcanist.storage.ttl')));
     }
 }

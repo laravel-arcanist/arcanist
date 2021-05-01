@@ -23,6 +23,9 @@ class TestCase extends \Orchestra\Testbench\TestCase
             'database' => ':memory:',
             'prefix' => '',
         ]);
+
+        include_once __DIR__ . '/../database/migrations/create_wizards_table.php.stub';
+        (new \CreateWizardsTable())->up();
     }
 
     /**
