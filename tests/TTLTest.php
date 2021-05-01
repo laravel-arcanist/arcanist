@@ -38,4 +38,26 @@ class TTLTest extends \PHPUnit\Framework\TestCase
 
         TTL::fromSeconds(-1);
     }
+
+    /**
+     * @test
+     * @dataProvider secondsProvider
+     */
+    public function it_can_be_turned_back_to_seconds(int $value): void
+    {
+        Carbon::setTestNow(now());
+
+        $ttl = TTL::fromSeconds($value);
+
+        self::assertEquals($value, $ttl->toSeconds());
+    }
+
+    public function secondsProvider(): Generator
+    {
+        yield from [
+            [0],
+            [60],
+            [24 * 60 * 60]
+        ];
+    }
 }

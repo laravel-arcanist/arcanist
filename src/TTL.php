@@ -27,4 +27,9 @@ final class TTL
     {
         return now()->sub('seconds', $this->value);
     }
+
+    public function toSeconds(): int
+    {
+        return $this->value;
+    }
 }
