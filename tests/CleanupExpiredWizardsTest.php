@@ -4,11 +4,11 @@ namespace Tests;
 
 use Mockery as m;
 use Carbon\Carbon;
+use Arcanist\AbstractWizard;
+use Arcanist\Repository\Wizard;
 use Illuminate\Support\Facades\Artisan;
-use Sassnowski\Arcanist\AbstractWizard;
-use Sassnowski\Arcanist\Repository\Wizard;
+use Arcanist\Commands\CleanupExpiredWizards;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Sassnowski\Arcanist\Commands\CleanupExpiredWizards;
 
 class CleanupExpiredWizardsTest extends TestCase
 {

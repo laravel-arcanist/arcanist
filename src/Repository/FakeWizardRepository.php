@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Repository;
+namespace Arcanist\Repository;
 
-use Sassnowski\Arcanist\AbstractWizard;
-use Sassnowski\Arcanist\Contracts\WizardRepository;
-use Sassnowski\Arcanist\Exception\WizardNotFoundException;
+use Arcanist\AbstractWizard;
+use Arcanist\Contracts\WizardRepository;
+use Arcanist\Exception\WizardNotFoundException;
 
 class FakeWizardRepository implements WizardRepository
 {

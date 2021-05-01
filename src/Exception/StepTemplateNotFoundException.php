@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Exception;
+namespace Arcanist\Exception;
 
 use Exception;
-use Sassnowski\Arcanist\WizardStep;
+use Arcanist\WizardStep;
 use Facade\IgnitionContracts\Solution;
 use Facade\IgnitionContracts\BaseSolution;
 use Facade\IgnitionContracts\ProvidesSolution;

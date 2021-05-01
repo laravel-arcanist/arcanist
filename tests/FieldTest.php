@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Sassnowski\Arcanist\Field;
+use Arcanist\Field;
 
 class FieldTest extends \PHPUnit\Framework\TestCase
 {

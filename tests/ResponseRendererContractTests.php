@@ -3,12 +3,12 @@
 namespace Tests;
 
 use Mockery as m;
-use Sassnowski\Arcanist\Arcanist;
-use Sassnowski\Arcanist\WizardStep;
+use Arcanist\Arcanist;
+use Arcanist\WizardStep;
+use Arcanist\AbstractWizard;
 use Illuminate\Testing\TestResponse;
-use Sassnowski\Arcanist\AbstractWizard;
-use Sassnowski\Arcanist\Contracts\ResponseRenderer;
-use Sassnowski\Arcanist\Exception\StepTemplateNotFoundException;
+use Arcanist\Contracts\ResponseRenderer;
+use Arcanist\Exception\StepTemplateNotFoundException;
 
 /**
  * @mixin TestCase

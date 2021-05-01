@@ -3,10 +3,10 @@
 namespace Tests;
 
 use Mockery as m;
+use Arcanist\WizardStep;
+use Arcanist\AbstractWizard;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Arcanist\WizardStep;
-use Sassnowski\Arcanist\AbstractWizard;
-use Sassnowski\Arcanist\Renderer\FakeResponseRenderer;
+use Arcanist\Renderer\FakeResponseRenderer;
 
 class FakeResponseRendererTest extends TestCase
 {

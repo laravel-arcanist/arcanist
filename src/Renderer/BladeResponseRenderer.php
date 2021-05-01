@@ -1,18 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Renderer;
+namespace Arcanist\Renderer;
 
 use function redirect;
+use Arcanist\WizardStep;
+use Arcanist\AbstractWizard;
 use Illuminate\View\Factory;
 use Illuminate\Http\Response;
 use InvalidArgumentException;
-use Sassnowski\Arcanist\WizardStep;
 use Illuminate\Http\RedirectResponse;
-use Sassnowski\Arcanist\AbstractWizard;
+use Arcanist\Contracts\ResponseRenderer;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\Responsable;
-use Sassnowski\Arcanist\Contracts\ResponseRenderer;
-use Sassnowski\Arcanist\Exception\StepTemplateNotFoundException;
+use Arcanist\Exception\StepTemplateNotFoundException;
 
 class BladeResponseRenderer implements ResponseRenderer
 {

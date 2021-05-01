@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Sassnowski\Arcanist\Action\ActionResult;
+use Arcanist\Action\ActionResult;
 
 class ActionResultTest extends \PHPUnit\Framework\TestCase
 {

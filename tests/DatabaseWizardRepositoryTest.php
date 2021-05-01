@@ -2,9 +2,9 @@
 
 namespace Tests;
 
+use Arcanist\Contracts\WizardRepository;
+use Arcanist\Repository\DatabaseWizardRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Sassnowski\Arcanist\Contracts\WizardRepository;
-use Sassnowski\Arcanist\Repository\DatabaseWizardRepository;
 
 class DatabaseWizardRepositoryTest extends TestCase
 {

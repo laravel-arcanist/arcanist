@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist;
+namespace Arcanist;
 
 use function event;
 use function route;
@@ -10,22 +10,22 @@ use function data_get;
 use function redirect;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Arcanist\Event\WizardLoaded;
+use Arcanist\Event\WizardSaving;
+use Arcanist\Action\ActionResult;
+use Arcanist\Event\WizardFinished;
 use Illuminate\Support\Collection;
+use Arcanist\Event\WizardFinishing;
 use Illuminate\Http\RedirectResponse;
-use Sassnowski\Arcanist\Event\WizardLoaded;
-use Sassnowski\Arcanist\Event\WizardSaving;
+use Arcanist\Contracts\ResponseRenderer;
+use Arcanist\Contracts\WizardRepository;
+use Arcanist\Contracts\WizardActionResolver;
+use Arcanist\Exception\UnknownStepException;
 use Illuminate\Contracts\Support\Renderable;
-use Sassnowski\Arcanist\Action\ActionResult;
 use Illuminate\Contracts\Support\Responsable;
-use Sassnowski\Arcanist\Event\WizardFinished;
 use Illuminate\Validation\ValidationException;
-use Sassnowski\Arcanist\Event\WizardFinishing;
-use Sassnowski\Arcanist\Contracts\ResponseRenderer;
-use Sassnowski\Arcanist\Contracts\WizardRepository;
-use Sassnowski\Arcanist\Contracts\WizardActionResolver;
-use Sassnowski\Arcanist\Exception\UnknownStepException;
-use Sassnowski\Arcanist\Exception\WizardNotFoundException;
-use Sassnowski\Arcanist\Exception\CannotUpdateStepException;
+use Arcanist\Exception\WizardNotFoundException;
+use Arcanist\Exception\CannotUpdateStepException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 abstract class AbstractWizard

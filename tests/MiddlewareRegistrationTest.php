@@ -2,8 +2,8 @@
 
 namespace Tests;
 
-use Sassnowski\Arcanist\Arcanist;
-use Sassnowski\Arcanist\AbstractWizard;
+use Arcanist\Arcanist;
+use Arcanist\AbstractWizard;
 
 class MiddlewareRegistrationTest extends TestCase
 {

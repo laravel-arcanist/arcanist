@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Contracts;
+namespace Arcanist\Contracts;
 
-use Sassnowski\Arcanist\AbstractWizard;
-use Sassnowski\Arcanist\Exception\WizardNotFoundException;
+use Arcanist\AbstractWizard;
+use Arcanist\Exception\WizardNotFoundException;
 
 interface WizardRepository
 {

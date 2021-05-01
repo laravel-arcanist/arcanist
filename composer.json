@@ -26,7 +26,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Sassnowski\\Arcanist\\": "src/"
+            "Arcanist\\": "src/"
         }
     },
     "autoload-dev": {
@@ -37,7 +37,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Sassnowski\\Arcanist\\ArcanistServiceProvider"
+                "Arcanist\\ArcanistServiceProvider"
             ]
         }
     },

@@ -6,13 +6,13 @@ use Generator;
 use function app;
 use Mockery as m;
 use function route;
-use Sassnowski\Arcanist\Arcanist;
+use Arcanist\Arcanist;
+use Arcanist\WizardStep;
+use Arcanist\AbstractWizard;
 use Illuminate\Contracts\View\View;
-use Sassnowski\Arcanist\WizardStep;
 use Illuminate\Testing\TestResponse;
-use Sassnowski\Arcanist\AbstractWizard;
-use Sassnowski\Arcanist\Contracts\ResponseRenderer;
-use Sassnowski\Arcanist\Renderer\BladeResponseRenderer;
+use Arcanist\Contracts\ResponseRenderer;
+use Arcanist\Renderer\BladeResponseRenderer;
 
 class BladeResponseRendererTest extends TestCase
 {

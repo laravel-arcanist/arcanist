@@ -3,9 +3,9 @@
 namespace Tests;
 
 use Mockery as m;
-use Sassnowski\Arcanist\Action\WizardAction;
-use Sassnowski\Arcanist\Contracts\WizardActionResolver;
-use Sassnowski\Arcanist\Resolver\ContainerWizardActionResolver;
+use Arcanist\Action\WizardAction;
+use Arcanist\Contracts\WizardActionResolver;
+use Arcanist\Resolver\ContainerWizardActionResolver;
 
 class ContainerWizardActionResolverTest extends TestCase
 {

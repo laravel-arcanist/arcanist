@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Exception;
+namespace Arcanist\Exception;
 
 use Exception;
 

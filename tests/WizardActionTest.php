@@ -2,8 +2,8 @@
 
 namespace Tests;
 
-use Sassnowski\Arcanist\Action\ActionResult;
-use Sassnowski\Arcanist\Action\WizardAction;
+use Arcanist\Action\ActionResult;
+use Arcanist\Action\WizardAction;
 
 class WizardActionTest extends \PHPUnit\Framework\TestCase
 {

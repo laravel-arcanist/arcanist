@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-use Sassnowski\Arcanist\Renderer\BladeResponseRenderer;
-use Sassnowski\Arcanist\Repository\DatabaseWizardRepository;
-use Sassnowski\Arcanist\Resolver\ContainerWizardActionResolver;
+use Arcanist\Renderer\BladeResponseRenderer;
+use Arcanist\Repository\DatabaseWizardRepository;
+use Arcanist\Resolver\ContainerWizardActionResolver;
 
 return [
     /*

@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Event;
+namespace Arcanist\Event;
 
-use Sassnowski\Arcanist\AbstractWizard;
+use Arcanist\AbstractWizard;
 
 final class WizardFinishing
 {

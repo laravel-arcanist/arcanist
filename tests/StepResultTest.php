@@ -2,8 +2,8 @@
 
 namespace Tests;
 
+use Arcanist\StepResult;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Arcanist\StepResult;
 
 class StepResultTest extends TestCase
 {

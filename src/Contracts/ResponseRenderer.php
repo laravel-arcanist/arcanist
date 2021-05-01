@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Contracts;
+namespace Arcanist\Contracts;
 
+use Arcanist\WizardStep;
+use Arcanist\AbstractWizard;
 use Illuminate\Http\Response;
-use Sassnowski\Arcanist\WizardStep;
 use Illuminate\Http\RedirectResponse;
-use Sassnowski\Arcanist\AbstractWizard;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\Responsable;
 

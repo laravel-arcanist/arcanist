@@ -5,11 +5,11 @@ namespace Tests;
 use Mockery as m;
 use Tests\Fixtures\WizardA;
 use Tests\Fixtures\WizardB;
-use Sassnowski\Arcanist\AbstractWizard;
-use Sassnowski\Arcanist\Contracts\ResponseRenderer;
-use Sassnowski\Arcanist\Contracts\WizardRepository;
-use Sassnowski\Arcanist\Contracts\WizardActionResolver;
-use Sassnowski\Arcanist\Exception\WizardNotFoundException;
+use Arcanist\AbstractWizard;
+use Arcanist\Contracts\ResponseRenderer;
+use Arcanist\Contracts\WizardRepository;
+use Arcanist\Contracts\WizardActionResolver;
+use Arcanist\Exception\WizardNotFoundException;
 
 trait WizardRepositoryContractTests
 {

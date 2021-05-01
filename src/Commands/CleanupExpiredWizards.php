@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Commands;
+namespace Arcanist\Commands;
 
-use Sassnowski\Arcanist\TTL;
+use Arcanist\TTL;
+use Arcanist\Repository\Wizard;
 use Illuminate\Console\Command;
-use Sassnowski\Arcanist\Repository\Wizard;
 
 class CleanupExpiredWizards extends Command
 {

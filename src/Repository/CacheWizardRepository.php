@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Repository;
+namespace Arcanist\Repository;
 
+use Arcanist\TTL;
 use Illuminate\Support\Str;
-use Sassnowski\Arcanist\TTL;
+use Arcanist\AbstractWizard;
 use Illuminate\Support\Facades\Cache;
-use Sassnowski\Arcanist\AbstractWizard;
-use Sassnowski\Arcanist\Contracts\WizardRepository;
-use Sassnowski\Arcanist\Exception\WizardNotFoundException;
+use Arcanist\Contracts\WizardRepository;
+use Arcanist\Exception\WizardNotFoundException;
 
 class CacheWizardRepository implements WizardRepository
 {

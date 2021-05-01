@@ -3,8 +3,8 @@
 namespace Tests;
 
 use Mockery as m;
-use Sassnowski\Arcanist\WizardStep;
-use Sassnowski\Arcanist\AbstractWizard;
+use Arcanist\WizardStep;
+use Arcanist\AbstractWizard;
 
 class WizardStepTest extends TestCase
 {

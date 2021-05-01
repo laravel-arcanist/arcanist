@@ -2,11 +2,11 @@
 
 namespace Tests;
 
+use Arcanist\Field;
+use Arcanist\StepResult;
+use Arcanist\WizardStep;
+use Arcanist\AbstractWizard;
 use Illuminate\Http\Request;
-use Sassnowski\Arcanist\Field;
-use Sassnowski\Arcanist\StepResult;
-use Sassnowski\Arcanist\WizardStep;
-use Sassnowski\Arcanist\AbstractWizard;
 
 class InvalidateDependentFieldsTest extends WizardTestCase
 {

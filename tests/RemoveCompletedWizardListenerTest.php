@@ -3,11 +3,11 @@
 namespace Tests;
 
 use Mockery as m;
+use Arcanist\AbstractWizard;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Arcanist\AbstractWizard;
-use Sassnowski\Arcanist\Event\WizardFinished;
-use Sassnowski\Arcanist\Repository\FakeWizardRepository;
-use Sassnowski\Arcanist\Listener\RemoveCompletedWizardListener;
+use Arcanist\Event\WizardFinished;
+use Arcanist\Repository\FakeWizardRepository;
+use Arcanist\Listener\RemoveCompletedWizardListener;
 
 class RemoveCompletedWizardListenerTest extends TestCase
 {

@@ -1,18 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist;
+namespace Arcanist;
 
 use Carbon\Carbon;
 use function database_path;
 use Illuminate\Support\Str;
+use Arcanist\Event\WizardFinished;
 use Illuminate\Support\ServiceProvider;
-use Sassnowski\Arcanist\Event\WizardFinished;
-use Sassnowski\Arcanist\Contracts\ResponseRenderer;
-use Sassnowski\Arcanist\Contracts\WizardRepository;
-use Sassnowski\Arcanist\Commands\CleanupExpiredWizards;
-use Sassnowski\Arcanist\Contracts\WizardActionResolver;
-use Sassnowski\Arcanist\Renderer\BladeResponseRenderer;
-use Sassnowski\Arcanist\Listener\RemoveCompletedWizardListener;
+use Arcanist\Contracts\ResponseRenderer;
+use Arcanist\Contracts\WizardRepository;
+use Arcanist\Commands\CleanupExpiredWizards;
+use Arcanist\Contracts\WizardActionResolver;
+use Arcanist\Renderer\BladeResponseRenderer;
+use Arcanist\Listener\RemoveCompletedWizardListener;
 
 class ArcanistServiceProvider extends ServiceProvider
 {

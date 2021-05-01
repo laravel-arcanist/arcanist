@@ -2,8 +2,8 @@
 
 namespace Tests;
 
-use Sassnowski\Arcanist\Contracts\WizardRepository;
-use Sassnowski\Arcanist\Repository\FakeWizardRepository;
+use Arcanist\Contracts\WizardRepository;
+use Arcanist\Repository\FakeWizardRepository;
 
 class FakeWizardRepositoryTest extends TestCase
 {

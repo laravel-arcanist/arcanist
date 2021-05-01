@@ -3,8 +3,8 @@
 namespace Tests;
 
 use Generator;
+use Arcanist\TTL;
 use Carbon\Carbon;
-use Sassnowski\Arcanist\TTL;
 use InvalidArgumentException;
 
 class TTLTest extends \PHPUnit\Framework\TestCase

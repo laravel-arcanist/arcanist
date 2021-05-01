@@ -3,15 +3,15 @@
 namespace Tests;
 
 use Mockery as m;
+use Arcanist\AbstractWizard;
+use Arcanist\Action\ActionResult;
+use Arcanist\Action\WizardAction;
 use Illuminate\Support\Facades\Event;
-use Sassnowski\Arcanist\AbstractWizard;
-use Sassnowski\Arcanist\Action\ActionResult;
-use Sassnowski\Arcanist\Action\WizardAction;
-use Sassnowski\Arcanist\Contracts\ResponseRenderer;
-use Sassnowski\Arcanist\Contracts\WizardRepository;
-use Sassnowski\Arcanist\Renderer\FakeResponseRenderer;
-use Sassnowski\Arcanist\Contracts\WizardActionResolver;
-use Sassnowski\Arcanist\Repository\FakeWizardRepository;
+use Arcanist\Contracts\ResponseRenderer;
+use Arcanist\Contracts\WizardRepository;
+use Arcanist\Renderer\FakeResponseRenderer;
+use Arcanist\Contracts\WizardActionResolver;
+use Arcanist\Repository\FakeWizardRepository;
 
 class WizardTestCase extends TestCase
 {

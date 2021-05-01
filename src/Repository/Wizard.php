@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Repository;
+namespace Arcanist\Repository;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

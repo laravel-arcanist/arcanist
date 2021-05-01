@@ -2,12 +2,12 @@
 
 namespace Tests;
 
+use Arcanist\TTL;
 use Mockery as m;
-use Sassnowski\Arcanist\TTL;
-use Sassnowski\Arcanist\AbstractWizard;
-use Sassnowski\Arcanist\Contracts\WizardRepository;
-use Sassnowski\Arcanist\Repository\CacheWizardRepository;
-use Sassnowski\Arcanist\Exception\WizardNotFoundException;
+use Arcanist\AbstractWizard;
+use Arcanist\Contracts\WizardRepository;
+use Arcanist\Repository\CacheWizardRepository;
+use Arcanist\Exception\WizardNotFoundException;
 
 class CacheWizardRepositoryTest extends TestCase
 {

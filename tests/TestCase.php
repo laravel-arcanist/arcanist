@@ -3,8 +3,8 @@
 namespace Tests;
 
 use Illuminate\Routing\Router;
+use Arcanist\ArcanistServiceProvider;
 use PHPUnit\Framework\Assert as PHPUnitAssert;
-use Sassnowski\Arcanist\ArcanistServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {

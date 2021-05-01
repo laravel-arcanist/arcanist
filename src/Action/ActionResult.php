@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Action;
+namespace Arcanist\Action;
 
 class ActionResult
 {

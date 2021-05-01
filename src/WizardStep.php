@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist;
+namespace Arcanist;
 
 use function collect;
 use Illuminate\Http\Request;

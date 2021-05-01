@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Resolver;
+namespace Arcanist\Resolver;
 
-use Sassnowski\Arcanist\Action\WizardAction;
-use Sassnowski\Arcanist\Contracts\WizardActionResolver;
+use Arcanist\Action\WizardAction;
+use Arcanist\Contracts\WizardActionResolver;
 
 class ContainerWizardActionResolver implements WizardActionResolver
 {

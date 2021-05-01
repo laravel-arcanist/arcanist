@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist\Listener;
+namespace Arcanist\Listener;
 
-use Sassnowski\Arcanist\Event\WizardFinished;
-use Sassnowski\Arcanist\Contracts\WizardRepository;
+use Arcanist\Event\WizardFinished;
+use Arcanist\Contracts\WizardRepository;
 
 class RemoveCompletedWizardListener
 {

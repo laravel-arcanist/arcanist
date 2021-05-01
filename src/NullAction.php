@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Sassnowski\Arcanist;
+namespace Arcanist;
 
-use Sassnowski\Arcanist\Action\ActionResult;
-use Sassnowski\Arcanist\Action\WizardAction;
+use Arcanist\Action\ActionResult;
+use Arcanist\Action\WizardAction;
 
 final class NullAction extends WizardAction
 {

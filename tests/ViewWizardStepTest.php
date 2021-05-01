@@ -2,11 +2,11 @@
 
 namespace Tests;
 
+use Arcanist\WizardStep;
+use Arcanist\AbstractWizard;
 use Illuminate\Http\Request;
-use Sassnowski\Arcanist\WizardStep;
-use Sassnowski\Arcanist\AbstractWizard;
-use Sassnowski\Arcanist\Renderer\FakeResponseRenderer;
-use Sassnowski\Arcanist\Exception\CannotUpdateStepException;
+use Arcanist\Renderer\FakeResponseRenderer;
+use Arcanist\Exception\CannotUpdateStepException;
 
 class ViewWizardStepTest extends WizardTestCase
 {
