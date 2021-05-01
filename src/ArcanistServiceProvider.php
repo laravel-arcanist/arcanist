@@ -28,8 +28,6 @@ class ArcanistServiceProvider extends ServiceProvider
             __DIR__ . '/../config/arcanist.php' => config_path('arcanist.php'),
         ], ['config', 'arcanist-config']);
 
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-
         Arcanist::boot($this->app['config']['arcanist']['wizards']);
     }
 
