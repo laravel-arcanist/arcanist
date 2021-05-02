@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Arcanist\Tests;
+namespace Arcanist\Testing;
 
 use Mockery as m;
 use Arcanist\Arcanist;

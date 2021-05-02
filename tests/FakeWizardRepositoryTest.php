@@ -4,6 +4,7 @@ namespace Arcanist\Tests;
 
 use Arcanist\Contracts\WizardRepository;
 use Arcanist\Repository\FakeWizardRepository;
+use Arcanist\Testing\WizardRepositoryContractTests;
 
 class FakeWizardRepositoryTest extends TestCase
 {

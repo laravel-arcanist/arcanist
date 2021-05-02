@@ -13,6 +13,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Testing\TestResponse;
 use Arcanist\Contracts\ResponseRenderer;
 use Arcanist\Renderer\BladeResponseRenderer;
+use Arcanist\Testing\ResponseRendererContractTests;
 
 class BladeResponseRendererTest extends TestCase
 {

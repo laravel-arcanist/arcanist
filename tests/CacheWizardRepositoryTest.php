@@ -8,6 +8,7 @@ use Arcanist\AbstractWizard;
 use Arcanist\Contracts\WizardRepository;
 use Arcanist\Repository\CacheWizardRepository;
 use Arcanist\Exception\WizardNotFoundException;
+use Arcanist\Testing\WizardRepositoryContractTests;
 
 class CacheWizardRepositoryTest extends TestCase
 {
