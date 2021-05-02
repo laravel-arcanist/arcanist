@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Fixtures;
+namespace Arcanist\Tests\Fixtures;
 
 use function redirect;
 use Arcanist\AbstractWizard;

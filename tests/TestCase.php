@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Tests;
+namespace Arcanist\Tests;
 
 use Illuminate\Routing\Router;
 use Arcanist\ArcanistServiceProvider;

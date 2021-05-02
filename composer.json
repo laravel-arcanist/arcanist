@@ -1,5 +1,5 @@
 {
-    "name": "ksassnowski/arcanist",
+    "name": "laravel-arcanist/arcanist",
     "description": "A package to take the pain out of building multi-step form wizards in Laravel.",
     "type": "library",
     "license": "MIT",
@@ -31,7 +31,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Arcanist\\Tests\\": "tests/"
         }
     },
     "extra": {

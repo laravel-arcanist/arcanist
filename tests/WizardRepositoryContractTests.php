@@ -1,10 +1,12 @@
-<?php declare(strict_types=1);
+<?php
 
-namespace Tests;
+declare(strict_types=1);
+
+namespace Arcanist\Tests;
 
 use Mockery as m;
-use Tests\Fixtures\WizardA;
-use Tests\Fixtures\WizardB;
+use Arcanist\Tests\Fixtures\WizardA;
+use Arcanist\Tests\Fixtures\WizardB;
 use Arcanist\AbstractWizard;
 use Arcanist\Contracts\ResponseRenderer;
 use Arcanist\Contracts\WizardRepository;
