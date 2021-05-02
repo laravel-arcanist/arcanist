@@ -78,6 +78,10 @@ return [
         'blade' => [
             'view_base_path' => 'wizards',
         ],
+
+        'inertia' => [
+            'component_base_path' => 'Wizards',
+        ],
     ],
 
     /*
