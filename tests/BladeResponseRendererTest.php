@@ -63,7 +63,7 @@ class BladeResponseRendererTest extends TestCase
 
         self::assertEquals(
             ['::key::' => '::value::'],
-            $response->getData()['data']
+            $response->getData()['step']
         );
     }
 

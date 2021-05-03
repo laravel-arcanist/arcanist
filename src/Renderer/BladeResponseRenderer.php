@@ -30,7 +30,7 @@ class BladeResponseRenderer implements ResponseRenderer
         try {
             return $this->factory->make($viewName, [
             'wizard' => $wizard->summary(),
-            'data' => $data,
+            'step' => $data,
         ]);
         } catch (InvalidArgumentException) {
             throw StepTemplateNotFoundException::forStep($step);
