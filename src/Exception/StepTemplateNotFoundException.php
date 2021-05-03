@@ -23,6 +23,6 @@ class StepTemplateNotFoundException extends Exception implements ProvidesSolutio
     public function getSolution(): Solution
     {
         return BaseSolution::create('No template for wizard step found')
-            ->setSolutionDescription("No template was found for the step [{$this->step->name}].");
+            ->setSolutionDescription("No template was found for the step [{$this->step->title}].");
     }
 }

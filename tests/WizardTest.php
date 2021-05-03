@@ -266,8 +266,8 @@ class WizardTest extends WizardTestCase
 
         $summary = $wizard->summary();
 
-        self::assertEquals('::step-1-name::', $summary['steps'][0]['name']);
-        self::assertEquals('::step-2-name::', $summary['steps'][1]['name']);
+        self::assertEquals('::step-1-name::', $summary['steps'][0]['title']);
+        self::assertEquals('::step-2-name::', $summary['steps'][1]['title']);
     }
 
     /** @test */
@@ -745,7 +745,7 @@ class ErrorWizard extends AbstractWizard
 
 class TestStep extends WizardStep
 {
-    public string $name = '::step-1-name::';
+    public string $title = '::step-1-name::';
     public string $slug = 'step-name';
 
     protected function fields(): array
@@ -780,7 +780,7 @@ class TestStep extends WizardStep
 
 class TestStepWithViewData extends WizardStep
 {
-    public string $name = '::step-2-name::';
+    public string $title = '::step-2-name::';
     public string $slug = 'step-with-view-data';
 
     public function viewData(Request $request): array

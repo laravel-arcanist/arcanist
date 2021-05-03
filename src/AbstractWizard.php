@@ -271,7 +271,7 @@ abstract class AbstractWizard
             'steps' => collect($this->steps)->map(fn (WizardStep $step) => [
                 'slug' => $step->slug,
                 'isComplete' => $step->isComplete(),
-                'name' => $step->name,
+                'title' => $step->title(),
                 'active' => $step->index() === $current->index(),
                 'url' => $this->exists()
                     ? route('wizard.' . static::$slug . '.show', [$this->getId(), $step->slug])

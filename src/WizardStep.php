@@ -14,7 +14,7 @@ abstract class WizardStep
     /**
      * The name of the step that gets displayed in the step list.
      */
-    public string $name = 'New Step';
+    public string $title = 'New Step';
 
     /**
      * The slug of the wizard that is used in the URL.
@@ -33,6 +33,11 @@ abstract class WizardStep
         $this->index = $index;
 
         return $this;
+    }
+
+    public function title(): string
+    {
+        return $this->title;
     }
 
     /**
