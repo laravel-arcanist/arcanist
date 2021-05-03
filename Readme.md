@@ -5,10 +5,8 @@
 Arcanist requires PHP 8 and Laravel 8.
 
 ```
-composer require sassnowski/arcanist
+composer require laravel-arcanist/arcanist
 ```
-
-Make sure to read the [documentation](https://laravel-arcanist.com) for the full installation instructions.
 
 ## Documentation
 
