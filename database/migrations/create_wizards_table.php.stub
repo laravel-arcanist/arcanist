@@ -11,7 +11,7 @@ class CreateWizardsTable extends Migration
         Schema::create('wizards', function (Blueprint $table) {
             $table->increments('id');
             $table->string('class');
-            $table->json('data')->default('[]');
+            $table->json('data');
             $table->timestamps();
         });
     }

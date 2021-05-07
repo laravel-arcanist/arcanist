@@ -28,6 +28,7 @@ class CleanupExpiredWizardsTest extends TestCase
     {
         $wizardClass = m::spy(AbstractWizard::class);
         $wizard = Wizard::create([
+            'data' => '[]',
             'class' => $wizardClass::class,
             'updated_at' => now(),
         ]);
