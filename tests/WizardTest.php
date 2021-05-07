@@ -435,6 +435,36 @@ class WizardTest extends WizardTestCase
     }
 
     /** @test */
+    public function it_passes_all_gathered_data_to_the_action_by_default(): void
+    {
+        $actionSpy = new class extends WizardAction {
+            public array $payload = [];
+
+            public function execute($payload): ActionResult
+            {
+                $this->payload = $payload;
+
+                return $this->success();
+            }
+        };
+        $actionResolver = m::mock(WizardActionResolver::class);
+        $actionResolver
+            ->allows('resolveAction')
+            ->andReturn($actionSpy);
+        $wizard = $this->createWizard(SharedDataWizard::class, resolver: $actionResolver);
+
+        $wizard->update(Request::create('::url::', 'POST', [
+            'first_name' => '::first-name::',
+            'last_name' => '::last-name::',
+        ]), '1', 'step-name');
+
+        self::assertEquals(
+            ['first_name' => '::first-name::', 'last_name' => '::last-name::'],
+            $actionSpy->payload
+        );
+    }
+
+    /** @test */
     public function it_fires_an_event_after_the_onComplete_callback_was_ran(): void
     {
         $wizard = $this->createWizard(TestWizard::class);
@@ -727,7 +757,7 @@ class SharedDataWizard extends AbstractWizard
 
     protected function onAfterComplete(ActionResult $result): RedirectResponse
     {
-        return redirect();
+        return redirect()->back();
     }
 
     protected function redirectTo(): string

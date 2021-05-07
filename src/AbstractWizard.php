@@ -8,6 +8,7 @@ use function config;
 use function collect;
 use function data_get;
 use function redirect;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Arcanist\Event\WizardLoaded;
@@ -242,7 +243,7 @@ abstract class AbstractWizard
     public function data(?string $key = null, mixed $default = null): mixed
     {
         if ($key === null) {
-            return $this->data;
+            return Arr::except($this->data, '_arcanist');
         }
 
         return data_get($this->data, $key, $default);
@@ -391,6 +392,8 @@ abstract class AbstractWizard
 
     private function processLastStep(WizardStep $step): RedirectResponse
     {
+        $this->load($this->id);
+
         event(new WizardFinishing($this));
 
         $result = $this->actionResolver
