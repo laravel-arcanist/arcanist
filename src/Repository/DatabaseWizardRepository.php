@@ -30,7 +30,7 @@ class DatabaseWizardRepository implements WizardRepository
         ])->delete();
 
         if ($affectedRows === 0) {
-            throw new WizardNotFoundException();
+            return;
         }
 
         $wizard->setId(null);

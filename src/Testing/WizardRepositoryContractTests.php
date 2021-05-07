@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Arcanist\Testing;
 
 use Mockery as m;
+use Arcanist\AbstractWizard;
 use Arcanist\Tests\Fixtures\WizardA;
 use Arcanist\Tests\Fixtures\WizardB;
-use Arcanist\AbstractWizard;
 use Arcanist\Contracts\ResponseRenderer;
 use Arcanist\Contracts\WizardRepository;
 use Arcanist\Contracts\WizardActionResolver;
@@ -186,7 +186,7 @@ trait WizardRepositoryContractTests
      * @test
      * @group WizardRepository
      */
-    public function it_throws_an_exception_when_trying_to_load_a_wizard_but_the_id_and_class_dont_match(): void
+    public function it_does_not_unset_the_wizards_it_(): void
     {
         $repository = $this->createRepository();
 
@@ -228,21 +228,25 @@ trait WizardRepositoryContractTests
      * @test
      * @group WizardRepository
      */
-    public function it_throws_an_exception_when_trying_to_delete_a_wizard_but_the_id_and_class_dont_match(): void
+    public function it_does_not_delete_the_wizards_class_and_id_dont_match(): void
     {
         $repository = $this->createRepository();
 
         // Assuming we have previously saved an wizard.
         $wizardA = $this->makeWizard(WizardA::class, $repository);
         $repository->saveData($wizardA, []);
+        $expectdId = $wizardA->getId();
 
         // Attempting to delete a different type of wizard with the same id
-        // should result in an exception.
+        // should not unset $wizardA id.
         $wizardB = $this->makeWizard(WizardB::class, $repository, $wizardA->getId());
 
-        $this->expectException(WizardNotFoundException::class);
-
         $repository->deleteWizard($wizardB);
+
+        // $wizardB should not have been deleted
+        $this->assertNotNull($wizardB->getId());
+        // $wizardA should not have been deleted
+        $this->assertEquals($expectdId, $wizardA->getId());
     }
 
     abstract protected function createRepository(): WizardRepository;

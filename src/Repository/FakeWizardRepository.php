@@ -42,7 +42,9 @@ class FakeWizardRepository implements WizardRepository
 
     public function deleteWizard(AbstractWizard $wizard): void
     {
-        $this->guardAgainstWizardClassMismatch($wizard);
+        if ($this->hasIdMismatch($wizard)) {
+            return;
+        }
 
         unset($this->data[get_class($wizard)][$wizard->getId()]);
 
@@ -51,12 +53,13 @@ class FakeWizardRepository implements WizardRepository
 
     private function guardAgainstWizardClassMismatch(AbstractWizard $wizard): void
     {
-        $hasIdMismatch = collect($this->data)
+        throw_if($this->hasIdMismatch($wizard), new WizardNotFoundException());
+    }
+
+    private function hasIdMismatch(AbstractWizard $wizard): bool
+    {
+        return collect($this->data)
             ->except(get_class($wizard))
             ->contains(fn (array $wizards) => isset($wizards[$wizard->getId()]));
-
-        if ($hasIdMismatch) {
-            throw new WizardNotFoundException();
-        }
     }
 }

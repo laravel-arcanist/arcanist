@@ -41,7 +41,7 @@ class CacheWizardRepository implements WizardRepository
         $cacheKey = $this->buildCacheKey($wizard);
 
         if (!Cache::has($cacheKey)) {
-            throw new WizardNotFoundException();
+            return;
         }
 
         Cache::delete($cacheKey);
