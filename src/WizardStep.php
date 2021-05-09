@@ -4,6 +4,7 @@ namespace Arcanist;
 
 use function collect;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
@@ -68,7 +69,11 @@ abstract class WizardStep
     {
         $data = $this->validate($request, $this->rules());
 
-        return $this->handle($request, $data);
+        return collect($this->fields())
+            ->mapWithKeys(fn (Field $field) => [
+                $field->name => $field->value($data[$field->name] ?? null)
+            ])
+            ->pipe(fn (Collection $values) => $this->handle($request, $values->toArray()));
     }
 
     public function dependentFields(): array

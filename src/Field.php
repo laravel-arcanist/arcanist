@@ -2,8 +2,13 @@
 
 namespace Arcanist;
 
+use Illuminate\Http\UploadedFile;
+
 class Field
 {
+    /** @var callable $transformationCallback */
+    private $transformationCallback = null;
+
     public function __construct(
         public string $name,
         public array $rules = ['nullable'],
@@ -33,5 +38,24 @@ class Field
     public function shouldInvalidate(array $changedFieldNames): bool
     {
         return count(array_intersect($this->dependencies, $changedFieldNames)) > 0;
+    }
+
+    public function value(mixed $value): mixed
+    {
+        $callback = $this->transformationCallback ?: fn ($val) => $val;
+
+        return $callback($value);
+    }
+
+    public function transform(callable $callback): self
+    {
+        $this->transformationCallback = $callback;
+
+        return $this;
+    }
+
+    public function file(string $folder): self
+    {
+        return $this->transform(fn (UploadedFile $file) => $file->store($folder));
     }
 }

@@ -3,8 +3,10 @@
 namespace Arcanist\Tests;
 
 use Arcanist\Field;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
-class FieldTest extends \PHPUnit\Framework\TestCase
+class FieldTest extends TestCase
 {
     /** @test */
     public function it_can_create_a_new_field_with_a_name(): void
@@ -76,5 +78,40 @@ class FieldTest extends \PHPUnit\Framework\TestCase
             ->dependsOn('::field-1::', '::field-2::');
 
         self::assertTrue($field->shouldInvalidate(['::field-2::']));
+    }
+
+    /** @test */
+    public function it_returns_its_value_if_no_transformation_function_is_provided(): void
+    {
+        $field = Field::make('::field::');
+
+        $actual = $field->value('::value::');
+
+        self::assertEquals('::value::', $actual);
+    }
+
+    /** @test */
+    public function it_applies_the_registered_transformation_callback_to_the_value(): void
+    {
+        $field = Field::make('::field::')
+            ->transform(function ($value) {
+                return '::mapped-value::';
+            });
+
+        self::assertEquals('::mapped-value::', $field->value('::value::'));
+    }
+
+    /** @test */
+    public function it_saves_uploaded_files_to_the_specified_directory_and_returns_the_path(): void
+    {
+        Storage::fake();
+        $field = Field::make('::field::')->file('folder-name');
+        $file = UploadedFile::fake()->create('::filename::');
+
+        $path = $field->value($file);
+
+        $expectedPath = $file->hashName('folder-name');
+        self::assertEquals($expectedPath, $path);
+        Storage::assertExists($expectedPath);
     }
 }
