@@ -398,7 +398,7 @@ abstract class AbstractWizard
 
         $result = $this->actionResolver
             ->resolveAction($this->onCompleteAction)
-            ->execute($this->transformWizardData());
+            ->execute($this->transformWizardData(), $this);
 
         if (!$result->successful()) {
             return $this->responseRenderer->redirectWithError(
