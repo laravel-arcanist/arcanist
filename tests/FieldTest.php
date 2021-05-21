@@ -3,8 +3,6 @@
 namespace Arcanist\Tests;
 
 use Arcanist\Field;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 
 class FieldTest extends TestCase
 {
@@ -99,19 +97,5 @@ class FieldTest extends TestCase
             });
 
         self::assertEquals('::mapped-value::', $field->value('::value::'));
-    }
-
-    /** @test */
-    public function it_saves_uploaded_files_to_the_specified_directory_and_returns_the_path(): void
-    {
-        Storage::fake();
-        $field = Field::make('::field::')->file('folder-name');
-        $file = UploadedFile::fake()->create('::filename::');
-
-        $path = $field->value($file);
-
-        $expectedPath = $file->hashName('folder-name');
-        self::assertEquals($expectedPath, $path);
-        Storage::assertExists($expectedPath);
     }
 }

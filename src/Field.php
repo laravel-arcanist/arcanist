@@ -2,8 +2,6 @@
 
 namespace Arcanist;
 
-use Illuminate\Http\UploadedFile;
-
 class Field
 {
     /** @var callable $transformationCallback */
@@ -52,10 +50,5 @@ class Field
         $this->transformationCallback = $callback;
 
         return $this;
-    }
-
-    public function file(string $folder): self
-    {
-        return $this->transform(fn (UploadedFile $file) => $file->store($folder));
     }
 }
