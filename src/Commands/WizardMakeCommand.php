@@ -2,13 +2,15 @@
 
 namespace Arcanist\Commands;
 
-use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
+use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Input\InputOption;
 
 class WizardMakeCommand extends GeneratorCommand
 {
     protected $name = 'make:wizard';
+
+    protected $type = 'Wizard';
 
     public function handle(): void
     {
@@ -37,7 +39,6 @@ class WizardMakeCommand extends GeneratorCommand
             ->replaceSteps($stub)
             ->replaceClass($stub, $name);
     }
-
 
     protected function getDefaultNamespace($rootNamespace)
     {

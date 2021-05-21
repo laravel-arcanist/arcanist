@@ -10,6 +10,8 @@ class WizardStepMakeCommand extends GeneratorCommand
 {
     protected $name = 'make:wizard-step';
 
+    protected $type = 'Wizard Step';
+
     protected function getStub()
     {
         return __DIR__ . '/stubs/step.stub';
