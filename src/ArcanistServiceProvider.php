@@ -7,9 +7,11 @@ use function database_path;
 use Illuminate\Support\Str;
 use Arcanist\Event\WizardFinished;
 use Illuminate\Support\ServiceProvider;
+use Arcanist\Commands\WizardMakeCommand;
 use Arcanist\Contracts\ResponseRenderer;
 use Arcanist\Contracts\WizardRepository;
 use Arcanist\Commands\CleanupExpiredWizards;
+use Arcanist\Commands\WizardStepMakeCommand;
 use Arcanist\Contracts\WizardActionResolver;
 use Arcanist\Renderer\BladeResponseRenderer;
 use Arcanist\Listener\RemoveCompletedWizardListener;
@@ -19,7 +21,11 @@ class ArcanistServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
-            $this->commands([CleanupExpiredWizards::class]);
+            $this->commands([
+                CleanupExpiredWizards::class,
+                WizardMakeCommand::class,
+                WizardStepMakeCommand::class,
+            ]);
         }
 
         $now = Carbon::now();
