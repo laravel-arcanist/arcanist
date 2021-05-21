@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] — 2021-05-21
+
+### Added
+
+- Added `make:wizard` and `make:wizard-step` commands
+- Added `transform` method to `Field` class to register arbitrary callbacks for a field.
+  Note that whatever the callback returns is the value that gets persisted for the field.
+
 ## [0.2.0] — 2021-05-07
 
 ### Changed
