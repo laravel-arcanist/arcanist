@@ -14,9 +14,9 @@ class Field
     ) {
     }
 
-    public static function make(string $name): Field
+    public static function make(string $name): static
     {
-        return new self($name);
+        return new static($name);
     }
 
     public function rules(array $rules): self
