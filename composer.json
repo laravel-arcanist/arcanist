@@ -1,7 +1,7 @@
 {
     "name": "laravel-arcanist/arcanist",
-    "description": "A package to take the pain out of building multi-step form wizards in Laravel.",
     "type": "library",
+    "description": "A package to take the pain out of building multi-step form wizards in Laravel.",
     "license": "MIT",
     "authors": [
         {
@@ -9,21 +9,26 @@
             "email": "me@kai-sassnowski.com"
         }
     ],
-    "scripts": {
-        "test": "vendor/bin/phpunit"
-    },
     "require": {
         "php": "^8.0",
-        "laravel/framework": "^8.0",
-        "facade/ignition-contracts": "^1.0"
+        "facade/ignition-contracts": "^1.0",
+        "laravel/framework": "^8.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5",
-        "orchestra/testbench": "^6.17",
+        "ergebnis/composer-normalize": "^2.15",
         "mockery/mockery": "^1.4.3",
         "nunomaduro/collision": "^5.3",
-        "spatie/phpunit-watcher": "^1.23",
-        "spatie/phpunit-snapshot-assertions": "^4.2"
+        "orchestra/testbench": "^6.17",
+        "phpunit/phpunit": "^9.5",
+        "spatie/phpunit-snapshot-assertions": "^4.2",
+        "spatie/phpunit-watcher": "^1.23"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Arcanist\\ArcanistServiceProvider"
+            ]
+        }
     },
     "autoload": {
         "psr-4": {
@@ -35,13 +40,15 @@
             "Arcanist\\Tests\\": "tests/"
         }
     },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Arcanist\\ArcanistServiceProvider"
-            ]
-        }
-    },
+    "minimum-stability": "dev",
     "prefer-stable": true,
-    "minimum-stability": "dev"
+    "scripts": {
+        "post-install-cmd": [
+            "composer normalize"
+        ],
+        "post-update-cmd": [
+            "composer normalize"
+        ],
+        "test": "vendor/bin/phpunit"
+    }
 }
