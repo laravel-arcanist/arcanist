@@ -4,10 +4,9 @@ namespace Arcanist\Contracts;
 
 use Arcanist\WizardStep;
 use Arcanist\AbstractWizard;
-use Illuminate\Http\Response;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\Responsable;
+use Symfony\Component\HttpFoundation\Response;
 
 interface ResponseRenderer
 {
@@ -20,11 +19,11 @@ interface ResponseRenderer
     public function redirect(
         WizardStep $step,
         AbstractWizard $wizard
-    ): RedirectResponse;
+    ): Response | Responsable | Renderable;
 
     public function redirectWithError(
         WizardStep $step,
         AbstractWizard $wizard,
         ?string $error = null
-    ): RedirectResponse;
+    ): Response | Responsable | Renderable;
 }

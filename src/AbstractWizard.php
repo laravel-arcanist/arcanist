@@ -10,14 +10,12 @@ use function data_get;
 use function redirect;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Arcanist\Event\WizardLoaded;
 use Arcanist\Event\WizardSaving;
 use Arcanist\Action\ActionResult;
 use Arcanist\Event\WizardFinished;
 use Illuminate\Support\Collection;
 use Arcanist\Event\WizardFinishing;
-use Illuminate\Http\RedirectResponse;
 use Arcanist\Contracts\ResponseRenderer;
 use Arcanist\Contracts\WizardRepository;
 use Arcanist\Contracts\WizardActionResolver;
@@ -25,6 +23,7 @@ use Arcanist\Exception\UnknownStepException;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 use Arcanist\Exception\WizardNotFoundException;
 use Arcanist\Exception\CannotUpdateStepException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -137,7 +136,7 @@ abstract class AbstractWizard
      *
      * @throws UnknownStepException
      */
-    public function show(Request $request, string $wizardId, ?string $slug = null): Responsable | Response | Renderable | RedirectResponse
+    public function show(Request $request, string $wizardId, ?string $slug = null):  Response | Responsable | Renderable
     {
         $this->load($wizardId);
 
@@ -165,7 +164,7 @@ abstract class AbstractWizard
      *
      * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): Response | Responsable | Renderable
     {
         $step = $this->loadFirstStep();
 
@@ -193,7 +192,7 @@ abstract class AbstractWizard
      * @throws UnknownStepException
      * @throws ValidationException
      */
-    public function update(Request $request, string $wizardId, string $slug): RedirectResponse
+    public function update(Request $request, string $wizardId, string $slug): Response | Responsable | Renderable
     {
         $this->load($wizardId);
 
@@ -226,7 +225,7 @@ abstract class AbstractWizard
             );
     }
 
-    public function destroy(Request $request, string $wizardId): RedirectResponse
+    public function destroy(Request $request, string $wizardId): Response | Responsable | Renderable
     {
         $this->load($wizardId);
 
@@ -293,7 +292,7 @@ abstract class AbstractWizard
     /**
      * Gets called after the last step in the wizard is finished.
      */
-    protected function onAfterComplete(ActionResult $result): RedirectResponse
+    protected function onAfterComplete(ActionResult $result): Response | Responsable | Renderable
     {
         return redirect()->to($this->redirectTo());
     }
@@ -390,7 +389,7 @@ abstract class AbstractWizard
         $this->wizardRepository->saveData($this, $data);
     }
 
-    private function processLastStep(WizardStep $step): RedirectResponse
+    private function processLastStep(WizardStep $step): Response | Responsable | Renderable
     {
         $this->load($this->id);
 

@@ -6,12 +6,11 @@ use function redirect;
 use Arcanist\WizardStep;
 use Arcanist\AbstractWizard;
 use Illuminate\View\Factory;
-use Illuminate\Http\Response;
 use InvalidArgumentException;
-use Illuminate\Http\RedirectResponse;
 use Arcanist\Contracts\ResponseRenderer;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\Responsable;
+use Symfony\Component\HttpFoundation\Response;
 use Arcanist\Exception\StepTemplateNotFoundException;
 
 class BladeResponseRenderer implements ResponseRenderer
@@ -37,7 +36,7 @@ class BladeResponseRenderer implements ResponseRenderer
         }
     }
 
-    public function redirect(WizardStep $step, AbstractWizard $wizard): RedirectResponse
+    public function redirect(WizardStep $step, AbstractWizard $wizard): Response | Renderable | Responsable
     {
         if (!$wizard->exists()) {
             return redirect()->route('wizard.' . $wizard::$slug . '.create');
@@ -48,8 +47,11 @@ class BladeResponseRenderer implements ResponseRenderer
         ]);
     }
 
-    public function redirectWithError(WizardStep $step, AbstractWizard $wizard, ?string $error = null): RedirectResponse
-    {
+    public function redirectWithError(
+        WizardStep $step,
+        AbstractWizard $wizard,
+        ?string $error = null
+    ): Response | Renderable | Responsable {
         return redirect()
             ->route('wizard.' . $wizard::$slug . '.show', [
                 $wizard->getId(),
