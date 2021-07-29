@@ -88,7 +88,7 @@ abstract class WizardStep
         return $this->success($payload);
     }
 
-    protected function fields(): array
+    public function fields(): array
     {
         return [];
     }
