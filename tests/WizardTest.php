@@ -778,7 +778,7 @@ class TestStep extends WizardStep
     public string $title = '::step-1-name::';
     public string $slug = 'step-name';
 
-    protected function fields(): array
+    public function fields(): array
     {
         return [
             Field::make('first_name')
