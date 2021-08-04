@@ -26,7 +26,7 @@ class Step1 extends WizardStep
         return parent::viewData($request);
     }
 
-    protected function fields(): array
+    public function fields(): array
     {
         return [
             // Field::make('username')

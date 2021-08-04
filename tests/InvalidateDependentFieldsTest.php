@@ -176,7 +176,7 @@ class RegularStep extends WizardStep
         return true;
     }
 
-    protected function fields(): array
+    public function fields(): array
     {
         return [
             Field::make('::normal-field-1::'),
@@ -195,7 +195,7 @@ class FailingStep extends WizardStep
         return false;
     }
 
-    protected function fields(): array
+    public function fields(): array
     {
         return [
             Field::make('::normal-field-1::')
@@ -217,7 +217,7 @@ class StepWithDependentField extends WizardStep
         return $this->data('::dependent-field-1::') !== null;
     }
 
-    protected function fields(): array
+    public function fields(): array
     {
         return [
             Field::make('::dependent-field-1::')
@@ -233,7 +233,7 @@ class AnotherStepWithDependentField extends WizardStep
         return $this->data('::dependent-field-2::') !== null;
     }
 
-    protected function fields(): array
+    public function fields(): array
     {
         return [
             Field::make('::dependent-field-2::')
