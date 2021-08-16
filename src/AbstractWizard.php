@@ -233,7 +233,7 @@ abstract class AbstractWizard
 
         $this->wizardRepository->deleteWizard($this);
 
-        return redirect()->to($this->redirectTo());
+        return $this->onAfterDelete();
     }
 
     /**
@@ -305,6 +305,14 @@ abstract class AbstractWizard
     protected function beforeDelete(Request $request): void
     {
         //
+    }
+
+    /**
+     * Gets called after the wizard was deleted.
+     */
+    protected function onAfterDelete(): Response | Responsable | Renderable
+    {
+        return redirect()->to($this->redirectTo());
     }
 
     /**

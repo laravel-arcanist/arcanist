@@ -25,8 +25,11 @@ use Arcanist\Contracts\ResponseRenderer;
 use Arcanist\Renderer\FakeResponseRenderer;
 use Arcanist\Contracts\WizardActionResolver;
 use Arcanist\Exception\UnknownStepException;
+use Illuminate\Contracts\Support\Renderable;
 use Arcanist\Repository\FakeWizardRepository;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class WizardTest extends WizardTestCase
@@ -38,6 +41,7 @@ class WizardTest extends WizardTestCase
         Event::fake();
         $_SERVER['__onAfterComplete.called'] = 0;
         $_SERVER['__beforeDelete.called'] = 0;
+        $_SERVER['__onAfterDelete.called'] = 0;
 
         Arcanist::boot([
             TestWizard::class,
@@ -570,6 +574,16 @@ class WizardTest extends WizardTestCase
         $response->assertRedirect('::other-route::');
     }
 
+    /** @test */
+    public function it_calls_the_on_after_delete_hook_of_the_wizard(): void
+    {
+        $wizard = $this->createWizard(TestWizard::class);
+
+        $wizard->destroy(new Request(), '1');
+
+        self::assertEquals(1, $_SERVER['__onAfterDelete.called']);
+    }
+
     /**
      * @test
      * @dataProvider resumeWizardProvider
@@ -714,11 +728,18 @@ class TestWizard extends AbstractWizard
         TestStepWithViewData::class,
     ];
 
-    protected function onAfterComplete(ActionResult $result): RedirectResponse
+    protected function onAfterComplete(ActionResult $result): Response | Responsable | Renderable
     {
         $_SERVER['__onAfterComplete.called']++;
 
         return redirect()->back();
+    }
+
+    protected function onAfterDelete(): Response | Responsable | Renderable
+    {
+        $_SERVER['__onAfterDelete.called']++;
+
+        return parent::onAfterDelete();
     }
 
     protected function beforeDelete(Request $request): void
