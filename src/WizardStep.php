@@ -135,7 +135,7 @@ abstract class WizardStep
     /**
      * The validation rules for submitting the step's form.
      */
-    private function rules(): array
+    protected function rules(): array
     {
         return collect($this->fields())
             ->mapWithKeys(fn (Field $field) => [$field->name => $field->rules])

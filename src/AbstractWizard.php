@@ -78,7 +78,7 @@ abstract class AbstractWizard
 
     public function __construct(
         private WizardRepository $wizardRepository,
-        private ResponseRenderer $responseRenderer,
+        protected ResponseRenderer $responseRenderer,
         private WizardActionResolver $actionResolver
     ) {
         $this->redirectTo = config('arcanist.redirect_url', '/home');
