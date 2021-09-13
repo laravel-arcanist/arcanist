@@ -32,6 +32,7 @@ abstract class WizardStep
         // implement than I currently want to invest.
         $this->wizard = $wizard;
         $this->index = $index;
+        $this->title = $this->title();
 
         return $this;
     }
