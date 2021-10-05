@@ -2,9 +2,11 @@
 
 namespace Arcanist\Action;
 
+use Illuminate\Http\Request;
+
 abstract class WizardAction
 {
-    abstract public function execute($payload): ActionResult;
+    abstract public function execute(Request $request, $payload): ActionResult;
 
     protected function success(array $payload = []): ActionResult
     {
