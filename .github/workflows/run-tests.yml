@@ -11,7 +11,7 @@ jobs:
         stability: [prefer-lowest, prefer-stable]
         os: [ubuntu-latest]
 
-    name: P${{ matrix.php }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
+    name: P${{ matrix.php }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
     steps:
       - name: Setup PHP
