@@ -8,14 +8,10 @@ jobs:
     strategy:
       matrix:
         php: [8.0, 8.1]
-        laravel: [8.*]
-        dependency-version: [prefer-lowest, prefer-stable]
-        include:
-          - laravel: 8.*
-            testbench: ^6.17
+        stability: [prefer-lowest, prefer-stable]
         os: [ubuntu-latest]
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
+    name: P${{ matrix.php }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
 
     steps:
       - name: Setup PHP
@@ -34,10 +30,12 @@ jobs:
           path: ~/.composer/cache/files
           key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
 
+      - name: Set minimum PHP 8.1 versions
+        run: composer require laravel/framework:^8.67 symfony/symfony:5.4.x-dev phpoption/phpoption:^1.8 --no-interaction --no-update
+        if: matrix.php >= 8.1
+
       - name: Install dependencies
-        run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+        run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: Execute tests
         run: vendor/bin/phpunit
