@@ -20,6 +20,7 @@
         "nunomaduro/collision": "^5.3",
         "orchestra/testbench": "^6.23",
         "phpunit/phpunit": "^9.5.8",
+        "roave/security-advisories": "dev-latest",
         "spatie/phpunit-snapshot-assertions": "^4.2",
         "spatie/phpunit-watcher": "^1.23"
     },
