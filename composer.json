@@ -12,13 +12,13 @@
     "require": {
         "php": "^8.0",
         "facade/ignition-contracts": "^1.0",
-        "laravel/framework": "^8.0"
+        "laravel/framework": "^8.0||^9.0"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.15",
         "mockery/mockery": "^1.4.3",
-        "nunomaduro/collision": "^5.3",
-        "orchestra/testbench": "^6.23",
+        "nunomaduro/collision": "^5.3||^6.0",
+        "orchestra/testbench": "^6.23||^7.0",
         "phpunit/phpunit": "^9.5.8",
         "roave/security-advisories": "dev-latest",
         "spatie/phpunit-snapshot-assertions": "^4.2",
