@@ -20,7 +20,6 @@ use Illuminate\Console\Command;
 class CleanupExpiredWizards extends Command
 {
     protected $signature = 'arcanist:clean-expired';
-
     protected $description = 'Clean up expired wizards.';
 
     public function __construct(private TTL $ttl)
