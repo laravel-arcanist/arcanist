@@ -3,6 +3,7 @@
 namespace Arcanist;
 
 use function collect;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
@@ -138,7 +139,11 @@ abstract class WizardStep
     protected function rules(): array
     {
         return collect($this->fields())
-            ->mapWithKeys(fn (Field $field) => [$field->name => $field->rules])
+            ->mapWithKeys(function (Field $field) {
+                return Arr::isAssoc($field->rules)
+                    ? $field->rules
+                    : [$field->name => $field->rules];
+            })
             ->all();
     }
 }
