@@ -1,13 +1,24 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Renderer;
 
-use Arcanist\WizardStep;
 use Arcanist\AbstractWizard;
-use Illuminate\Http\Response;
-use Illuminate\Http\RedirectResponse;
 use Arcanist\Contracts\ResponseRenderer;
+use Arcanist\WizardStep;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 
 class FakeResponseRenderer implements ResponseRenderer
 {
@@ -19,16 +30,16 @@ class FakeResponseRenderer implements ResponseRenderer
     public function renderStep(
         WizardStep $step,
         AbstractWizard $wizard,
-        array $data = []
-    ): Response | Responsable {
-        $this->renderedSteps[get_class($step)] = $data;
+        array $data = [],
+    ): Response|Responsable {
+        $this->renderedSteps[$step::class] = $data;
 
         return new Response();
     }
 
     public function redirect(WizardStep $step, AbstractWizard $wizard): RedirectResponse
     {
-        $this->redirect = get_class($step);
+        $this->redirect = $step::class;
 
         return new RedirectResponse('::url::');
     }
@@ -36,9 +47,9 @@ class FakeResponseRenderer implements ResponseRenderer
     public function redirectWithError(
         WizardStep $step,
         AbstractWizard $wizard,
-        ?string $error = null
+        ?string $error = null,
     ): RedirectResponse {
-        $this->redirect = get_class($step);
+        $this->redirect = $step::class;
         $this->hasError = true;
         $this->error = $error;
 
@@ -51,8 +62,8 @@ class FakeResponseRenderer implements ResponseRenderer
             return false;
         }
 
-        if ($data !== null) {
-            return array_diff($data, $this->renderedSteps[$stepClass]) === [];
+        if (null !== $data) {
+            return \array_diff($data, $this->renderedSteps[$stepClass]) === [];
         }
 
         return true;

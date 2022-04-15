@@ -1,17 +1,28 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Tests;
 
-use Mockery as m;
 use Arcanist\AbstractWizard;
 use Arcanist\Action\ActionResult;
 use Arcanist\Action\WizardAction;
-use Illuminate\Support\Facades\Event;
 use Arcanist\Contracts\ResponseRenderer;
+use Arcanist\Contracts\WizardActionResolver;
 use Arcanist\Contracts\WizardRepository;
 use Arcanist\Renderer\FakeResponseRenderer;
-use Arcanist\Contracts\WizardActionResolver;
 use Arcanist\Repository\FakeWizardRepository;
+use Illuminate\Support\Facades\Event;
+use Mockery as m;
 
 class WizardTestCase extends TestCase
 {
@@ -26,11 +37,11 @@ class WizardTestCase extends TestCase
         string $wizardClass,
         ?WizardRepository $repository = null,
         ?ResponseRenderer $renderer = null,
-        ?WizardActionResolver $resolver = null
+        ?WizardActionResolver $resolver = null,
     ): AbstractWizard {
         $repository ??= $this->createWizardRepository(wizardClass: $wizardClass);
         $renderer ??= new FakeResponseRenderer();
-        $resolver ??= new class implements WizardActionResolver {
+        $resolver ??= new class() implements WizardActionResolver {
             public function resolveAction(string $actionClass): WizardAction
             {
                 $action = m::mock(WizardAction::class);
@@ -47,7 +58,7 @@ class WizardTestCase extends TestCase
     {
         return new FakeWizardRepository([
             $wizardClass ?: TestWizard::class => [
-                '1' => $data
+                '1' => $data,
             ],
         ]);
     }

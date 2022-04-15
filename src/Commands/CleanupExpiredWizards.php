@@ -1,17 +1,26 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Commands;
 
-use Arcanist\TTL;
 use Arcanist\Repository\Wizard;
+use Arcanist\TTL;
 use Illuminate\Console\Command;
 
 class CleanupExpiredWizards extends Command
 {
-    /** @var string */
     protected $signature = 'arcanist:clean-expired';
 
-    /** @var string $description */
     protected $description = 'Clean up expired wizards.';
 
     public function __construct(private TTL $ttl)

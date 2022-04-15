@@ -1,21 +1,34 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Testing;
 
-use Mockery as m;
-use Arcanist\Arcanist;
-use Arcanist\WizardStep;
 use Arcanist\AbstractWizard;
-use Illuminate\Testing\TestResponse;
+use Arcanist\Arcanist;
 use Arcanist\Contracts\ResponseRenderer;
 use Arcanist\Exception\StepTemplateNotFoundException;
+use Arcanist\WizardStep;
+use Illuminate\Testing\TestResponse;
+use Mockery as m;
 
 /**
  * @mixin TestCase
  */
 trait ResponseRendererContractTests
 {
-    /** @test */
+    /**
+     * @test
+     */
     public function throws_an_exception_if_the_template_does_not_exist(): void
     {
         $wizard = m::mock(AbstractWizard::class)->makePartial();
@@ -31,7 +44,9 @@ trait ResponseRendererContractTests
             ->renderStep($step, $wizard, []);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_redirects_to_the_first_step_if_the_wizard_does_not_exist_yet(): void
     {
         $wizard = m::mock(AbstractWizard::class)->makePartial();
@@ -46,7 +61,9 @@ trait ResponseRendererContractTests
         $response->assertRedirect(route('wizard.::wizard::.create'));
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_redirects_with_an_error(): void
     {
         $wizard = m::mock(AbstractWizard::class)->makePartial();
@@ -58,7 +75,7 @@ trait ResponseRendererContractTests
         Arcanist::boot([$wizard::class]);
 
         $response = new TestResponse(
-            $this->makeRenderer()->redirectWithError($step, $wizard, '::message::')
+            $this->makeRenderer()->redirectWithError($step, $wizard, '::message::'),
         );
 
         $response->assertSessionHasErrors('wizard');

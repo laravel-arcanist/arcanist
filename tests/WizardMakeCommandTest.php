@@ -1,17 +1,27 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Tests;
 
 use Generator;
-use function app_path;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Spatie\Snapshots\MatchesSnapshots;
+use function app_path;
 
 class WizardMakeCommandTest extends TestCase
 {
     use MatchesSnapshots;
-
     private string $wizardName;
 
     protected function setUp(): void
@@ -29,20 +39,19 @@ class WizardMakeCommandTest extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider stepCommandInvocationProvider
      */
-    public function it_creates_steps_if_the_step_option_was_provided(array $steps): void
+    public function testItCreatesStepsIfTheStepOptionWasProvided(array $steps): void
     {
-        $option = implode(',', $steps);
+        $option = \implode(',', $steps);
 
         $this
             ->withoutExceptionHandling()
             ->artisan('make:wizard ' . $this->wizardName . ' --steps=' . $option);
 
         foreach ($steps as $step) {
-            $this->assertTrue(File::exists(
-                app_path('Wizards/' . $this->wizardName . '/Steps/' . $step . '.php')
+            self::assertTrue(File::exists(
+                app_path('Wizards/' . $this->wizardName . '/Steps/' . $step . '.php'),
             ));
         }
     }
@@ -55,23 +64,21 @@ class WizardMakeCommandTest extends TestCase
         ];
     }
 
-    /** @test */
-    public function it_does_not_create_steps_if_the_option_isnt_provided(): void
+    public function testItDoesNotCreateStepsIfTheOptionIsntProvided(): void
     {
         $this->artisan('make:wizard ' . $this->wizardName);
 
-        $this->assertFalse(File::exists(app_path('Wizards/' . $this->wizardName . '/Steps')));
+        self::assertFalse(File::exists(app_path('Wizards/' . $this->wizardName . '/Steps')));
     }
 
     /**
-     * @test
      * @dataProvider emptyStepNameProvider
      */
-    public function it_does_not_create_steps_if_no_step_names_are_provided(string $option): void
+    public function testItDoesNotCreateStepsIfNoStepNamesAreProvided(string $option): void
     {
         $this->artisan('make:wizard ' . $this->wizardName . ' ' . $option);
 
-        $this->assertFalse(File::exists(app_path('Wizards/' . $this->wizardName . '/Steps')));
+        self::assertFalse(File::exists(app_path('Wizards/' . $this->wizardName . '/Steps')));
     }
 
     public function emptyStepNameProvider(): Generator
@@ -82,24 +89,21 @@ class WizardMakeCommandTest extends TestCase
         ];
     }
 
-    /** @test */
-    public function it_prefills_the_generated_wizards_title_property(): void
+    public function testItPrefillsTheGeneratedWizardsTitleProperty(): void
     {
         $this->artisan('make:wizard TestWizard');
 
         $this->assertMatchesFileSnapshot(app_path('Wizards/TestWizard/TestWizard.php'));
     }
 
-    /** @test */
-    public function it_prefills_the_generated_wizards_slug_property(): void
+    public function testItPrefillsTheGeneratedWizardsSlugProperty(): void
     {
         $this->artisan('make:wizard TestWizard');
 
         $this->assertMatchesFileSnapshot(app_path('Wizards/TestWizard/TestWizard.php'));
     }
 
-    /** @test */
-    public function it_registers_any_provided_steps_in_the_wizard(): void
+    public function testItRegistersAnyProvidedStepsInTheWizard(): void
     {
         $this->artisan('make:wizard TestWizard --steps=Step1,Step2');
 

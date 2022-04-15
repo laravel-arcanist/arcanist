@@ -1,32 +1,43 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist;
 
-use function event;
-use function route;
-use function config;
-use function collect;
-use function data_get;
-use function redirect;
-use Illuminate\Support\Arr;
-use Illuminate\Http\Request;
+use Arcanist\Action\ActionResult;
+use Arcanist\Contracts\ResponseRenderer;
+use Arcanist\Contracts\WizardActionResolver;
+use Arcanist\Contracts\WizardRepository;
+use Arcanist\Event\WizardFinished;
+use Arcanist\Event\WizardFinishing;
 use Arcanist\Event\WizardLoaded;
 use Arcanist\Event\WizardSaving;
-use Arcanist\Action\ActionResult;
-use Arcanist\Event\WizardFinished;
-use Illuminate\Support\Collection;
-use Arcanist\Event\WizardFinishing;
-use Arcanist\Contracts\ResponseRenderer;
-use Arcanist\Contracts\WizardRepository;
-use Arcanist\Contracts\WizardActionResolver;
+use Arcanist\Exception\CannotUpdateStepException;
 use Arcanist\Exception\UnknownStepException;
+use Arcanist\Exception\WizardNotFoundException;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
-use Arcanist\Exception\WizardNotFoundException;
-use Arcanist\Exception\CannotUpdateStepException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use function collect;
+use function config;
+use function data_get;
+use function event;
+use function redirect;
+use function route;
 
 abstract class AbstractWizard
 {
@@ -79,7 +90,7 @@ abstract class AbstractWizard
     public function __construct(
         private WizardRepository $wizardRepository,
         protected ResponseRenderer $responseRenderer,
-        private WizardActionResolver $actionResolver
+        private WizardActionResolver $actionResolver,
     ) {
         $this->redirectTo = config('arcanist.redirect_url', '/home');
         $this->steps = collect($this->steps)
@@ -126,7 +137,7 @@ abstract class AbstractWizard
     /**
      * Renders the template of the first step of this wizard.
      */
-    public function create(Request $request): Responsable | Response | Renderable
+    public function create(Request $request): Responsable|Response|Renderable
     {
         return $this->renderStep($request, $this->steps[0]);
     }
@@ -136,14 +147,14 @@ abstract class AbstractWizard
      *
      * @throws UnknownStepException
      */
-    public function show(Request $request, string $wizardId, ?string $slug = null):  Response | Responsable | Renderable
+    public function show(Request $request, string $wizardId, ?string $slug = null): Response|Responsable|Renderable
     {
         $this->load($wizardId);
 
-        if ($slug === null) {
+        if (null === $slug) {
             return $this->responseRenderer->redirect(
                 $this->firstIncompleteStep(),
-                $this
+                $this,
             );
         }
 
@@ -152,7 +163,7 @@ abstract class AbstractWizard
         if (!$this->stepCanBeEdited($targetStep)) {
             return $this->responseRenderer->redirect(
                 $this->firstIncompleteStep(),
-                $this
+                $this,
             );
         }
 
@@ -164,7 +175,7 @@ abstract class AbstractWizard
      *
      * @throws ValidationException
      */
-    public function store(Request $request): Response | Responsable | Renderable
+    public function store(Request $request): Response|Responsable|Renderable
     {
         $step = $this->loadFirstStep();
 
@@ -174,7 +185,7 @@ abstract class AbstractWizard
             return $this->responseRenderer->redirectWithError(
                 $this->steps[0],
                 $this,
-                $result->error()
+                $result->error(),
             );
         }
 
@@ -182,7 +193,7 @@ abstract class AbstractWizard
 
         return $this->responseRenderer->redirect(
             $this->steps[1],
-            $this
+            $this,
         );
     }
 
@@ -192,7 +203,7 @@ abstract class AbstractWizard
      * @throws UnknownStepException
      * @throws ValidationException
      */
-    public function update(Request $request, string $wizardId, string $slug): Response | Responsable | Renderable
+    public function update(Request $request, string $wizardId, string $slug): Response|Responsable|Renderable
     {
         $this->load($wizardId);
 
@@ -208,24 +219,24 @@ abstract class AbstractWizard
             return $this->responseRenderer->redirectWithError(
                 $this->steps[0],
                 $this,
-                $result->error()
+                $result->error(),
             );
         }
 
         $this->saveStepData(
             $step,
-            $this->invalidateDependentFields($result->payload())
+            $this->invalidateDependentFields($result->payload()),
         );
 
         return $this->isLastStep()
             ? $this->processLastStep($request, $step)
             : $this->responseRenderer->redirect(
                 $this->nextStep(),
-                $this
+                $this,
             );
     }
 
-    public function destroy(Request $request, string $wizardId): Response | Responsable | Renderable
+    public function destroy(Request $request, string $wizardId): Response|Responsable|Renderable
     {
         $this->load($wizardId);
 
@@ -241,7 +252,7 @@ abstract class AbstractWizard
      */
     public function data(?string $key = null, mixed $default = null): mixed
     {
-        if ($key === null) {
+        if (null === $key) {
             return Arr::except($this->data, '_arcanist');
         }
 
@@ -254,7 +265,7 @@ abstract class AbstractWizard
      */
     public function exists(): bool
     {
-        return $this->id !== null;
+        return null !== $this->id;
     }
 
     /**
@@ -276,7 +287,7 @@ abstract class AbstractWizard
                 'url' => $this->exists()
                     ? route('wizard.' . static::$slug . '.show', [$this->getId(), $step->slug])
                     : null,
-            ])->all()
+            ])->all(),
         ];
     }
 
@@ -292,7 +303,7 @@ abstract class AbstractWizard
     /**
      * Gets called after the last step in the wizard is finished.
      */
-    protected function onAfterComplete(ActionResult $result): Response | Responsable | Renderable
+    protected function onAfterComplete(ActionResult $result): Response|Responsable|Renderable
     {
         return redirect()->to($this->redirectTo());
     }
@@ -304,13 +315,12 @@ abstract class AbstractWizard
      */
     protected function beforeDelete(Request $request): void
     {
-        //
     }
 
     /**
      * Gets called after the wizard was deleted.
      */
-    protected function onAfterDelete(): Response | Responsable | Renderable
+    protected function onAfterDelete(): Response|Responsable|Renderable
     {
         return redirect()->to($this->redirectTo());
     }
@@ -341,8 +351,8 @@ abstract class AbstractWizard
         $step = collect($this->steps)
             ->first(fn (WizardStep $step) => $step->slug === $slug);
 
-        if ($step === null) {
-            throw new UnknownStepException(sprintf(
+        if (null === $step) {
+            throw new UnknownStepException(\sprintf(
                 'No step with slug [%s] exists for wizard [%s]',
                 $slug,
                 static::class,
@@ -367,20 +377,20 @@ abstract class AbstractWizard
         event(new WizardLoaded($this));
     }
 
-    private function renderStep(Request $request, WizardStep $step): Responsable | Response | Renderable
+    private function renderStep(Request $request, WizardStep $step): Responsable|Response|Renderable
     {
         return $this->responseRenderer->renderStep(
             $step,
             $this,
-            $this->buildViewData($request, $step)
+            $this->buildViewData($request, $step),
         );
     }
 
     private function buildViewData(Request $request, WizardStep $step): array
     {
-        return array_merge(
+        return \array_merge(
             $step->viewData($request),
-            $this->sharedData($request)
+            $this->sharedData($request),
         );
     }
 
@@ -388,16 +398,16 @@ abstract class AbstractWizard
     {
         event(new WizardSaving($this));
 
-        $data['_arcanist'] = array_merge(
+        $data['_arcanist'] = \array_merge(
             $this->data['_arcanist'] ?? [],
             [$step->slug => true],
-            $data['_arcanist'] ?? []
+            $data['_arcanist'] ?? [],
         );
 
         $this->wizardRepository->saveData($this, $data);
     }
 
-    private function processLastStep(Request $request, WizardStep $step): Response | Responsable | Renderable
+    private function processLastStep(Request $request, WizardStep $step): Response|Responsable|Renderable
     {
         $this->load($this->id);
 
@@ -411,7 +421,7 @@ abstract class AbstractWizard
             return $this->responseRenderer->redirectWithError(
                 $step,
                 $this,
-                $result->error()
+                $result->error(),
             );
         }
 
@@ -439,7 +449,7 @@ abstract class AbstractWizard
 
     private function isLastStep(): bool
     {
-        return $this->currentStep + 1 === count($this->steps);
+        return $this->currentStep + 1 === \count($this->steps);
     }
 
     private function firstIncompleteStep(): WizardStep
@@ -457,7 +467,7 @@ abstract class AbstractWizard
         $fields = collect($this->steps)
             ->mapWithKeys(fn (WizardStep $step) => [
                 $step->slug => collect($step->dependentFields())
-                    ->filter(fn (Field $field) => $field->shouldInvalidate($changedFields))
+                    ->filter(fn (Field $field) => $field->shouldInvalidate($changedFields)),
             ])
             ->filter(fn (Collection $fields) => $fields->isNotEmpty());
 

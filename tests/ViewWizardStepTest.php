@@ -1,42 +1,50 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Tests;
 
-use Arcanist\WizardStep;
 use Arcanist\AbstractWizard;
-use Illuminate\Http\Request;
-use Arcanist\Renderer\FakeResponseRenderer;
 use Arcanist\Exception\CannotUpdateStepException;
+use Arcanist\Renderer\FakeResponseRenderer;
+use Arcanist\WizardStep;
+use Illuminate\Http\Request;
 
 class ViewWizardStepTest extends WizardTestCase
 {
-    /** @test */
-    public function it_redirects_to_the_first_incomplete_step_if_trying_skip_ahead(): void
+    public function testItRedirectsToTheFirstIncompleteStepIfTryingSkipAhead(): void
     {
         $renderer = new FakeResponseRenderer();
-        $wizard = $this->createWizard(IncompleteStepWizard::class, renderer:  $renderer);
+        $wizard = $this->createWizard(IncompleteStepWizard::class, renderer: $renderer);
 
         $wizard->show(new Request(), '1', 'incomplete-step-2');
 
         self::assertTrue($renderer->didRedirectTo(IncompleteStep::class));
     }
 
-    /** @test */
-    public function it_allows_skipping_ahead_if_the_target_step_has_been_completed_previously(): void
+    public function testItAllowsSkippingAheadIfTheTargetStepHasBeenCompletedPreviously(): void
     {
         $renderer = new FakeResponseRenderer();
-        $wizard = $this->createWizard(IncompleteStepWizard::class, renderer:  $renderer);
+        $wizard = $this->createWizard(IncompleteStepWizard::class, renderer: $renderer);
 
         $wizard->show(new Request(), '1', 'complete-step-2');
 
         self::assertTrue($renderer->stepWasRendered(AnotherCompleteStep::class));
     }
 
-    /** @test */
-    public function it_does_not_allow_updating_an_incomplete_step_if_the_previous_steps_have_not_been_completed_yet(): void
+    public function testItDoesNotAllowUpdatingAnIncompleteStepIfThePreviousStepsHaveNotBeenCompletedYet(): void
     {
         $renderer = new FakeResponseRenderer();
-        $wizard = $this->createWizard(IncompleteStepWizard::class, renderer:  $renderer);
+        $wizard = $this->createWizard(IncompleteStepWizard::class, renderer: $renderer);
 
         $this->expectException(CannotUpdateStepException::class);
 

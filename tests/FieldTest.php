@@ -1,4 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Tests;
 
@@ -6,16 +17,14 @@ use Arcanist\Field;
 
 class FieldTest extends TestCase
 {
-    /** @test */
-    public function it_can_create_a_new_field_with_a_name(): void
+    public function testItCanCreateANewFieldWithAName(): void
     {
         $field = Field::make('::name::');
 
         self::assertEquals('::name::', $field->name);
     }
 
-    /** @test */
-    public function it_can_add_validation_rules_to_a_field(): void
+    public function testItCanAddValidationRulesToAField(): void
     {
         $field = Field::make('::name::')
             ->rules(['::something::']);
@@ -23,24 +32,21 @@ class FieldTest extends TestCase
         self::assertEquals(['::something::'], $field->rules);
     }
 
-    /** @test */
-    public function it_is_nullable_by_default(): void
+    public function testItIsNullableByDefault(): void
     {
         $field = Field::make('::name::');
 
         self::assertEquals(['nullable'], $field->rules);
     }
 
-    /** @test */
-    public function it_does_not_have_dependencies_by_default(): void
+    public function testItDoesNotHaveDependenciesByDefault(): void
     {
         $field = Field::make('::name::');
 
         self::assertCount(0, $field->dependencies);
     }
 
-    /** @test */
-    public function it_can_specify_dependencies(): void
+    public function testItCanSpecifyDependencies(): void
     {
         $field = Field::make('::name::')
             ->dependsOn('::field-1::', '::field-2::');
@@ -51,8 +57,7 @@ class FieldTest extends TestCase
         ], $field->dependencies);
     }
 
-    /** @test */
-    public function it_should_not_change_if_none_of_its_dependencies_changed(): void
+    public function testItShouldNotChangeIfNoneOfItsDependenciesChanged(): void
     {
         $field = Field::make('::dependent-field::')
             ->dependsOn('::field::');
@@ -60,8 +65,7 @@ class FieldTest extends TestCase
         self::assertFalse($field->shouldInvalidate(['::another-field::']));
     }
 
-    /** @test */
-    public function it_should_invalidate_if_its_dependency_changed(): void
+    public function testItShouldInvalidateIfItsDependencyChanged(): void
     {
         $field = Field::make('::dependent-field::')
             ->dependsOn('::field::');
@@ -69,8 +73,7 @@ class FieldTest extends TestCase
         self::assertTrue($field->shouldInvalidate(['::field::']));
     }
 
-    /** @test */
-    public function it_should_invalidate_if_any_one_of_its_dependencies_changed(): void
+    public function testItShouldInvalidateIfAnyOneOfItsDependenciesChanged(): void
     {
         $field = Field::make('::dependent-field::')
             ->dependsOn('::field-1::', '::field-2::');
@@ -78,8 +81,7 @@ class FieldTest extends TestCase
         self::assertTrue($field->shouldInvalidate(['::field-2::']));
     }
 
-    /** @test */
-    public function it_returns_its_value_if_no_transformation_function_is_provided(): void
+    public function testItReturnsItsValueIfNoTransformationFunctionIsProvided(): void
     {
         $field = Field::make('::field::');
 
@@ -88,8 +90,7 @@ class FieldTest extends TestCase
         self::assertEquals('::value::', $actual);
     }
 
-    /** @test */
-    public function it_applies_the_registered_transformation_callback_to_the_value(): void
+    public function testItAppliesTheRegisteredTransformationCallbackToTheValue(): void
     {
         $field = Field::make('::field::')
             ->transform(function ($value) {

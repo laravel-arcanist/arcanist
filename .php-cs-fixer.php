@@ -27,8 +27,8 @@ $config = Config\Factory::fromRuleSet(new Config\RuleSet\Php80($header), [
 ]);
 
 $config->getFinder()
-    ->exclude([__DIR__. '/tests/__snapshots__'])
-    ->in([__DIR__ . '/src', __DIR__ . '/tests']);
+    ->in([__DIR__ . '/src', __DIR__ . '/tests'])
+    ->exclude('__snapshots__');
 $config->setCacheFile(__DIR__ . '/.build/php-cs-fixer/.php-cs-fixer.cache');
 
 return $config;

@@ -1,4 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Tests;
 
@@ -6,41 +17,37 @@ use Arcanist\Action\ActionResult;
 
 class ActionResultTest extends \PHPUnit\Framework\TestCase
 {
-    /** @test */
-    public function it_can_return_a_successful_result(): void
+    public function testItCanReturnASuccessfulResult(): void
     {
         $result = ActionResult::success([]);
 
-        $this->assertInstanceOf(ActionResult::class, $result);
-        $this->assertTrue($result->successful());
+        self::assertInstanceOf(ActionResult::class, $result);
+        self::assertTrue($result->successful());
     }
 
-    /** @test */
-    public function it_can_return_a_failed_result(): void
+    public function testItCanReturnAFailedResult(): void
     {
         $result = ActionResult::failed();
 
-        $this->assertInstanceOf(ActionResult::class, $result);
-        $this->assertFalse($result->successful());
+        self::assertInstanceOf(ActionResult::class, $result);
+        self::assertFalse($result->successful());
     }
 
-    /** @test */
-    public function it_returns_a_payload_for_a_successful_result(): void
+    public function testItReturnsAPayloadForASuccessfulResult(): void
     {
         $result = ActionResult::success([
             '::key-1::' => '::value-1::',
             '::key-2::' => '::value-2::',
         ]);
 
-        $this->assertEquals('::value-1::', $result->get('::key-1::'));
-        $this->assertEquals('::value-2::', $result->get('::key-2::'));
+        self::assertEquals('::value-1::', $result->get('::key-1::'));
+        self::assertEquals('::value-2::', $result->get('::key-2::'));
     }
 
-    /** @test */
-    public function it_can_pass_along_an_error_message_for_a_failed_result(): void
+    public function testItCanPassAlongAnErrorMessageForAFailedResult(): void
     {
         $result = ActionResult::failed('::message::');
 
-        $this->assertEquals('::message::', $result->error());
+        self::assertEquals('::message::', $result->error());
     }
 }

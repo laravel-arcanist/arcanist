@@ -1,25 +1,34 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Tests;
 
-use Mockery as m;
 use Arcanist\Action\WizardAction;
 use Arcanist\Contracts\WizardActionResolver;
 use Arcanist\Resolver\ContainerWizardActionResolver;
+use Mockery as m;
 
 class ContainerWizardActionResolverTest extends TestCase
 {
-    /** @test */
-    public function it_implements_the_correct_interface(): void
+    public function testItImplementsTheCorrectInterface(): void
     {
         self::assertInstanceOf(
             WizardActionResolver::class,
-            new ContainerWizardActionResolver()
+            new ContainerWizardActionResolver(),
         );
     }
 
-    /** @test */
-    public function it_resolves_the_action_from_the_container(): void
+    public function testItResolvesTheActionFromTheContainer(): void
     {
         $expected = m::mock(WizardAction::class);
         app()->instance('::action::', $expected);

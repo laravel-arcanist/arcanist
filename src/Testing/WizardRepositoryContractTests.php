@@ -2,16 +2,25 @@
 
 declare(strict_types=1);
 
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
+
 namespace Arcanist\Testing;
 
-use Mockery as m;
 use Arcanist\AbstractWizard;
+use Arcanist\Contracts\ResponseRenderer;
+use Arcanist\Contracts\WizardActionResolver;
+use Arcanist\Contracts\WizardRepository;
+use Arcanist\Exception\WizardNotFoundException;
 use Arcanist\Tests\Fixtures\WizardA;
 use Arcanist\Tests\Fixtures\WizardB;
-use Arcanist\Contracts\ResponseRenderer;
-use Arcanist\Contracts\WizardRepository;
-use Arcanist\Contracts\WizardActionResolver;
-use Arcanist\Exception\WizardNotFoundException;
+use Mockery as m;
 
 trait WizardRepositoryContractTests
 {
@@ -31,7 +40,7 @@ trait WizardRepositoryContractTests
 
         self::assertEquals(
             ['foo' => 'bar'],
-            $repository->loadData($wizard)
+            $repository->loadData($wizard),
         );
     }
 
@@ -42,6 +51,7 @@ trait WizardRepositoryContractTests
     public function it_throws_an_exception_when_trying_to_load_a_wizard_that_doesnt_exist(): void
     {
         $repository = $this->createRepository();
+
         /** @var AbstractWizard $wizard */
         $wizard = m::mock(AbstractWizard::class)->makePartial();
         $wizard->setId(1);
@@ -73,6 +83,7 @@ trait WizardRepositoryContractTests
     public function it_updates_an_existing_wizard(): void
     {
         $repository = $this->createRepository();
+
         /** @var AbstractWizard $wizard */
         $wizard = m::mock(AbstractWizard::class)->makePartial();
 
@@ -86,11 +97,11 @@ trait WizardRepositoryContractTests
         self::assertEquals(
             $wizardId,
             $wizard->getId(),
-            "Expected wizard id to stay the same but it didn't. `saveData` should not create a new record if the wizard already has an id."
+            "Expected wizard id to stay the same but it didn't. `saveData` should not create a new record if the wizard already has an id.",
         );
         self::assertEquals(
             ['foo' => 'baz'],
-            $repository->loadData($wizard)
+            $repository->loadData($wizard),
         );
     }
 
@@ -104,6 +115,7 @@ trait WizardRepositoryContractTests
 
         /** @var AbstractWizard $wizard1 */
         $wizard1 = m::mock(AbstractWizard::class)->makePartial();
+
         /** @var AbstractWizard $wizard2 */
         $wizard2 = m::mock(AbstractWizard::class)->makePartial();
 
@@ -121,6 +133,7 @@ trait WizardRepositoryContractTests
     public function it_merges_new_data_with_the_existing_data(): void
     {
         $repository = $this->createRepository();
+
         /** @var AbstractWizard $wizard */
         $wizard = m::mock(AbstractWizard::class)->makePartial();
 
@@ -131,13 +144,13 @@ trait WizardRepositoryContractTests
 
         $repository->saveData($wizard, [
             '::key-2::' => '::new-value-2::',
-            '::key-3::' => '::value-3::'
+            '::key-3::' => '::value-3::',
         ]);
 
         $this->assertEquals([
             '::key-1::' => '::old-value-1::',
             '::key-2::' => '::new-value-2::',
-            '::key-3::' => '::value-3::'
+            '::key-3::' => '::value-3::',
         ], $repository->loadData($wizard));
     }
 
@@ -148,6 +161,7 @@ trait WizardRepositoryContractTests
     public function it_deletes_a_wizard(): void
     {
         $repository = $this->createRepository();
+
         /** @var AbstractWizard $wizard */
         $wizard = m::mock(AbstractWizard::class)->makePartial();
 
@@ -169,6 +183,7 @@ trait WizardRepositoryContractTests
     public function it_unsets_the_wizard_id_after_deleting_it(): void
     {
         $repository = $this->createRepository();
+
         /** @var AbstractWizard $wizard */
         $wizard = m::mock(AbstractWizard::class)->makePartial();
 
@@ -256,10 +271,10 @@ trait WizardRepositoryContractTests
         $wizard = new $class(
             $repository,
             m::mock(ResponseRenderer::class),
-            m::mock(WizardActionResolver::class)
+            m::mock(WizardActionResolver::class),
         );
 
-        if ($id !== null) {
+        if (null !== $id) {
             $wizard->setId($id);
         }
 

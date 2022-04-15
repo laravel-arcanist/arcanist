@@ -1,20 +1,31 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist;
 
-use Carbon\Carbon;
-use function database_path;
-use Illuminate\Support\Str;
-use Arcanist\Event\WizardFinished;
-use Illuminate\Support\ServiceProvider;
-use Arcanist\Commands\WizardMakeCommand;
-use Arcanist\Contracts\ResponseRenderer;
-use Arcanist\Contracts\WizardRepository;
 use Arcanist\Commands\CleanupExpiredWizards;
+use Arcanist\Commands\WizardMakeCommand;
 use Arcanist\Commands\WizardStepMakeCommand;
+use Arcanist\Contracts\ResponseRenderer;
 use Arcanist\Contracts\WizardActionResolver;
-use Arcanist\Renderer\BladeResponseRenderer;
+use Arcanist\Contracts\WizardRepository;
+use Arcanist\Event\WizardFinished;
 use Arcanist\Listener\RemoveCompletedWizardListener;
+use Arcanist\Renderer\BladeResponseRenderer;
+use Carbon\Carbon;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
+use function database_path;
 
 class ArcanistServiceProvider extends ServiceProvider
 {
@@ -46,22 +57,22 @@ class ArcanistServiceProvider extends ServiceProvider
 
         $this->app['events']->listen(
             WizardFinished::class,
-            RemoveCompletedWizardListener::class
+            RemoveCompletedWizardListener::class,
         );
 
         $this->app->bind(
             WizardRepository::class,
-            config('arcanist.storage.driver')
+            config('arcanist.storage.driver'),
         );
 
         $this->app->bind(
             ResponseRenderer::class,
-            config('arcanist.renderers.renderer')
+            config('arcanist.renderers.renderer'),
         );
 
         $this->app->bind(
             WizardActionResolver::class,
-            config('arcanist.action_resolver')
+            config('arcanist.action_resolver'),
         );
 
         $this->app->when(BladeResponseRenderer::class)

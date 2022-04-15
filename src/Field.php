@@ -1,16 +1,29 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist;
 
 class Field
 {
-    /** @var callable $transformationCallback */
-    private $transformationCallback = null;
+    /**
+     * @var callable
+     */
+    private $transformationCallback;
 
     public function __construct(
         public string $name,
         public array $rules = ['nullable'],
-        public array $dependencies = []
+        public array $dependencies = [],
     ) {
     }
 
@@ -35,7 +48,7 @@ class Field
 
     public function shouldInvalidate(array $changedFieldNames): bool
     {
-        return count(array_intersect($this->dependencies, $changedFieldNames)) > 0;
+        return \count(\array_intersect($this->dependencies, $changedFieldNames)) > 0;
     }
 
     public function value(mixed $value): mixed

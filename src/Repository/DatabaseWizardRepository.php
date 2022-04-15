@@ -1,9 +1,18 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Repository;
 
-use function get_class;
-use function array_merge;
 use Arcanist\AbstractWizard;
 use Arcanist\Contracts\WizardRepository;
 use Arcanist\Exception\WizardNotFoundException;
@@ -26,10 +35,10 @@ class DatabaseWizardRepository implements WizardRepository
     {
         $affectedRows = Wizard::where([
             'id' => $wizard->getId(),
-            'class' => get_class($wizard),
+            'class' => $wizard::class,
         ])->delete();
 
-        if ($affectedRows === 0) {
+        if (0 === $affectedRows) {
             return;
         }
 
@@ -39,7 +48,7 @@ class DatabaseWizardRepository implements WizardRepository
     private function createWizard(AbstractWizard $wizard, array $data): void
     {
         $model = Wizard::create([
-            'class' => get_class($wizard),
+            'class' => $wizard::class,
             'data' => $data,
         ]);
 
@@ -51,7 +60,7 @@ class DatabaseWizardRepository implements WizardRepository
         $model = $this->loadWizard($wizard);
 
         $model->update([
-            'data' => array_merge($model->data, $data)
+            'data' => \array_merge($model->data, $data),
         ]);
     }
 
@@ -62,10 +71,10 @@ class DatabaseWizardRepository implements WizardRepository
     {
         $model = Wizard::where([
             'id' => $wizard->getId(),
-            'class' => get_class($wizard)
+            'class' => $wizard::class,
         ])->first();
 
-        if ($model === null) {
+        if (null === $model) {
             throw new WizardNotFoundException();
         }
 

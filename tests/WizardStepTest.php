@@ -1,10 +1,21 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Tests;
 
-use Mockery as m;
-use Arcanist\WizardStep;
 use Arcanist\AbstractWizard;
+use Arcanist\WizardStep;
+use Mockery as m;
 
 class WizardStepTest extends TestCase
 {
@@ -14,13 +25,12 @@ class WizardStepTest extends TestCase
     {
         parent::setUp();
 
-        $this->step = new class extends WizardStep {
+        $this->step = new class() extends WizardStep {
             public string $slug = '::step-slug::';
         };
     }
 
-    /** @test */
-    public function it_considers_a_step_finished_if_it_was_successfully_submitted_before(): void
+    public function testItConsidersAStepFinishedIfItWasSuccessfullySubmittedBefore(): void
     {
         $wizard = m::mock(AbstractWizard::class);
         $wizard->allows('data')->with('_arcanist.::step-slug::', false)->andReturnTrue();
@@ -29,8 +39,7 @@ class WizardStepTest extends TestCase
         self::assertTrue($this->step->isComplete());
     }
 
-    /** @test */
-    public function it_considers_a_step_unfinished_if_it_was_never_successfully_submitted_before(): void
+    public function testItConsidersAStepUnfinishedIfItWasNeverSuccessfullySubmittedBefore(): void
     {
         $wizard = m::mock(AbstractWizard::class);
         $wizard->allows('data')->with('_arcanist.::step-slug::', false)->andReturnNull();

@@ -1,4 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Action;
 
@@ -7,16 +18,16 @@ class ActionResult
     private function __construct(
         private bool $successful,
         private array $payload,
-        private ?string $errorMessage = null
+        private ?string $errorMessage = null,
     ) {
     }
 
-    public static function success(array $payload = []): ActionResult
+    public static function success(array $payload = []): self
     {
         return new self(true, $payload);
     }
 
-    public static function failed(?string $message = null): ActionResult
+    public static function failed(?string $message = null): self
     {
         return new self(false, [], $message);
     }

@@ -1,4 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Repository;
 
@@ -22,16 +33,16 @@ class FakeWizardRepository implements WizardRepository
 
         $this->guardAgainstWizardClassMismatch($wizard);
 
-        $wizardClass = get_class($wizard);
+        $wizardClass = $wizard::class;
 
         $existingData = $this->data[$wizardClass][$wizard->getId()] ?? [];
 
-        $this->data[$wizardClass][$wizard->getId()] = array_merge($existingData, $data);
+        $this->data[$wizardClass][$wizard->getId()] = \array_merge($existingData, $data);
     }
 
     public function loadData(AbstractWizard $wizard): array
     {
-        $wizardClass = get_class($wizard);
+        $wizardClass = $wizard::class;
 
         if (!isset($this->data[$wizardClass][$wizard->getId()])) {
             throw new WizardNotFoundException();
@@ -46,7 +57,7 @@ class FakeWizardRepository implements WizardRepository
             return;
         }
 
-        unset($this->data[get_class($wizard)][$wizard->getId()]);
+        unset($this->data[$wizard::class][$wizard->getId()]);
 
         $wizard->setId(null);
     }
@@ -59,7 +70,7 @@ class FakeWizardRepository implements WizardRepository
     private function hasIdMismatch(AbstractWizard $wizard): bool
     {
         return collect($this->data)
-            ->except(get_class($wizard))
+            ->except($wizard::class)
             ->contains(fn (array $wizards) => isset($wizards[$wizard->getId()]));
     }
 }

@@ -1,4 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Tests;
 
@@ -7,10 +18,9 @@ use Arcanist\Action\WizardAction;
 
 class WizardActionTest extends \PHPUnit\Framework\TestCase
 {
-    /** @test */
-    public function it_can_return_a_successful_result(): void
+    public function testItCanReturnASuccessfulResult(): void
     {
-        $action = new class extends WizardAction {
+        $action = new class() extends WizardAction {
             public function execute(mixed $payload = null): ActionResult
             {
                 return $this->success();
@@ -19,13 +29,12 @@ class WizardActionTest extends \PHPUnit\Framework\TestCase
 
         $result = $action->execute();
 
-        $this->assertTrue($result->successful());
+        self::assertTrue($result->successful());
     }
 
-    /** @test */
-    public function it_passes_along_the_payload(): void
+    public function testItPassesAlongThePayload(): void
     {
-        $action = new class extends WizardAction {
+        $action = new class() extends WizardAction {
             public function execute(mixed $payload = null): ActionResult
             {
                 return $this->success(['::key::' => '::value::']);
@@ -34,13 +43,12 @@ class WizardActionTest extends \PHPUnit\Framework\TestCase
 
         $result = $action->execute();
 
-        $this->assertEquals('::value::', $result->get('::key::'));
+        self::assertEquals('::value::', $result->get('::key::'));
     }
 
-    /** @test */
-    public function it_can_return_a_failed_result(): void
+    public function testItCanReturnAFailedResult(): void
     {
-        $action = new class extends WizardAction {
+        $action = new class() extends WizardAction {
             public function execute(mixed $payload = null): ActionResult
             {
                 return $this->failure();
@@ -49,13 +57,12 @@ class WizardActionTest extends \PHPUnit\Framework\TestCase
 
         $result = $action->execute();
 
-        $this->assertFalse($result->successful());
+        self::assertFalse($result->successful());
     }
 
-    /** @test */
-    public function it_passes_along_the_error_message_for_a_failed_result(): void
+    public function testItPassesAlongTheErrorMessageForAFailedResult(): void
     {
-        $action = new class extends WizardAction {
+        $action = new class() extends WizardAction {
             public function execute(mixed $payload = null): ActionResult
             {
                 return $this->failure('::error::');
@@ -64,6 +71,6 @@ class WizardActionTest extends \PHPUnit\Framework\TestCase
 
         $result = $action->execute();
 
-        $this->assertEquals('::error::', $result->error());
+        self::assertEquals('::error::', $result->error());
     }
 }

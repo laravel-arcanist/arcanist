@@ -1,24 +1,34 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Tests;
 
-use Generator;
-use function app;
-use Mockery as m;
-use function route;
-use Arcanist\Arcanist;
-use Arcanist\WizardStep;
 use Arcanist\AbstractWizard;
-use Illuminate\Contracts\View\View;
-use Illuminate\Testing\TestResponse;
+use Arcanist\Arcanist;
 use Arcanist\Contracts\ResponseRenderer;
 use Arcanist\Renderer\BladeResponseRenderer;
 use Arcanist\Testing\ResponseRendererContractTests;
+use Arcanist\WizardStep;
+use Generator;
+use Illuminate\Contracts\View\View;
+use Illuminate\Testing\TestResponse;
+use Mockery as m;
+use function app;
+use function route;
 
 class BladeResponseRendererTest extends TestCase
 {
     use ResponseRendererContractTests;
-
     private AbstractWizard $wizard;
     private WizardStep $step;
     private BladeResponseRenderer $renderer;
@@ -39,54 +49,50 @@ class BladeResponseRendererTest extends TestCase
         Arcanist::boot([BladeTestWizard::class]);
     }
 
-    /** @test */
-    public function it_renders_the_correct_template_for_a_wizard_step(): void
+    public function testItRendersTheCorrectTemplateForAWizardStep(): void
     {
         $response = $this->renderer->renderStep(
             $this->step,
             $this->wizard,
-            []
+            [],
         );
 
         self::assertInstanceOf(View::class, $response);
         self::assertEquals("wizards.{$this->wizard::$slug}.{$this->step->slug}", $response->name());
     }
 
-    /** @test */
-    public function it_passes_along_the_view_data_to_the_view(): void
+    public function testItPassesAlongTheViewDataToTheView(): void
     {
         $response = $this->renderer->renderStep(
             $this->step,
             $this->wizard,
-            ['::key::' => '::value::']
+            ['::key::' => '::value::'],
         );
 
         self::assertEquals(
             ['::key::' => '::value::'],
-            $response->getData()['step']
+            $response->getData()['step'],
         );
     }
 
-    /** @test */
-    public function it_provides_the_wizard_summary_to_every_view(): void
+    public function testItProvidesTheWizardSummaryToEveryView(): void
     {
         $response = $this->renderer->renderStep(
             $this->step,
             $this->wizard,
-            []
+            [],
         );
 
         self::assertEquals(
             ['::summary::'],
-            $response->getData()['wizard']
+            $response->getData()['wizard'],
         );
     }
 
     /**
-     * @test
      * @dataProvider redirectToStepProvider
      */
-    public function it_redirects_to_a_steps_view(callable $callRenderer): void
+    public function testItRedirectsToAStepsView(callable $callRenderer): void
     {
         $this->wizard->setId(1);
 
@@ -108,7 +114,7 @@ class BladeResponseRendererTest extends TestCase
                 function (BladeResponseRenderer $renderer, AbstractWizard $wizard, WizardStep $step) {
                     return $renderer->redirectWithError($step, $wizard);
                 },
-            ]
+            ],
         ];
     }
 
@@ -121,7 +127,6 @@ class BladeResponseRendererTest extends TestCase
 class BladeTestWizard extends AbstractWizard
 {
     public static string $slug = 'blade-wizard';
-
     protected array $steps = [
         BladeStep::class,
     ];

@@ -1,18 +1,28 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Tests;
 
-use Mockery as m;
 use Arcanist\AbstractWizard;
-use PHPUnit\Framework\TestCase;
 use Arcanist\Event\WizardFinished;
-use Arcanist\Repository\FakeWizardRepository;
 use Arcanist\Listener\RemoveCompletedWizardListener;
+use Arcanist\Repository\FakeWizardRepository;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
 class RemoveCompletedWizardListenerTest extends TestCase
 {
-    /** @test */
-    public function it_removes_a_wizard_after_it_was_completed(): void
+    public function testItRemovesAWizardAfterItWasCompleted(): void
     {
         $wizard = m::mock(AbstractWizard::class)->makePartial();
         $wizard->setId(1);

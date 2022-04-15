@@ -1,17 +1,27 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Tests;
 
+use Arcanist\AbstractWizard;
 use Arcanist\Field;
 use Arcanist\StepResult;
 use Arcanist\WizardStep;
-use Arcanist\AbstractWizard;
 use Illuminate\Http\Request;
 
 class InvalidateDependentFieldsTest extends WizardTestCase
 {
-    /** @test */
-    public function it_unsets_a_single_dependent_field_if_the_field_it_depends_on_was_changed(): void
+    public function testItUnsetsASingleDependentFieldIfTheFieldItDependsOnWasChanged(): void
     {
         $repo = $this->createWizardRepository([
             '::normal-field-1::' => '::value-1::',
@@ -26,8 +36,7 @@ class InvalidateDependentFieldsTest extends WizardTestCase
         self::assertNull($repo->loadData($wizard)['::dependent-field-1::']);
     }
 
-    /** @test */
-    public function it_does_not_unset_a_dependent_field_if_the_field_it_depends_on_wasnt_changed(): void
+    public function testItDoesNotUnsetADependentFieldIfTheFieldItDependsOnWasntChanged(): void
     {
         $repo = $this->createWizardRepository([
             '::normal-field-1::' => '::value-1::',
@@ -42,8 +51,7 @@ class InvalidateDependentFieldsTest extends WizardTestCase
         self::assertEquals('::value-2::', $repo->loadData($wizard)['::dependent-field-1::']);
     }
 
-    /** @test */
-    public function it_unsets_a_dependent_field_if_one_of_its_dependencies_changed(): void
+    public function testItUnsetsADependentFieldIfOneOfItsDependenciesChanged(): void
     {
         $repo = $this->createWizardRepository([
             '::normal-field-1::' => '::value-1::',
@@ -60,8 +68,7 @@ class InvalidateDependentFieldsTest extends WizardTestCase
         self::assertNull($repo->loadData($wizard)['::dependent-field-1::']);
     }
 
-    /** @test */
-    public function it_unsets_all_dependent_fields_if_a_common_dependency_changed(): void
+    public function testItUnsetsAllDependentFieldsIfACommonDependencyChanged(): void
     {
         $repo = $this->createWizardRepository([
             '::dependent-field-1::' => '::dependent-field-value::',
@@ -78,8 +85,7 @@ class InvalidateDependentFieldsTest extends WizardTestCase
         self::assertNull($repo->loadData($wizard)['::dependent-field-2::']);
     }
 
-    /** @test */
-    public function it_unsets_all_dependent_fields_whose_dependency_was_changed(): void
+    public function testItUnsetsAllDependentFieldsWhoseDependencyWasChanged(): void
     {
         $repo = $this->createWizardRepository([
             '::dependent-field-1::' => '::dependent-field-1-value::',
@@ -98,8 +104,7 @@ class InvalidateDependentFieldsTest extends WizardTestCase
         self::assertNull($repo->loadData($wizard)['::dependent-field-3::']);
     }
 
-    /** @test */
-    public function it_does_not_invalidate_dependent_fields_if_the_step_was_unsuccessful(): void
+    public function testItDoesNotInvalidateDependentFieldsIfTheStepWasUnsuccessful(): void
     {
         $repo = $this->createWizardRepository([
             '::normal-field-1::' => '::normal-field-1-value::',
@@ -114,22 +119,21 @@ class InvalidateDependentFieldsTest extends WizardTestCase
         self::assertEquals('::dependent-field-1-value::', $repo->loadData($wizard)['::dependent-field-1::']);
     }
 
-    /** @test */
-    public function it_marks_the_step_as_unfinished_if_any_of_its_fields_got_invalidated(): void
+    public function testItMarksTheStepAsUnfinishedIfAnyOfItsFieldsGotInvalidated(): void
     {
         $repo = $this->createWizardRepository([
             '::normal-field-1::' => '::value-1::',
             '::dependent-field-1::' => '::value-2::',
             '_arcanist' => [
                 '::step-with-dependent-field-slug::' => true,
-            ]
+            ],
         ], DependentStepWizard::class);
         $wizard = $this->createWizard(DependentStepWizard::class, repository: $repo);
         $wizard->setId(1);
 
         // Sanity check
         self::assertTrue(
-            $repo->loadData($wizard)['_arcanist']['::step-with-dependent-field-slug::'] ?? false
+            $repo->loadData($wizard)['_arcanist']['::step-with-dependent-field-slug::'] ?? false,
         );
 
         $wizard->update(Request::create('::uri::', 'POST', [
@@ -137,7 +141,7 @@ class InvalidateDependentFieldsTest extends WizardTestCase
         ]), '1', 'regular-step');
 
         self::assertNull(
-            $repo->loadData($wizard)['_arcanist']['::step-with-dependent-field-slug::'] ?? null
+            $repo->loadData($wizard)['_arcanist']['::step-with-dependent-field-slug::'] ?? null,
         );
     }
 }
@@ -198,7 +202,7 @@ class FailingStep extends WizardStep
     public function fields(): array
     {
         return [
-            Field::make('::normal-field-1::')
+            Field::make('::normal-field-1::'),
         ];
     }
 

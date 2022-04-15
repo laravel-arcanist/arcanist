@@ -1,4 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist;
 
@@ -7,7 +18,7 @@ final class StepResult
     private function __construct(
         private bool $successful,
         private array $payload = [],
-        private ?string $error = null
+        private ?string $error = null,
     ) {
     }
 

@@ -1,15 +1,25 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Commands;
 
-use Illuminate\Support\Str;
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 
 class WizardStepMakeCommand extends GeneratorCommand
 {
     protected $name = 'make:wizard-step';
-
     protected $type = 'Wizard Step';
 
     protected function getStub()
@@ -44,14 +54,14 @@ class WizardStepMakeCommand extends GeneratorCommand
 
     private function replaceStepTitle(string &$stub): self
     {
-        $stub = str_replace('{{ title }}', $this->getNameInput(), $stub);
+        $stub = \str_replace('{{ title }}', $this->getNameInput(), $stub);
 
         return $this;
     }
 
     private function replaceStepSlug(string &$stub): self
     {
-        $stub = str_replace('{{ slug }}', Str::kebab($this->getNameInput()), $stub);
+        $stub = \str_replace('{{ slug }}', Str::kebab($this->getNameInput()), $stub);
 
         return $this;
     }

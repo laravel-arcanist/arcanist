@@ -1,15 +1,25 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Commands;
 
-use Illuminate\Support\Str;
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
 class WizardMakeCommand extends GeneratorCommand
 {
     protected $name = 'make:wizard';
-
     protected $type = 'Wizard';
 
     public function handle(): void
@@ -54,14 +64,14 @@ class WizardMakeCommand extends GeneratorCommand
 
     private function replaceWizardTitle(string &$stub): self
     {
-        $stub = str_replace('{{ title }}', $this->getNameInput(), $stub);
+        $stub = \str_replace('{{ title }}', $this->getNameInput(), $stub);
 
         return $this;
     }
 
     private function replaceWizardSlug(string &$stub): self
     {
-        $stub = str_replace('{{ slug }}', Str::kebab($this->getNameInput()), $stub);
+        $stub = \str_replace('{{ slug }}', Str::kebab($this->getNameInput()), $stub);
 
         return $this;
     }
@@ -75,17 +85,17 @@ class WizardMakeCommand extends GeneratorCommand
         } else {
             $steps = [
                 'protected array $steps = [',
-                ...array_map(
+                ...\array_map(
                     fn (string $step) => '        \App\Wizards\\' . $this->getNameInput() . '\Steps\\' . $step . '::class,',
-                    $steps
+                    $steps,
                 ),
-                '    ];'
+                '    ];',
             ];
 
-            $steps = implode("\n", $steps);
+            $steps = \implode("\n", $steps);
         }
 
-        $stub = str_replace('{{ steps }}', $steps, $stub);
+        $stub = \str_replace('{{ steps }}', $steps, $stub);
 
         return $this;
     }
@@ -98,6 +108,6 @@ class WizardMakeCommand extends GeneratorCommand
             return [];
         }
 
-        return explode(',', $steps);
+        return \explode(',', $steps);
     }
 }

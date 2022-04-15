@@ -1,12 +1,23 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Exception;
 
-use Exception;
 use Arcanist\WizardStep;
-use Facade\IgnitionContracts\Solution;
+use Exception;
 use Facade\IgnitionContracts\BaseSolution;
 use Facade\IgnitionContracts\ProvidesSolution;
+use Facade\IgnitionContracts\Solution;
 
 class StepTemplateNotFoundException extends Exception implements ProvidesSolution
 {

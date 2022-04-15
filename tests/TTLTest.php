@@ -1,19 +1,29 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Tests;
 
-use Generator;
 use Arcanist\TTL;
 use Carbon\Carbon;
+use Generator;
 use InvalidArgumentException;
 
 class TTLTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @test
      * @dataProvider validValueProvider
      */
-    public function it_can_be_turned_into_a_date(int $value, callable $expectedDate): void
+    public function testItCanBeTurnedIntoADate(int $value, callable $expectedDate): void
     {
         Carbon::setTestNow(now());
 
@@ -31,8 +41,7 @@ class TTLTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /** @test */
-    public function it_cannot_be_negative(): void
+    public function testItCannotBeNegative(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -40,10 +49,9 @@ class TTLTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @test
      * @dataProvider secondsProvider
      */
-    public function it_can_be_turned_back_to_seconds(int $value): void
+    public function testItCanBeTurnedBackToSeconds(int $value): void
     {
         Carbon::setTestNow(now());
 
@@ -57,7 +65,7 @@ class TTLTest extends \PHPUnit\Framework\TestCase
         yield from [
             [0],
             [60],
-            [24 * 60 * 60]
+            [24 * 60 * 60],
         ];
     }
 }

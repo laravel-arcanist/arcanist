@@ -1,26 +1,31 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Tests;
 
-use Arcanist\TTL;
-use Mockery as m;
 use Arcanist\AbstractWizard;
 use Arcanist\Contracts\WizardRepository;
-use Arcanist\Repository\CacheWizardRepository;
 use Arcanist\Exception\WizardNotFoundException;
+use Arcanist\Repository\CacheWizardRepository;
 use Arcanist\Testing\WizardRepositoryContractTests;
+use Arcanist\TTL;
+use Mockery as m;
 
 class CacheWizardRepositoryTest extends TestCase
 {
     use WizardRepositoryContractTests;
 
-    protected function createRepository(): WizardRepository
-    {
-        return new CacheWizardRepository(TTL::fromSeconds(24 * 60 * 60));
-    }
-
-    /** @test */
-    public function it_saves_wizard_data_with_the_correct_ttl(): void
+    public function testItSavesWizardDataWithTheCorrectTtl(): void
     {
         /** @var AbstractWizard $wizard */
         $wizard = m::mock(AbstractWizard::class)->makePartial();
@@ -34,8 +39,7 @@ class CacheWizardRepositoryTest extends TestCase
         $repository->loadData($wizard);
     }
 
-    /** @test */
-    public function it_refreshes_the_ttl_when_the_wizard_gets_updated(): void
+    public function testItRefreshesTheTtlWhenTheWizardGetsUpdated(): void
     {
         /** @var AbstractWizard $wizard */
         $wizard = m::mock(AbstractWizard::class)->makePartial();
@@ -49,5 +53,10 @@ class CacheWizardRepositoryTest extends TestCase
 
         $this->travel(59)->seconds();
         self::assertEquals(['::key::' => '::data-2::'], $repository->loadData($wizard));
+    }
+
+    protected function createRepository(): WizardRepository
+    {
+        return new CacheWizardRepository(TTL::fromSeconds(24 * 60 * 60));
     }
 }

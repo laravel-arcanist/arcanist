@@ -1,32 +1,41 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist\Tests;
 
-use Mockery as m;
-use Arcanist\WizardStep;
 use Arcanist\AbstractWizard;
-use PHPUnit\Framework\TestCase;
 use Arcanist\Renderer\FakeResponseRenderer;
+use Arcanist\WizardStep;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
 class FakeResponseRendererTest extends TestCase
 {
-    /** @test */
-    public function it_records_what_step_was_rendered(): void
+    public function testItRecordsWhatStepWasRendered(): void
     {
         $renderer = new FakeResponseRenderer();
         $wizard = m::mock(AbstractWizard::class);
 
         $renderer->renderStep(
             new FakeStep($wizard, '1'),
-            $wizard
+            $wizard,
         );
 
         self::assertTrue($renderer->stepWasRendered(FakeStep::class));
         self::assertFalse($renderer->stepWasRendered(AnotherFakeStep::class));
     }
 
-    /** @test */
-    public function it_records_what_data_a_step_was_rendered_with(): void
+    public function testItRecordsWhatDataAStepWasRenderedWith(): void
     {
         $renderer = new FakeResponseRenderer();
         $wizard = m::mock(AbstractWizard::class);
@@ -40,8 +49,7 @@ class FakeResponseRendererTest extends TestCase
         self::assertTrue($renderer->stepWasRendered(FakeStep::class, ['foo' => 'bar']));
     }
 
-    /** @test */
-    public function it_records_redirects(): void
+    public function testItRecordsRedirects(): void
     {
         $wizard = m::mock(AbstractWizard::class);
         $step = new FakeStep($wizard, '1');
@@ -54,8 +62,7 @@ class FakeResponseRendererTest extends TestCase
         self::assertFalse($renderer->didRedirectWithError(FakeStep::class));
     }
 
-    /** @test */
-    public function it_records_redirects_with_errors(): void
+    public function testItRecordsRedirectsWithErrors(): void
     {
         $wizard = m::mock(AbstractWizard::class);
         $step = new FakeStep($wizard, '1');

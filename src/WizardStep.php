@@ -1,12 +1,23 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/laravel-arcanist/arcanist
+ */
 
 namespace Arcanist;
 
-use function collect;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use function collect;
 
 abstract class WizardStep
 {
@@ -21,7 +32,6 @@ abstract class WizardStep
      * The slug of the wizard that is used in the URL.
      */
     public string $slug = 'new-step';
-
     private AbstractWizard $wizard;
     private int $index;
 
@@ -71,7 +81,7 @@ abstract class WizardStep
 
         return collect($this->fields())
             ->mapWithKeys(fn (Field $field) => [
-                $field->name => $field->value($data[$field->name] ?? null)
+                $field->name => $field->value($data[$field->name] ?? null),
             ])
             ->pipe(fn (Collection $values) => $this->handle($request, $values->toArray()));
     }
@@ -79,18 +89,18 @@ abstract class WizardStep
     public function dependentFields(): array
     {
         return collect($this->fields())
-            ->filter(fn (Field $field) => count($field->dependencies) > 0)
+            ->filter(fn (Field $field) => \count($field->dependencies) > 0)
             ->all();
-    }
-
-    protected function handle(Request $request, array $payload): StepResult
-    {
-        return $this->success($payload);
     }
 
     public function fields(): array
     {
         return [];
+    }
+
+    protected function handle(Request $request, array $payload): StepResult
+    {
+        return $this->success($payload);
     }
 
     protected function success(array $payload = []): StepResult
@@ -120,7 +130,7 @@ abstract class WizardStep
     {
         return collect($this->rules())
             ->keys()
-            ->map(fn (string $key) => explode('.', $key)[0])
+            ->map(fn (string $key) => \explode('.', $key)[0])
             ->mapWithKeys(fn (string $key) => [
                 $key => $this->data($key),
             ])->merge($additionalData)
