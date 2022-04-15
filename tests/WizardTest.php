@@ -242,6 +242,17 @@ class WizardTest extends WizardTestCase
     }
 
     /** @test */
+    public function it_returns_the_wizards_current_step_index_in_the_summary(): void
+    {
+        $wizard = $this->createWizard(TestWizard::class);
+        $wizard->show(new Request(), '1', 'step-with-view-data');
+
+        $summary = $wizard->summary();
+
+        self::assertEquals(1, $summary['currentStepIndex']);
+    }
+
+    /** @test */
     public function it_returns_the_slug_of_each_step_in_the_summary(): void
     {
         $wizard = $this->createWizard(TestWizard::class);

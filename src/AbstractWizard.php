@@ -266,6 +266,7 @@ abstract class AbstractWizard
 
         return [
             'id' => $this->id,
+            'currentStepIndex' => $this->currentStep,
             'slug' => static::$slug,
             'title' => $this->title(),
             'steps' => collect($this->steps)->map(fn (WizardStep $step) => [
