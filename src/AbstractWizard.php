@@ -218,7 +218,7 @@ abstract class AbstractWizard
         );
 
         return $this->isLastStep()
-            ? $this->processLastStep($step)
+            ? $this->processLastStep($request, $step)
             : $this->responseRenderer->redirect(
                 $this->nextStep(),
                 $this
@@ -284,7 +284,7 @@ abstract class AbstractWizard
      * Return a structured object of the wizard's data that will be
      * passed to the action after the wizard is completed.
      */
-    protected function transformWizardData(): mixed
+    protected function transformWizardData(Request $request): mixed
     {
         return $this->data();
     }
@@ -397,7 +397,7 @@ abstract class AbstractWizard
         $this->wizardRepository->saveData($this, $data);
     }
 
-    private function processLastStep(WizardStep $step): Response | Responsable | Renderable
+    private function processLastStep(Request $request, WizardStep $step): Response | Responsable | Renderable
     {
         $this->load($this->id);
 
@@ -405,7 +405,7 @@ abstract class AbstractWizard
 
         $result = $this->actionResolver
             ->resolveAction($this->onCompleteAction)
-            ->execute($this->transformWizardData());
+            ->execute($this->transformWizardData($request));
 
         if (!$result->successful()) {
             return $this->responseRenderer->redirectWithError(
