@@ -38,6 +38,8 @@ class FakeWizardRepository implements WizardRepository
         $existingData = $this->data[$wizardClass][$wizard->getId()] ?? [];
 
         $this->data[$wizardClass][$wizard->getId()] = \array_merge($existingData, $data);
+
+        $wizard->setData($data);
     }
 
     public function loadData(AbstractWizard $wizard): array

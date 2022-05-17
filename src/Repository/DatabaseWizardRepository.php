@@ -53,6 +53,7 @@ class DatabaseWizardRepository implements WizardRepository
         ]);
 
         $wizard->setId($model->id);
+        $wizard->setData($data);
     }
 
     private function updateWizard(AbstractWizard $wizard, array $data): void
@@ -62,6 +63,9 @@ class DatabaseWizardRepository implements WizardRepository
         $model->update([
             'data' => \array_merge($model->data, $data),
         ]);
+
+        // Refresh the data in the model
+        $wizard->setData($data);
     }
 
     /**

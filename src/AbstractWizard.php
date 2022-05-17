@@ -139,7 +139,7 @@ abstract class AbstractWizard
      */
     public function create(Request $request): Responsable|Response|Renderable
     {
-        return $this->renderStep($request, $this->steps[0]);
+        return $this->renderStep($request, $this->availableSteps()[0]);
     }
 
     /**
@@ -183,7 +183,7 @@ abstract class AbstractWizard
 
         if (!$result->successful()) {
             return $this->responseRenderer->redirectWithError(
-                $this->steps[0],
+                $this->availableSteps()[0],
                 $this,
                 $result->error(),
             );
@@ -192,7 +192,7 @@ abstract class AbstractWizard
         $this->saveStepData($step, $result->payload());
 
         return $this->responseRenderer->redirect(
-            $this->steps[1],
+            $this->availableSteps()[1],
             $this,
         );
     }
@@ -259,6 +259,11 @@ abstract class AbstractWizard
         return data_get($this->data, $key, $default);
     }
 
+    public function setData(array $data)
+    {
+        $this->data = $data;
+    }
+
     /**
      * Checks if this wizard already exists or is being created
      * for the first time.
@@ -279,7 +284,7 @@ abstract class AbstractWizard
             'id' => $this->id,
             'slug' => static::$slug,
             'title' => $this->title(),
-            'steps' => collect($this->steps)->map(fn (WizardStep $step) => [
+            'steps' => collect($this->availableSteps())->map(fn (WizardStep $step) => [
                 'slug' => $step->slug,
                 'isComplete' => $step->isComplete(),
                 'title' => $step->title(),
@@ -434,27 +439,32 @@ abstract class AbstractWizard
 
     private function nextStep(): WizardStep
     {
-        return $this->steps[$this->currentStep + 1];
+        return $this->availableSteps()[$this->currentStep + 1];
     }
 
     private function loadFirstStep(): WizardStep
     {
-        return $this->steps[0];
+        return $this->availableSteps()[0];
     }
 
     private function currentStep(): WizardStep
     {
-        return $this->steps[$this->currentStep ?? 0];
+        return $this->availableSteps()[$this->currentStep ?? 0];
     }
 
     private function isLastStep(): bool
     {
-        return $this->currentStep + 1 === \count($this->steps);
+        return $this->currentStep + 1 === \count($this->availableSteps());
     }
 
     private function firstIncompleteStep(): WizardStep
     {
-        return collect($this->steps)->first(fn (WizardStep $step) => !$step->isComplete());
+        return collect($this->availableSteps())->first(fn (WizardStep $step) => !$step->isComplete());
+    }
+
+    private function availableSteps(): array
+    {
+        return collect($this->steps)->filter(fn (WizardStep $step) => !$step->omit())->values()->all();
     }
 
     private function invalidateDependentFields(array $payload): array
@@ -464,7 +474,7 @@ abstract class AbstractWizard
             ->keys()
             ->all();
 
-        $fields = collect($this->steps)
+        $fields = collect($this->availableSteps())
             ->mapWithKeys(fn (WizardStep $step) => [
                 $step->slug => collect($step->dependentFields())
                     ->filter(fn (Field $field) => $field->shouldInvalidate($changedFields)),
@@ -499,7 +509,7 @@ abstract class AbstractWizard
         }
 
         /** @var WizardStep $firstIncompleteStep */
-        $firstIncompleteStep = collect($this->steps)
+        $firstIncompleteStep = collect($this->availableSteps())
             ->first(fn (WizardStep $step) => !$step->isComplete());
 
         return $intendedStep->slug === $firstIncompleteStep->slug;

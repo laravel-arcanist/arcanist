@@ -32,6 +32,7 @@ class CacheWizardRepository implements WizardRepository
     {
         if (!$wizard->exists()) {
             $wizard->setId(Str::orderedUuid());
+            $wizard->setData($data);
 
             $this->store($wizard, $data);
 
@@ -44,6 +45,7 @@ class CacheWizardRepository implements WizardRepository
             throw new WizardNotFoundException();
         }
 
+        $wizard->setData($data);
         $this->store($wizard, \array_merge(Cache::get($cacheKey, []), $data));
     }
 
