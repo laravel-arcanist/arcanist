@@ -464,7 +464,9 @@ abstract class AbstractWizard
 
     private function availableSteps(): array
     {
-        return collect($this->steps)->filter(fn (WizardStep $step) => !$step->omit())->values()->all();
+        return once(fn () =>
+            collect($this->steps)->filter(fn(WizardStep $step) => !$step->omit())->values()->all()
+        );
     }
 
     private function invalidateDependentFields(array $payload): array
