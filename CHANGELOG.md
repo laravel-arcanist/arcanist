@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] — 2022-06-23
+
+### Added
+
+- Added ommitable steps (#44, @ercsctt, @ksassnowski)
+
 ## [0.7.0] — 2022-04-15
 
 ### Changed
@@ -76,6 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release
 
+[0.8.0]: https://github.com/laravel-arcanist/arcanist/compare/0.7.0...0.8.0
 [0.7.0]: https://github.com/laravel-arcanist/arcanist/compare/0.6.0...0.7.0
 [0.6.0]: https://github.com/laravel-arcanist/arcanist/compare/0.5.2...0.6.0
 [0.5.2]: https://github.com/laravel-arcanist/arcanist/compare/0.5.1...0.5.2
