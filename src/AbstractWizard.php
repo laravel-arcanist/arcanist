@@ -207,6 +207,7 @@ abstract class AbstractWizard
      *
      * @throws UnknownStepException
      * @throws ValidationException
+     * @throws CannotUpdateStepException
      */
     public function update(Request $request, string $wizardId, string $slug): Response|Responsable|Renderable
     {
