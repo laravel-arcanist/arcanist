@@ -73,6 +73,14 @@ abstract class WizardStep
     }
 
     /**
+     * Checks if the step should be omitted from the wizard.
+     */
+    public function omit(): bool
+    {
+        return false;
+    }
+
+    /**
      * @throws ValidationException
      */
     public function process(Request $request): StepResult

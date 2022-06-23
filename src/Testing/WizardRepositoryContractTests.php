@@ -48,6 +48,23 @@ trait WizardRepositoryContractTests
      * @test
      * @group WizardRepository
      */
+    public function it_updates_the_wizards_data_after_saving(): void
+    {
+        /** @var AbstractWizard $wizard */
+        $wizard = m::mock(AbstractWizard::class)->makePartial();
+        $repository = $this->createRepository();
+
+        $repository->saveData($wizard, ['foo' => 'bar']);
+        self::assertEquals('bar', $wizard->data('foo'));
+
+        $repository->saveData($wizard, ['foo' => 'baz']);
+        self::assertEquals('baz', $wizard->data('foo'));
+    }
+
+    /**
+     * @test
+     * @group WizardRepository
+     */
     public function it_throws_an_exception_when_trying_to_load_a_wizard_that_doesnt_exist(): void
     {
         $repository = $this->createRepository();
