@@ -264,7 +264,7 @@ abstract class AbstractWizard
         return data_get($this->data, $key, $default);
     }
 
-    public function setData(array $data)
+    public function setData(array $data): void
     {
         $this->data = $data;
     }
@@ -469,7 +469,7 @@ abstract class AbstractWizard
 
     private function availableSteps(): array
     {
-        if ($this->availableSteps === null) {
+        if (null === $this->availableSteps) {
             $this->availableSteps = collect($this->steps)
                 ->filter(fn (WizardStep $step): bool => !$step->omit())
                 ->values()

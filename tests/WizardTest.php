@@ -340,7 +340,7 @@ class WizardTest extends WizardTestCase
         self::assertNull($summary['steps'][0]['url']);
         self::assertNull($summary['steps'][1]['url']);
     }
-    
+
     public function testItDoesNotIncludeOmittedStepsInTheSummary(): void
     {
         $wizard = $this->createWizard(OmittedStepWizard::class);
