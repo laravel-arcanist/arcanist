@@ -340,6 +340,16 @@ class WizardTest extends WizardTestCase
         self::assertNull($summary['steps'][0]['url']);
         self::assertNull($summary['steps'][1]['url']);
     }
+    
+    public function testItDoesNotIncludeOmittedStepsInTheSummary(): void
+    {
+        $wizard = $this->createWizard(OmittedStepWizard::class);
+
+        $summary = $wizard->summary();
+
+        self::assertCount(1, $summary['steps']);
+        self::assertSame('step-name', $summary['steps'][0]['slug']);
+    }
 
     /**
      * @dataProvider sharedDataProvider
@@ -734,6 +744,14 @@ class MultiStepWizard extends AbstractWizard
     ];
 }
 
+class OmittedStepWizard extends AbstractWizard
+{
+    protected array $steps = [
+        TestStep::class,
+        OmittedStep::class,
+    ];
+}
+
 class SharedDataWizard extends AbstractWizard
 {
     protected array $steps = [
@@ -814,6 +832,16 @@ class TestStepWithViewData extends WizardStep
     public function beforeSaving(Request $request, array $data): void
     {
         $this->setData('::key::', '::value::');
+    }
+}
+
+class OmittedStep extends WizardStep
+{
+    public string $slug = 'omitted-step-name';
+
+    public function omit(): bool
+    {
+        return true;
     }
 }
 
