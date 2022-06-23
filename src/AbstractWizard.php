@@ -205,9 +205,9 @@ abstract class AbstractWizard
     /**
      * Handles the form submission of a step in an existing wizard.
      *
+     * @throws CannotUpdateStepException
      * @throws UnknownStepException
      * @throws ValidationException
-     * @throws CannotUpdateStepException
      */
     public function update(Request $request, string $wizardId, string $slug): Response|Responsable|Renderable
     {
