@@ -87,6 +87,11 @@ abstract class AbstractWizard
      */
     protected string $redirectTo;
 
+    /**
+     * @var null|array<int, WizardStep>
+     */
+    private ?array $availableSteps = null;
+
     public function __construct(
         private WizardRepository $wizardRepository,
         protected ResponseRenderer $responseRenderer,
@@ -464,9 +469,14 @@ abstract class AbstractWizard
 
     private function availableSteps(): array
     {
-        return once(fn () =>
-            collect($this->steps)->filter(fn(WizardStep $step) => !$step->omit())->values()->all()
-        );
+        if ($this->availableSteps === null) {
+            $this->availableSteps = collect($this->steps)
+                ->filter(fn (WizardStep $step): bool => !$step->omit())
+                ->values()
+                ->all();
+        }
+
+        return $this->availableSteps;
     }
 
     private function invalidateDependentFields(array $payload): array

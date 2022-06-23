@@ -12,8 +12,7 @@
     "require": {
         "php": "^8.0",
         "facade/ignition-contracts": "^1.0",
-        "laravel/framework": "^8.0 || ^9.0",
-        "spatie/once": "^3.1"
+        "laravel/framework": "^8.0 || ^9.0"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.15",

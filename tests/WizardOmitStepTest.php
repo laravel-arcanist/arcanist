@@ -54,6 +54,8 @@ class WizardOmitStepTest extends WizardTestCase
         $_SERVER['__beforeDelete.called'] = 0;
         $_SERVER['__onAfterDelete.called'] = 0;
 
+        OptionalStep::$omitCalled = 0;
+
         Arcanist::boot([
             MultiStepOmitWizard::class,
             MiddleOmittedStepWizard::class,
@@ -127,6 +129,19 @@ class WizardOmitStepTest extends WizardTestCase
         ]), '1', 'step-name');
 
         self::assertTrue($renderer->didRedirectTo(AnotherStep::class));
+    }
+    
+    public function testOnlyComputesAvailableStepsOnce(): void
+    {
+        $wizard = $this->createWizard(
+            MiddleOmittedStepWizard::class,
+            renderer: new FakeResponseRenderer()
+        );
+
+        $wizard->summary();
+        $wizard->summary();
+
+        self::assertSame(1, OptionalStep::$omitCalled);
     }
 }
 
@@ -210,6 +225,7 @@ class FirstStep extends WizardStep
 
 class OptionalStep extends WizardStep
 {
+    public static int $omitCalled = 0;
     public string $title = '::step-2-name::';
     public string $slug = 'step-2-name';
 
@@ -230,6 +246,8 @@ class OptionalStep extends WizardStep
 
     public function omit(): bool
     {
+        ++static::$omitCalled;
+
         return true;
     }
 }
