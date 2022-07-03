@@ -85,6 +85,8 @@ abstract class WizardStep
      */
     public function process(Request $request): StepResult
     {
+        $request = $request->merge($this->prepareForValidation($request->all()));
+
         $data = $this->validate($request, $this->rules());
 
         return collect($this->fields())
@@ -158,5 +160,15 @@ abstract class WizardStep
         return collect($this->fields())
             ->mapWithKeys(fn (Field $field) => [$field->name => $field->rules])
             ->all();
+    }
+
+    /**
+     * Prepare request payload for validation
+     * @param array $payload
+     * @return array
+     */
+    public function prepareForValidation(array $payload): array
+    {
+        return $payload;
     }
 }
