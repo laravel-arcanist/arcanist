@@ -64,7 +64,6 @@ class DatabaseWizardRepository implements WizardRepository
             'data' => \array_merge($model->data, $data),
         ]);
 
-        // Refresh the data in the model
         $wizard->setData($data);
     }
 

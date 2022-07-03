@@ -87,6 +87,11 @@ abstract class AbstractWizard
      */
     protected string $redirectTo;
 
+    /**
+     * @var null|array<int, WizardStep>
+     */
+    private ?array $availableSteps = null;
+
     public function __construct(
         private WizardRepository $wizardRepository,
         protected ResponseRenderer $responseRenderer,
@@ -200,6 +205,7 @@ abstract class AbstractWizard
     /**
      * Handles the form submission of a step in an existing wizard.
      *
+     * @throws CannotUpdateStepException
      * @throws UnknownStepException
      * @throws ValidationException
      */
@@ -259,7 +265,7 @@ abstract class AbstractWizard
         return data_get($this->data, $key, $default);
     }
 
-    public function setData(array $data)
+    public function setData(array $data): void
     {
         $this->data = $data;
     }
@@ -464,9 +470,14 @@ abstract class AbstractWizard
 
     private function availableSteps(): array
     {
-        return once(fn () =>
-            collect($this->steps)->filter(fn(WizardStep $step) => !$step->omit())->values()->all()
-        );
+        if (null === $this->availableSteps) {
+            $this->availableSteps = collect($this->steps)
+                ->filter(fn (WizardStep $step): bool => !$step->omit())
+                ->values()
+                ->all();
+        }
+
+        return $this->availableSteps;
     }
 
     private function invalidateDependentFields(array $payload): array

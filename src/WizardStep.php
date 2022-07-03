@@ -73,10 +73,7 @@ abstract class WizardStep
     }
 
     /**
-     * Allows the step to be omitted from the wizard if returns true
-     * This can also be used to create wizard logic, using data from previous steps to
-     * show or display a step.
-     * @return bool
+     * Checks if the step should be omitted from the wizard.
      */
     public function omit(): bool
     {

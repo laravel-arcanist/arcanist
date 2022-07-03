@@ -17,31 +17,14 @@ use Arcanist\AbstractWizard;
 use Arcanist\Action\ActionResult;
 use Arcanist\Action\WizardAction;
 use Arcanist\Arcanist;
-use Arcanist\Contracts\ResponseRenderer;
 use Arcanist\Contracts\WizardActionResolver;
-use Arcanist\Event\WizardFinished;
-use Arcanist\Event\WizardFinishing;
-use Arcanist\Event\WizardLoaded;
-use Arcanist\Event\WizardSaving;
-use Arcanist\Exception\UnknownStepException;
 use Arcanist\Field;
 use Arcanist\NullAction;
 use Arcanist\Renderer\FakeResponseRenderer;
-use Arcanist\Repository\FakeWizardRepository;
-use Arcanist\StepResult;
 use Arcanist\WizardStep;
-use Generator;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Contracts\Support\Responsable;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Testing\TestResponse;
-use Illuminate\Validation\ValidationException;
 use Mockery as m;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class WizardOmitStepTest extends WizardTestCase
 {
@@ -54,20 +37,21 @@ class WizardOmitStepTest extends WizardTestCase
         $_SERVER['__beforeDelete.called'] = 0;
         $_SERVER['__onAfterDelete.called'] = 0;
 
+        OptionalStep::$omitCalled = 0;
+
         Arcanist::boot([
             MultiStepOmitWizard::class,
             MiddleOmittedStepWizard::class,
             FirstOmittedStepWizard::class,
             LastOmittedStepWizard::class,
-            MultipleOmittedStepWizard::class
+            MultipleOmittedStepWizard::class,
         ]);
     }
 
     /**
      * Tests:
-     * - 2 optional steps in a row still both get skipped
+     * - 2 optional steps in a row still both get skipped.
      */
-
     public function testOmittedStepGetsSkipped(): void
     {
         $renderer = new FakeResponseRenderer();
@@ -128,13 +112,26 @@ class WizardOmitStepTest extends WizardTestCase
 
         self::assertTrue($renderer->didRedirectTo(AnotherStep::class));
     }
+
+    public function testOnlyComputesAvailableStepsOnce(): void
+    {
+        $wizard = $this->createWizard(
+            MiddleOmittedStepWizard::class,
+            renderer: new FakeResponseRenderer(),
+        );
+
+        $wizard->summary();
+        $wizard->summary();
+
+        self::assertSame(1, OptionalStep::$omitCalled);
+    }
 }
 
 class MultiStepOmitWizard extends AbstractWizard
 {
     protected array $steps = [
         FirstStep::class,
-        OptionalStep::class
+        OptionalStep::class,
     ];
 }
 
@@ -143,7 +140,7 @@ class MiddleOmittedStepWizard extends AbstractWizard
     protected array $steps = [
         FirstStep::class,
         OptionalStep::class,
-        AnotherStep::class
+        AnotherStep::class,
     ];
 }
 
@@ -151,7 +148,7 @@ class FirstOmittedStepWizard extends AbstractWizard
 {
     protected array $steps = [
         OptionalStep::class,
-        FirstStep::class
+        FirstStep::class,
     ];
 }
 
@@ -160,7 +157,7 @@ class LastOmittedStepWizard extends AbstractWizard
     protected array $steps = [
         FirstStep::class,
         AnotherStep::class,
-        OptionalStep::class
+        OptionalStep::class,
     ];
 }
 
@@ -170,7 +167,7 @@ class MultipleOmittedStepWizard extends AbstractWizard
         FirstStep::class,
         OptionalStep::class,
         AnotherOptionalStep::class,
-        AnotherStep::class
+        AnotherStep::class,
     ];
 }
 
@@ -189,7 +186,7 @@ class FirstStep extends WizardStep
                 ->rules(['required']),
 
             Field::make('has_job')
-                ->rules(['required', 'bool'])
+                ->rules(['required', 'bool']),
         ];
     }
 
@@ -210,6 +207,7 @@ class FirstStep extends WizardStep
 
 class OptionalStep extends WizardStep
 {
+    public static int $omitCalled = 0;
     public string $title = '::step-2-name::';
     public string $slug = 'step-2-name';
 
@@ -217,7 +215,7 @@ class OptionalStep extends WizardStep
     {
         return [
             Field::make('company')
-                ->rules(['required'])
+                ->rules(['required']),
         ];
     }
 
@@ -230,6 +228,8 @@ class OptionalStep extends WizardStep
 
     public function omit(): bool
     {
+        ++static::$omitCalled;
+
         return true;
     }
 }
@@ -243,7 +243,7 @@ class AnotherOptionalStep extends WizardStep
     {
         return [
             Field::make('xbox_gamertag')
-                ->rules(['required'])
+                ->rules(['required']),
         ];
     }
 
@@ -269,7 +269,7 @@ class AnotherStep extends WizardStep
     {
         return [
             Field::make('pet_name')
-                ->rules(['required'])
+                ->rules(['required']),
         ];
     }
 
