@@ -11,11 +11,6 @@ parameters:
 			path: src/AbstractWizard.php
 
 		-
-			message: "#^Method Arcanist\\\\AbstractWizard\\:\\:summary\\(\\) should return array\\{id\\: int\\|string, slug\\: string, title\\: string, steps\\: array\\<int, array\\{slug\\: string, isComplete\\: bool, title\\: string, active\\: bool, url\\: string\\|null\\}\\>\\} but returns array\\{id\\: int\\|string\\|null, slug\\: string, title\\: string, steps\\: array\\<int, array\\{slug\\: string, isComplete\\: bool, title\\: string, active\\: bool, url\\: string\\|null\\}\\>\\}\\.$#"
-			count: 1
-			path: src/AbstractWizard.php
-
-		-
 			message: "#^Parameter \\#1 \\$callback of method Illuminate\\\\Support\\\\Collection\\<int,mixed\\>\\:\\:filter\\(\\) expects \\(callable\\(mixed, int\\)\\: bool\\)\\|null, Closure\\(Arcanist\\\\WizardStep\\)\\: bool given\\.$#"
 			count: 1
 			path: src/AbstractWizard.php
@@ -56,9 +51,14 @@ parameters:
 			path: src/AbstractWizard.php
 
 		-
-			message: "#^Property Arcanist\\\\AbstractWizard\\:\\:\\$id \\(int\\|string\\|null\\) does not accept mixed\\.$#"
+			message: "#^Cannot access offset 'config' on Illuminate\\\\Contracts\\\\Foundation\\\\Application\\.$#"
 			count: 1
-			path: src/AbstractWizard.php
+			path: src/ArcanistServiceProvider.php
+
+		-
+			message: "#^Cannot access offset 'events' on Illuminate\\\\Contracts\\\\Foundation\\\\Application\\.$#"
+			count: 1
+			path: src/ArcanistServiceProvider.php
 
 		-
 			message: "#^Parameter \\#1 \\$implementation of method Illuminate\\\\Contracts\\\\Container\\\\ContextualBindingBuilder\\:\\:give\\(\\) expects array\\|Closure\\|string, mixed given\\.$#"
@@ -76,6 +76,6 @@ parameters:
 			path: src/ArcanistServiceProvider.php
 
 		-
-			message: "#^Cannot access offset '\\:\\:step\\-with…' on mixed\\.$#"
-			count: 2
-			path: tests/InvalidateDependentFieldsTest.php
+			message: "#^Parameter \\#1 \\$id of method Arcanist\\\\AbstractWizard\\:\\:setId\\(\\) expects int\\|string\\|null, Ramsey\\\\Uuid\\\\UuidInterface given\\.$#"
+			count: 1
+			path: src/Repository/CacheWizardRepository.php

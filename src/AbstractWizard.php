@@ -148,6 +148,9 @@ abstract class AbstractWizard
         return $this->id;
     }
 
+    /**
+     * @param int|string|null $id
+     */
     public function setId(mixed $id): void
     {
         $this->id = $id;
@@ -311,7 +314,7 @@ abstract class AbstractWizard
      * Returns a summary about the current wizard and its steps.
      *
      * @return array{
-     *     id: string|int,
+     *     id: string|int|null,
      *     slug: string,
      *     title: string,
      *     steps: array<int, SummaryStep>,

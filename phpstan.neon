@@ -7,13 +7,8 @@ parameters:
 
     paths:
         - src
-        - tests
 
     level: 9
-
-    ignoreErrors:
-        - '/Parameter #1 \$response of class Illuminate\\Testing\\TestResponse constructor expects*/'
-        - /Cannot access offset '\w+' on Illuminate\\Contracts\\Foundation\\Application/
 
     excludePaths:
         - tests/__snapshots__/*

@@ -13,18 +13,27 @@ declare(strict_types=1);
 
 namespace Arcanist\Repository;
 
+use Arcanist\AbstractWizard;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property string $class
- * @property array  $data
+ * @property string|class-string<AbstractWizard> $class
+ * @property array<string, mixed>  $data
  * @property int    $id
  */
 class Wizard extends Model
 {
     use HasFactory;
+
+    /**
+     * @var array<int, string>
+     */
     protected $guarded = [];
+
+    /**
+     * @var array<string, string>
+     */
     protected $casts = [
         'data' => 'array',
     ];
