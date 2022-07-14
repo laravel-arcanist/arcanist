@@ -51,6 +51,7 @@ class BladeResponseRendererTest extends TestCase
 
     public function testItRendersTheCorrectTemplateForAWizardStep(): void
     {
+        /** @var View $response */
         $response = $this->renderer->renderStep(
             $this->step,
             $this->wizard,
@@ -63,6 +64,7 @@ class BladeResponseRendererTest extends TestCase
 
     public function testItPassesAlongTheViewDataToTheView(): void
     {
+        /** @var View $response */
         $response = $this->renderer->renderStep(
             $this->step,
             $this->wizard,
@@ -77,6 +79,7 @@ class BladeResponseRendererTest extends TestCase
 
     public function testItProvidesTheWizardSummaryToEveryView(): void
     {
+        /** @var View $response */
         $response = $this->renderer->renderStep(
             $this->step,
             $this->wizard,

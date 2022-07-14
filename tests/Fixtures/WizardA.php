@@ -14,13 +14,14 @@ declare(strict_types=1);
 namespace Arcanist\Tests\Fixtures;
 
 use Arcanist\AbstractWizard;
+use Arcanist\Action\ActionResult;
 use Illuminate\Http\RedirectResponse;
 use function redirect;
 
 class WizardA extends AbstractWizard
 {
-    protected function onAfterComplete(\Arcanist\Action\ActionResult $result): RedirectResponse
+    protected function onAfterComplete(ActionResult $result): RedirectResponse
     {
-        return redirect();
+        return redirect()->to('/');
     }
 }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Arcanist;
 
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -53,6 +54,8 @@ abstract class WizardStep
 
     /**
      * Returns the view data for the template.
+     *
+     * @return array<string, mixed>
      */
     public function viewData(Request $request): array
     {
@@ -94,6 +97,9 @@ abstract class WizardStep
             ->pipe(fn (Collection $values) => $this->handle($request, $values->toArray()));
     }
 
+    /**
+     * @return array<int, Field>
+     */
     public function dependentFields(): array
     {
         return collect($this->fields())
@@ -101,16 +107,25 @@ abstract class WizardStep
             ->all();
     }
 
+    /**
+     * @return array<int, Field>
+     */
     public function fields(): array
     {
         return [];
     }
 
+    /**
+     * @param array<string, mixed> $payload
+     */
     protected function handle(Request $request, array $payload): StepResult
     {
         return $this->success($payload);
     }
 
+    /**
+     * @param array<string, mixed> $payload
+     */
     protected function success(array $payload = []): StepResult
     {
         return StepResult::success($payload);
@@ -133,6 +148,10 @@ abstract class WizardStep
     /**
      * Convenience method to include the fields specified in the `rules`
      * in the view data.
+     *
+     * @param array<string, mixed> $additionalData
+     *
+     * @return array<string, mixed>
      */
     protected function withFormData(array $additionalData = []): array
     {
@@ -152,6 +171,8 @@ abstract class WizardStep
 
     /**
      * The validation rules for submitting the step's form.
+     *
+     * @return array<string, array<int, Rule|string>>
      */
     protected function rules(): array
     {

@@ -27,7 +27,7 @@ class FakeResponseRendererTest extends TestCase
         $wizard = m::mock(AbstractWizard::class);
 
         $renderer->renderStep(
-            new FakeStep($wizard, '1'),
+            new FakeStep(),
             $wizard,
         );
 
@@ -41,7 +41,7 @@ class FakeResponseRendererTest extends TestCase
         $wizard = m::mock(AbstractWizard::class);
 
         $renderer->renderStep(
-            new FakeStep($wizard, '1'),
+            new FakeStep(),
             $wizard,
             ['foo' => 'bar'],
         );
@@ -52,7 +52,7 @@ class FakeResponseRendererTest extends TestCase
     public function testItRecordsRedirects(): void
     {
         $wizard = m::mock(AbstractWizard::class);
-        $step = new FakeStep($wizard, '1');
+        $step = new FakeStep();
         $renderer = new FakeResponseRenderer();
 
         $renderer->redirect($step, $wizard);
@@ -65,7 +65,7 @@ class FakeResponseRendererTest extends TestCase
     public function testItRecordsRedirectsWithErrors(): void
     {
         $wizard = m::mock(AbstractWizard::class);
-        $step = new FakeStep($wizard, '1');
+        $step = new FakeStep();
         $renderer = new FakeResponseRenderer();
 
         $renderer->redirectWithError($step, $wizard, '::message::');

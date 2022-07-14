@@ -15,6 +15,9 @@ namespace Arcanist;
 
 final class StepResult
 {
+    /**
+     * @param array<string, mixed> $payload
+     */
     private function __construct(
         private bool $successful,
         private array $payload = [],
@@ -22,6 +25,9 @@ final class StepResult
     ) {
     }
 
+    /**
+     * @param array<string, mixed> $payload
+     */
     public static function success(array $payload = []): self
     {
         return new self(true, payload: $payload);
@@ -37,6 +43,9 @@ final class StepResult
         return $this->successful;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function payload(): array
     {
         return $this->payload;

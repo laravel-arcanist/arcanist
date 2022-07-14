@@ -19,6 +19,9 @@ use Arcanist\Exception\WizardNotFoundException;
 
 class DatabaseWizardRepository implements WizardRepository
 {
+    /**
+     * @param array<string, mixed> $data
+     */
     public function saveData(AbstractWizard $wizard, array $data): void
     {
         $wizard->exists()
@@ -26,6 +29,9 @@ class DatabaseWizardRepository implements WizardRepository
             : $this->createWizard($wizard, $data);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function loadData(AbstractWizard $wizard): array
     {
         return $this->loadWizard($wizard)->data;
@@ -45,6 +51,9 @@ class DatabaseWizardRepository implements WizardRepository
         $wizard->setId(null);
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     private function createWizard(AbstractWizard $wizard, array $data): void
     {
         $model = Wizard::create([
@@ -56,6 +65,9 @@ class DatabaseWizardRepository implements WizardRepository
         $wizard->setData($data);
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     private function updateWizard(AbstractWizard $wizard, array $data): void
     {
         $model = $this->loadWizard($wizard);

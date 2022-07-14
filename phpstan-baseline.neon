@@ -1,0 +1,81 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Method Arcanist\\\\AbstractWizard\\:\\:availableSteps\\(\\) should return array\\<int, Arcanist\\\\WizardStep\\> but returns array\\<int, mixed\\>\\.$#"
+			count: 1
+			path: src/AbstractWizard.php
+
+		-
+			message: "#^Method Arcanist\\\\AbstractWizard\\:\\:firstIncompleteStep\\(\\) should return Arcanist\\\\WizardStep but returns Arcanist\\\\WizardStep\\|null\\.$#"
+			count: 1
+			path: src/AbstractWizard.php
+
+		-
+			message: "#^Method Arcanist\\\\AbstractWizard\\:\\:summary\\(\\) should return array\\{id\\: int\\|string, slug\\: string, title\\: string, steps\\: array\\<int, array\\{slug\\: string, isComplete\\: bool, title\\: string, active\\: bool, url\\: string\\|null\\}\\>\\} but returns array\\{id\\: int\\|string\\|null, slug\\: string, title\\: string, steps\\: array\\<int, array\\{slug\\: string, isComplete\\: bool, title\\: string, active\\: bool, url\\: string\\|null\\}\\>\\}\\.$#"
+			count: 1
+			path: src/AbstractWizard.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of method Illuminate\\\\Support\\\\Collection\\<int,mixed\\>\\:\\:filter\\(\\) expects \\(callable\\(mixed, int\\)\\: bool\\)\\|null, Closure\\(Arcanist\\\\WizardStep\\)\\: bool given\\.$#"
+			count: 1
+			path: src/AbstractWizard.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of method Illuminate\\\\Support\\\\Collection\\<int,mixed\\>\\:\\:first\\(\\) expects \\(callable\\(mixed, int\\)\\: bool\\)\\|null, Closure\\(Arcanist\\\\WizardStep\\)\\: bool given\\.$#"
+			count: 1
+			path: src/AbstractWizard.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of method Illuminate\\\\Support\\\\Collection\\<int,mixed\\>\\:\\:map\\(\\) expects callable\\(mixed, int\\)\\: Arcanist\\\\WizardStep, Closure\\(string, mixed\\)\\: Arcanist\\\\WizardStep given\\.$#"
+			count: 1
+			path: src/AbstractWizard.php
+
+		-
+			message: "#^Parameter \\#1 \\$step of method Arcanist\\\\Contracts\\\\ResponseRenderer\\:\\:redirectWithError\\(\\) expects Arcanist\\\\WizardStep, mixed given\\.$#"
+			count: 1
+			path: src/AbstractWizard.php
+
+		-
+			message: "#^Parameter \\#1 \\$wizardId of method Arcanist\\\\AbstractWizard\\:\\:load\\(\\) expects string, int\\|string\\|null given\\.$#"
+			count: 1
+			path: src/AbstractWizard.php
+
+		-
+			message: "#^Parameter \\#1 \\.\\.\\.\\$arrays of function array_merge expects array, mixed given\\.$#"
+			count: 1
+			path: src/AbstractWizard.php
+
+		-
+			message: "#^Parameter \\#3 \\.\\.\\.\\$arrays of function array_merge expects array, mixed given\\.$#"
+			count: 1
+			path: src/AbstractWizard.php
+
+		-
+			message: "#^Property Arcanist\\\\AbstractWizard\\:\\:\\$availableSteps \\(array\\<int, Arcanist\\\\WizardStep\\>\\|null\\) does not accept array\\<int, mixed\\>\\.$#"
+			count: 1
+			path: src/AbstractWizard.php
+
+		-
+			message: "#^Property Arcanist\\\\AbstractWizard\\:\\:\\$id \\(int\\|string\\|null\\) does not accept mixed\\.$#"
+			count: 1
+			path: src/AbstractWizard.php
+
+		-
+			message: "#^Parameter \\#1 \\$implementation of method Illuminate\\\\Contracts\\\\Container\\\\ContextualBindingBuilder\\:\\:give\\(\\) expects array\\|Closure\\|string, mixed given\\.$#"
+			count: 1
+			path: src/ArcanistServiceProvider.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of static method Arcanist\\\\TTL\\:\\:fromSeconds\\(\\) expects int, mixed given\\.$#"
+			count: 1
+			path: src/ArcanistServiceProvider.php
+
+		-
+			message: "#^Parameter \\#2 \\$concrete of method Illuminate\\\\Contracts\\\\Container\\\\Container\\:\\:bind\\(\\) expects Closure\\|string\\|null, mixed given\\.$#"
+			count: 3
+			path: src/ArcanistServiceProvider.php
+
+		-
+			message: "#^Cannot access offset '\\:\\:step\\-with…' on mixed\\.$#"
+			count: 2
+			path: tests/InvalidateDependentFieldsTest.php

@@ -15,6 +15,9 @@ namespace Arcanist\Action;
 
 class ActionResult
 {
+    /**
+     * @param array<string, mixed> $payload
+     */
     private function __construct(
         private bool $successful,
         private array $payload,
@@ -22,6 +25,9 @@ class ActionResult
     ) {
     }
 
+    /**
+     * @param array<string, mixed> $payload
+     */
     public static function success(array $payload = []): self
     {
         return new self(true, $payload);

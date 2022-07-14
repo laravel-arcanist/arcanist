@@ -19,12 +19,16 @@ use Arcanist\Exception\WizardNotFoundException;
 interface WizardRepository
 {
     /**
+     * @param array<string, mixed> $data
+     *
      * @throws WizardNotFoundException
      */
     public function saveData(AbstractWizard $wizard, array $data): void;
 
     /**
      * @throws WizardNotFoundException
+     *
+     * @return array<string, mixed>
      */
     public function loadData(AbstractWizard $wizard): array;
 

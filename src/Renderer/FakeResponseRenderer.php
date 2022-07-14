@@ -22,11 +22,17 @@ use Illuminate\Http\Response;
 
 class FakeResponseRenderer implements ResponseRenderer
 {
+    /**
+     * @var array<class-string<WizardStep>, array<string, mixed>>
+     */
     private array $renderedSteps = [];
     private ?string $redirect = null;
     private ?string $error = null;
     private bool $hasError = false;
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function renderStep(
         WizardStep $step,
         AbstractWizard $wizard,
@@ -56,6 +62,9 @@ class FakeResponseRenderer implements ResponseRenderer
         return new RedirectResponse('::url::');
     }
 
+    /**
+     * @param null|array<string, mixed> $data
+     */
     public function stepWasRendered(string $stepClass, ?array $data = null): bool
     {
         if (!isset($this->renderedSteps[$stepClass])) {

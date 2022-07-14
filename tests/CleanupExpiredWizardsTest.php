@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Arcanist\Tests;
 
 use Arcanist\AbstractWizard;
-use Arcanist\Commands\CleanupExpiredWizards;
 use Arcanist\Repository\Wizard;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -24,7 +23,6 @@ use Mockery as m;
 class CleanupExpiredWizardsTest extends TestCase
 {
     use RefreshDatabase;
-    private CleanupExpiredWizards $job;
 
     protected function setUp(): void
     {

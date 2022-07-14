@@ -15,12 +15,13 @@ namespace Arcanist\Tests;
 
 use Arcanist\ArcanistServiceProvider;
 use Illuminate\Routing\Router;
+use Illuminate\Support\ServiceProvider;
 use PHPUnit\Framework\Assert as PHPUnitAssert;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
     /**
-     * Credits: https://github.com/jasonmccreary/laravel-test-assertions/blob/master/src/Traits/AdditionalAssertions.php.
+     * @param array<int, string> $middlewares
      */
     public function assertRouteUsesMiddleware(string $routeName, array $middlewares, bool $exact = false): void
     {
@@ -30,9 +31,12 @@ class TestCase extends \Orchestra\Testbench\TestCase
             ->refreshNameLookups();
 
         $route = $router->getRoutes()->getByName($routeName);
-        $usedMiddlewares = $route->gatherMiddleware();
 
-        PHPUnitAssert::assertNotNull($route, "Unable to find route for name `{$routeName}`");
+        if (null === $route) {
+            PHPUnitAssert::fail("Unable to find route for name `{$routeName}`");
+        }
+
+        $usedMiddlewares = $route->gatherMiddleware();
 
         if ($exact) {
             $unusedMiddlewares = \array_diff($middlewares, $usedMiddlewares);
@@ -58,7 +62,12 @@ class TestCase extends \Orchestra\Testbench\TestCase
         }
     }
 
-    protected function getPackageProviders($app)
+    /**
+     * @param mixed $app
+     *
+     * @return array<int, class-string<ServiceProvider>>
+     */
+    protected function getPackageProviders($app): array
     {
         return [
             ArcanistServiceProvider::class,
@@ -75,6 +84,8 @@ class TestCase extends \Orchestra\Testbench\TestCase
         ]);
 
         include_once __DIR__ . '/../database/migrations/create_wizards_table.php.stub';
+
+        /** @phpstan-ignore-next-line */
         (new \CreateWizardsTable())->up();
     }
 }

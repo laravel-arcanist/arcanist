@@ -22,13 +22,17 @@ class WizardStepMakeCommand extends GeneratorCommand
     protected $name = 'make:wizard-step';
     protected $type = 'Wizard Step';
 
-    protected function getStub()
+    protected function getStub(): string
     {
         return __DIR__ . '/stubs/step.stub';
     }
 
-    protected function getDefaultNamespace($rootNamespace)
+    /**
+     * @param string $rootNamespace
+     */
+    protected function getDefaultNamespace($rootNamespace): string
     {
+        /** @var string $wizard */
         $wizard = $this->argument('wizard');
 
         return $rootNamespace . '\Wizards\\' . $wizard . '\Steps';
@@ -44,6 +48,9 @@ class WizardStepMakeCommand extends GeneratorCommand
             ->replaceClass($stub, $name);
     }
 
+    /**
+     * @return array<int, array<int, int|string>>
+     */
     protected function getArguments(): array
     {
         return [

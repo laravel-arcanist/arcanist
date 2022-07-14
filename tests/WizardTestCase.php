@@ -33,6 +33,9 @@ class WizardTestCase extends TestCase
         Event::fake();
     }
 
+    /**
+     * @param class-string<AbstractWizard> $wizardClass
+     */
     protected function createWizard(
         string $wizardClass,
         ?WizardRepository $repository = null,
@@ -54,11 +57,15 @@ class WizardTestCase extends TestCase
         return new $wizardClass($repository, $renderer, $resolver);
     }
 
-    protected function createWizardRepository(array $data = [], ?string $wizardClass = null)
+    /**
+     * @param null|class-string<AbstractWizard> $wizardClass
+     * @param array<string, mixed>              $data
+     */
+    protected function createWizardRepository(array $data = [], ?string $wizardClass = null): FakeWizardRepository
     {
         return new FakeWizardRepository([
             $wizardClass ?: TestWizard::class => [
-                '1' => $data,
+                1 => $data,
             ],
         ]);
     }

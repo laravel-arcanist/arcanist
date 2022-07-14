@@ -13,13 +13,20 @@ declare(strict_types=1);
 
 namespace Arcanist;
 
+use Illuminate\Contracts\Validation\Rule;
+
 class Field
 {
     /**
-     * @var callable
+     * @var null|callable(mixed): mixed
      */
     private $transformationCallback;
 
+    /**
+     * @param string                   $name
+     * @param array<int, Rule|string>  $rules
+     * @param array<array-key, string> $dependencies
+     */
     public function __construct(
         public string $name,
         public array $rules = ['nullable'],
@@ -29,9 +36,13 @@ class Field
 
     public static function make(string $name): static
     {
+        /** @phpstan-ignore-next-line */
         return new static($name);
     }
 
+    /**
+     * @param array<int, Rule|string> $rules
+     */
     public function rules(array $rules): self
     {
         $this->rules = $rules;
@@ -46,6 +57,9 @@ class Field
         return $this;
     }
 
+    /**
+     * @param array<int, string> $changedFieldNames
+     */
     public function shouldInvalidate(array $changedFieldNames): bool
     {
         return \count(\array_intersect($this->dependencies, $changedFieldNames)) > 0;

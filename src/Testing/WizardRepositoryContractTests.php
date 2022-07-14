@@ -283,6 +283,9 @@ trait WizardRepositoryContractTests
 
     abstract protected function createRepository(): WizardRepository;
 
+    /**
+     * @param class-string<AbstractWizard> $class
+     */
     private function makeWizard(string $class, WizardRepository $repository, mixed $id = null): AbstractWizard
     {
         $wizard = new $class(

@@ -34,9 +34,9 @@ class StepResultTest extends TestCase
 
     public function testCanPassAlongDataToSuccessfulResult(): void
     {
-        $result = StepResult::success(['::data::']);
+        $result = StepResult::success(['::key::' => '::value::']);
 
-        self::assertEquals(['::data::'], $result->payload());
+        self::assertEquals(['::key::' => '::value::'], $result->payload());
     }
 
     public function testCanPassAlongErrorMessageToFailedResult(): void

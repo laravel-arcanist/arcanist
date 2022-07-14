@@ -40,6 +40,8 @@ class WizardMakeCommandTest extends TestCase
 
     /**
      * @dataProvider stepCommandInvocationProvider
+     *
+     * @param array<int, string> $steps
      */
     public function testItCreatesStepsIfTheStepOptionWasProvided(array $steps): void
     {

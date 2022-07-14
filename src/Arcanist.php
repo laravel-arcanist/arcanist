@@ -17,16 +17,26 @@ use Illuminate\Support\Facades\Route;
 
 class Arcanist
 {
+    /**
+     * @param array<int, class-string<AbstractWizard>> $wizards
+     */
     public static function boot(array $wizards): void
     {
+        /** @var string $routePrefix */
         $routePrefix = config('arcanist.route_prefix');
+
+        /** @var array<int, mixed> $defaultMiddleware */
         $defaultMiddleware = config('arcanist.middleware', []);
 
         foreach ($wizards as $wizard) {
-            static::registerRoutes($wizard, $routePrefix, $defaultMiddleware);
+            self::registerRoutes($wizard, $routePrefix, $defaultMiddleware);
         }
     }
 
+    /**
+     * @param class-string<AbstractWizard> $wizard
+     * @param array<int, mixed>            $defaultMiddleware
+     */
     private static function registerRoutes(string $wizard, string $routePrefix, array $defaultMiddleware): void
     {
         $middleware = \array_merge($defaultMiddleware, $wizard::middleware());

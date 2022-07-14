@@ -32,7 +32,7 @@ class CacheWizardRepositoryTest extends TestCase
         $repository = new CacheWizardRepository(TTL::fromSeconds(60));
 
         $this->travelTo(now());
-        $repository->saveData($wizard, ['::data::']);
+        $repository->saveData($wizard, ['::key::' => '::value::']);
 
         $this->travel(61)->seconds();
         $this->expectException(WizardNotFoundException::class);

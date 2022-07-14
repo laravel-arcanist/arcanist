@@ -39,6 +39,15 @@ use function event;
 use function redirect;
 use function route;
 
+/**
+ * @phpstan-type SummaryStep array{
+ *      slug: string,
+ *      isComplete: bool,
+ *      title: string,
+ *      active: bool,
+ *      url: ?string
+ * }
+ */
 abstract class AbstractWizard
 {
     /**
@@ -64,11 +73,15 @@ abstract class AbstractWizard
 
     /**
      * The steps this wizard consists of.
+     *
+     * @var array<int, mixed>
      */
     protected array $steps = [];
 
     /**
      * The wizard's id in the database.
+     *
+     * @var null|int|string
      */
     protected mixed $id = null;
 
@@ -79,6 +92,8 @@ abstract class AbstractWizard
 
     /**
      * The wizard's stored data.
+     *
+     * @var array<string, mixed>
      */
     protected array $data = [];
 
@@ -97,9 +112,12 @@ abstract class AbstractWizard
         protected ResponseRenderer $responseRenderer,
         private WizardActionResolver $actionResolver,
     ) {
-        $this->redirectTo = config('arcanist.redirect_url', '/home');
+        /** @var string $redirectTo */
+        $redirectTo = config('arcanist.redirect_url', '/home');
+        $this->redirectTo = $redirectTo;
+
         $this->steps = collect($this->steps)
-            ->map(fn ($step, $i) => app($step)->init($this, $i))
+            ->map(fn (string $step, $i): WizardStep => app($step)->init($this, $i))
             ->all();
     }
 
@@ -114,12 +132,17 @@ abstract class AbstractWizard
      * Here you can define additional middleware for a wizard
      * that gets merged together with the global middleware
      * defined in the config.
+     *
+     * @return array<int, mixed>
      */
     public static function middleware(): array
     {
         return [];
     }
 
+    /**
+     * @return null|int|string
+     */
     public function getId(): mixed
     {
         return $this->id;
@@ -133,6 +156,8 @@ abstract class AbstractWizard
     /**
      * Data that should be shared with every step in this
      * wizard. This data gets merged with a step's view data.
+     *
+     * @return array<string, mixed>
      */
     public function sharedData(Request $request): array
     {
@@ -265,6 +290,9 @@ abstract class AbstractWizard
         return data_get($this->data, $key, $default);
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function setData(array $data): void
     {
         $this->data = $data;
@@ -281,6 +309,13 @@ abstract class AbstractWizard
 
     /**
      * Returns a summary about the current wizard and its steps.
+     *
+     * @return array{
+     *     id: string|int,
+     *     slug: string,
+     *     title: string,
+     *     steps: array<int, SummaryStep>,
+     * }
      */
     public function summary(): array
     {
@@ -397,6 +432,9 @@ abstract class AbstractWizard
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function buildViewData(Request $request, WizardStep $step): array
     {
         return \array_merge(
@@ -405,6 +443,9 @@ abstract class AbstractWizard
         );
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     private function saveStepData(WizardStep $step, array $data): void
     {
         event(new WizardSaving($this));
@@ -468,6 +509,9 @@ abstract class AbstractWizard
         return collect($this->availableSteps())->first(fn (WizardStep $step) => !$step->isComplete());
     }
 
+    /**
+     * @return array<int, WizardStep>
+     */
     private function availableSteps(): array
     {
         if (null === $this->availableSteps) {
@@ -480,6 +524,11 @@ abstract class AbstractWizard
         return $this->availableSteps;
     }
 
+    /**
+     * @param array<string, mixed> $payload
+     *
+     * @return array<string, mixed>
+     */
     private function invalidateDependentFields(array $payload): array
     {
         $changedFields = collect($payload)

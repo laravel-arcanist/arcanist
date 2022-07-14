@@ -28,6 +28,9 @@ class CacheWizardRepository implements WizardRepository
     {
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function saveData(AbstractWizard $wizard, array $data): void
     {
         if (!$wizard->exists()) {
@@ -46,7 +49,10 @@ class CacheWizardRepository implements WizardRepository
         }
 
         $wizard->setData($data);
-        $this->store($wizard, \array_merge(Cache::get($cacheKey, []), $data));
+
+        /** @var array<string, mixed> $storedData */
+        $storedData = Cache::get($cacheKey, []);
+        $this->store($wizard, \array_merge($storedData, $data));
     }
 
     public function deleteWizard(AbstractWizard $wizard): void
@@ -57,15 +63,21 @@ class CacheWizardRepository implements WizardRepository
             return;
         }
 
-        Cache::delete($cacheKey);
+        Cache::forget($cacheKey);
         $wizard->setId(null);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function loadData(AbstractWizard $wizard): array
     {
         return $this->loadWizard($wizard);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function loadWizard(AbstractWizard $wizard): array
     {
         $key = $this->keyPrefix . $wizard::class . '.' . $wizard->getId();
@@ -74,6 +86,7 @@ class CacheWizardRepository implements WizardRepository
             throw new WizardNotFoundException();
         }
 
+        /** @phpstan-ignore-next-line */
         return Cache::get($key);
     }
 
@@ -82,6 +95,9 @@ class CacheWizardRepository implements WizardRepository
         return $this->keyPrefix . $wizard::class . '.' . $wizard->getId();
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     private function store(AbstractWizard $wizard, array $data): void
     {
         Cache::put(

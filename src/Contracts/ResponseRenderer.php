@@ -21,6 +21,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 interface ResponseRenderer
 {
+    /**
+     * @param array<string, mixed> $data
+     */
     public function renderStep(
         WizardStep $step,
         AbstractWizard $wizard,

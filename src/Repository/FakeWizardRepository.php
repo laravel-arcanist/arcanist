@@ -21,10 +21,16 @@ class FakeWizardRepository implements WizardRepository
 {
     private int $nextId = 1;
 
+    /**
+     * @param array<class-string<AbstractWizard>, array<array-key, array<string, mixed>>> $data
+     */
     public function __construct(private array $data = [])
     {
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function saveData(AbstractWizard $wizard, array $data): void
     {
         if ($wizard->getId() === null) {
@@ -42,6 +48,9 @@ class FakeWizardRepository implements WizardRepository
         $wizard->setData($data);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function loadData(AbstractWizard $wizard): array
     {
         $wizardClass = $wizard::class;
@@ -72,7 +81,7 @@ class FakeWizardRepository implements WizardRepository
     private function hasIdMismatch(AbstractWizard $wizard): bool
     {
         return collect($this->data)
-            ->except($wizard::class)
+            ->except([$wizard::class])
             ->contains(fn (array $wizards) => isset($wizards[$wizard->getId()]));
     }
 }

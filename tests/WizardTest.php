@@ -439,8 +439,14 @@ class WizardTest extends WizardTestCase
     public function testItPassesAllGatheredDataToTheActionByDefault(): void
     {
         $actionSpy = new class() extends WizardAction {
+            /**
+             * @var array<string, mixed>
+             */
             public array $payload = [];
 
+            /**
+             * @param array<string, mixed> $payload
+             */
             public function execute($payload): ActionResult
             {
                 $this->payload = $payload;
@@ -639,7 +645,7 @@ class WizardTest extends WizardTestCase
         );
     }
 
-    public function errorWizardProvider()
+    public function errorWizardProvider(): Generator
     {
         yield from [
             'store' => [
@@ -667,6 +673,7 @@ class WizardTest extends WizardTestCase
 
         $wizard->update($request, '1', 'step-name');
 
+        /** @phpstan-ignore-next-line */
         self::assertTrue($repo->loadData($wizard)['_arcanist']['step-name']);
     }
 
@@ -678,6 +685,7 @@ class WizardTest extends WizardTestCase
         $wizard->update(new Request(), '1', '::error-step::');
 
         self::assertNull(
+            /** @phpstan-ignore-next-line */
             $repo->loadData($wizard)['_arcanist']['::error-step::'] ?? null,
         );
     }
@@ -813,6 +821,9 @@ class TestStep extends WizardStep
         return true;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function beforeSaving(Request $request, array $data): void
     {
         ++$_SERVER['__beforeSaving.called'];
@@ -827,11 +838,6 @@ class TestStepWithViewData extends WizardStep
     public function viewData(Request $request): array
     {
         return ['foo' => 'bar'];
-    }
-
-    public function beforeSaving(Request $request, array $data): void
-    {
-        $this->setData('::key::', '::value::');
     }
 }
 

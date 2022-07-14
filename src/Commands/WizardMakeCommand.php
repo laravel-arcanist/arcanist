@@ -22,7 +22,7 @@ class WizardMakeCommand extends GeneratorCommand
     protected $name = 'make:wizard';
     protected $type = 'Wizard';
 
-    public function handle(): void
+    public function handle(): ?bool
     {
         parent::handle();
 
@@ -32,14 +32,16 @@ class WizardMakeCommand extends GeneratorCommand
                 'wizard' => $this->getNameInput(),
             ]);
         }
+
+        return null;
     }
 
-    protected function getStub()
+    protected function getStub(): string
     {
         return __DIR__ . '/stubs/wizard.stub';
     }
 
-    protected function buildClass($name)
+    protected function buildClass($name): string
     {
         $stub = $this->files->get($this->getStub());
 
@@ -50,12 +52,15 @@ class WizardMakeCommand extends GeneratorCommand
             ->replaceClass($stub, $name);
     }
 
-    protected function getDefaultNamespace($rootNamespace)
+    protected function getDefaultNamespace($rootNamespace): string
     {
         return $rootNamespace . '\Wizards\\' . $this->getNameInput();
     }
 
-    protected function getOptions()
+    /**
+     * @return array<int, array<int, null|int|string>>
+     */
+    protected function getOptions(): array
     {
         return [
             ['steps', null, InputOption::VALUE_OPTIONAL, 'bla'],
@@ -100,8 +105,12 @@ class WizardMakeCommand extends GeneratorCommand
         return $this;
     }
 
+    /**
+     * @return array<int, string>
+     */
     private function getSteps(): array
     {
+        /** @var string $steps */
         $steps = $this->option('steps');
 
         if (empty($steps)) {

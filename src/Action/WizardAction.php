@@ -15,8 +15,11 @@ namespace Arcanist\Action;
 
 abstract class WizardAction
 {
-    abstract public function execute($payload): ActionResult;
+    abstract public function execute(mixed $payload): ActionResult;
 
+    /**
+     * @param array<string, mixed> $payload
+     */
     protected function success(array $payload = []): ActionResult
     {
         return ActionResult::success($payload);

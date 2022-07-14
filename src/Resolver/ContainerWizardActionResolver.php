@@ -18,8 +18,12 @@ use Arcanist\Contracts\WizardActionResolver;
 
 class ContainerWizardActionResolver implements WizardActionResolver
 {
+    /**
+     * @param class-string<WizardAction>|string $actionClass
+     */
     public function resolveAction(string $actionClass): WizardAction
     {
+        /** @phpstan-ignore-next-line */
         return app()->make($actionClass);
     }
 }
