@@ -44,6 +44,7 @@ jobs:
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: Run phpstan
+        if: ${{ matrix.laravel }} == '9.*'
         run: composer analyze
 
       - name: Execute tests
