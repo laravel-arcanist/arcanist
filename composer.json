@@ -57,15 +57,15 @@
         "post-update-cmd": [
             "composer normalize"
         ],
+        "analyze": [
+            "vendor/bin/phpstan analyze -c phpstan.neon"
+        ],
         "cs": [
             "mkdir -p .build/php-cs-fixer",
             "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --diff --verbose"
         ],
         "test": [
             "vendor/bin/phpunit"
-        ],
-        "analyze": [
-            "vendor/bin/phpstan analyze -c phpstan.neon"
         ]
     }
 }
