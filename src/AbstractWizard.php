@@ -149,7 +149,7 @@ abstract class AbstractWizard
     }
 
     /**
-     * @param int|string|null $id
+     * @param null|int|string $id
      */
     public function setId(mixed $id): void
     {

@@ -18,9 +18,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property string|class-string<AbstractWizard> $class
- * @property array<string, mixed>  $data
- * @property int    $id
+ * @property class-string<AbstractWizard>|string $class
+ * @property array<string, mixed>                $data
+ * @property int                                 $id
  */
 class Wizard extends Model
 {
@@ -29,12 +29,12 @@ class Wizard extends Model
     /**
      * @var array<int, string>
      */
-    protected $guarded = [];
+    protected array $guarded = [];
 
     /**
      * @var array<string, string>
      */
-    protected $casts = [
+    protected array $casts = [
         'data' => 'array',
     ];
 }
