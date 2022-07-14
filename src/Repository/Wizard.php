@@ -26,15 +26,9 @@ class Wizard extends Model
 {
     use HasFactory;
 
-    /**
-     * @var array<int, string>
-     */
-    protected array $guarded = [];
+    protected $guarded = [];
 
-    /**
-     * @var array<string, string>
-     */
-    protected array $casts = [
+    protected $casts = [
         'data' => 'array',
     ];
 }
