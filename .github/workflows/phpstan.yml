@@ -1,0 +1,30 @@
+name: run-tests
+
+on: [push, pull_request]
+
+jobs:
+  phpstan:
+    runs-on: ubuntu-latest
+    name: PHPStan
+
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          coverage: none
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.composer/cache/files
+          key: dependencies-laravel-9.*-php-8.1-composer-${{ hashFiles('composer.json') }}
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: Run phpstan
+        run: composer analyze
