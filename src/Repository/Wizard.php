@@ -25,9 +25,7 @@ use Illuminate\Database\Eloquent\Model;
 class Wizard extends Model
 {
     use HasFactory;
-
     protected $guarded = [];
-
     protected $casts = [
         'data' => 'array',
     ];
