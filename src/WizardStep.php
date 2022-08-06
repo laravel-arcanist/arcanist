@@ -88,7 +88,7 @@ abstract class WizardStep
      */
     public function process(Request $request): StepResult
     {
-        $data = $this->validate($request, $this->rules());
+        $data = $this->validate($request, $this->rules(), $this->messages(), $this->customAttributes());
 
         return collect($this->fields())
             ->mapWithKeys(fn (Field $field) => [
@@ -179,5 +179,23 @@ abstract class WizardStep
         return collect($this->fields())
             ->mapWithKeys(fn (Field $field) => [$field->name => $field->rules])
             ->all();
+    }
+
+    /**
+     * The custom validation messages
+     *
+     * @return array<string, string>
+     */
+    protected function messages(): array {
+        return [];
+    }
+
+    /**
+     * The custom validation messages
+     *
+     * @return array<string, string>
+     */
+    protected function customAttributes(): array {
+        return [];
     }
 }
