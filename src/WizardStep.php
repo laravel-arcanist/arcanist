@@ -191,7 +191,7 @@ abstract class WizardStep
     }
 
     /**
-     * The custom validation messages
+     * The custom attributes label
      *
      * @return array<string, string>
      */
