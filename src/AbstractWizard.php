@@ -509,7 +509,7 @@ abstract class AbstractWizard
 
     private function firstIncompleteStep(): WizardStep
     {
-        return collect($this->availableSteps())->first(fn (WizardStep $step) => !$step->isComplete());
+        return collect($this->availableSteps())->first(fn (WizardStep $step) => !$step->isComplete(), $this->steps[count($this->steps) - 1]);
     }
 
     /**
