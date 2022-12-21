@@ -75,6 +75,10 @@ return [
     'renderers' => [
         'renderer' => BladeResponseRenderer::class,
 
+        'statamic' => [
+            'view_base_path' => 'wizards',
+        ],
+
         'blade' => [
             'view_base_path' => 'wizards',
         ],
