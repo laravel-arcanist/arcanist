@@ -427,7 +427,7 @@ abstract class AbstractWizard
         event(new WizardLoaded($this));
     }
 
-    private function renderStep(Request $request, WizardStep $step): Responsable|Response|Renderable
+    private function renderStep(Request $request, WizardStep $step): Responsable|Response|Renderable|View
     {
         return $this->responseRenderer->renderStep(
             $step,
