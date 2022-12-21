@@ -17,6 +17,7 @@ use Arcanist\AbstractWizard;
 use Arcanist\WizardStep;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\Responsable;
+use Statamic\View\View;
 use Symfony\Component\HttpFoundation\Response;
 
 interface ResponseRenderer
@@ -28,16 +29,16 @@ interface ResponseRenderer
         WizardStep $step,
         AbstractWizard $wizard,
         array $data = [],
-    ): Response|Responsable|Renderable;
+    ): Responsable|Response|Renderable|View;
 
     public function redirect(
         WizardStep $step,
         AbstractWizard $wizard,
-    ): Response|Responsable|Renderable;
+    ): Responsable|Response|Renderable|View;
 
     public function redirectWithError(
         WizardStep $step,
         AbstractWizard $wizard,
         ?string $error = null,
-    ): Response|Responsable|Renderable;
+    ): Responsable|Response|Renderable|View;
 }

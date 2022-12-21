@@ -25,7 +25,7 @@ use InvalidArgumentException;
 use Statamic\View\View;
 use Symfony\Component\HttpFoundation\Response;
 
-class BladeResponseRenderer implements ResponseRenderer
+class StatamicResponseRenderer implements ResponseRenderer
 {
     public function __construct(private Factory $factory, private string $viewBasePath)
     {
@@ -39,10 +39,12 @@ class BladeResponseRenderer implements ResponseRenderer
         $viewName = $this->viewBasePath . '.' . $wizard::$slug . '.' . $step->slug;
 
         try {
-            return $this->factory->make($viewName, [
-                'wizard' => $wizard->summary(),
-                'step' => $data,
-            ]);
+            return (new View)
+                ->template($viewName)
+                ->with([
+                    'wizard' => $wizard->summary(),
+                    'step' => $data,
+                ]);
         } catch (InvalidArgumentException) {
             throw StepTemplateNotFoundException::forStep($step);
         }

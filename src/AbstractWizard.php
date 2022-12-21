@@ -24,20 +24,21 @@ use Arcanist\Event\WizardSaving;
 use Arcanist\Exception\CannotUpdateStepException;
 use Arcanist\Exception\UnknownStepException;
 use Arcanist\Exception\WizardNotFoundException;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Contracts\Support\Responsable;
-use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use function collect;
 use function config;
 use function data_get;
 use function event;
 use function redirect;
 use function route;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Illuminate\Validation\ValidationException;
+use Statamic\View\View;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @phpstan-type SummaryStep array{
@@ -170,7 +171,7 @@ abstract class AbstractWizard
     /**
      * Renders the template of the first step of this wizard.
      */
-    public function create(Request $request): Responsable|Response|Renderable
+    public function create(Request $request): Responsable|Response|Renderable|View
     {
         return $this->renderStep($request, $this->availableSteps()[0]);
     }
@@ -180,7 +181,7 @@ abstract class AbstractWizard
      *
      * @throws UnknownStepException
      */
-    public function show(Request $request, string $wizardId, ?string $slug = null): Response|Responsable|Renderable
+    public function show(Request $request, string $wizardId, ?string $slug = null): Responsable|Response|Renderable|View
     {
         $this->load($wizardId);
 
@@ -208,7 +209,7 @@ abstract class AbstractWizard
      *
      * @throws ValidationException
      */
-    public function store(Request $request): Response|Responsable|Renderable
+    public function store(Request $request): Responsable|Response|Renderable|View
     {
         $step = $this->loadFirstStep();
 
@@ -237,7 +238,7 @@ abstract class AbstractWizard
      * @throws UnknownStepException
      * @throws ValidationException
      */
-    public function update(Request $request, string $wizardId, string $slug): Response|Responsable|Renderable
+    public function update(Request $request, string $wizardId, string $slug): Responsable|Response|Renderable|View
     {
         $this->load($wizardId);
 
@@ -270,7 +271,7 @@ abstract class AbstractWizard
             );
     }
 
-    public function destroy(Request $request, string $wizardId): Response|Responsable|Renderable
+    public function destroy(Request $request, string $wizardId): Responsable|Response|Renderable|View
     {
         $this->load($wizardId);
 
@@ -352,7 +353,7 @@ abstract class AbstractWizard
     /**
      * Gets called after the last step in the wizard is finished.
      */
-    protected function onAfterComplete(ActionResult $result): Response|Responsable|Renderable
+    protected function onAfterComplete(ActionResult $result): Responsable|Response|Renderable|View
     {
         return redirect()->to($this->redirectTo());
     }
@@ -369,7 +370,7 @@ abstract class AbstractWizard
     /**
      * Gets called after the wizard was deleted.
      */
-    protected function onAfterDelete(): Response|Responsable|Renderable
+    protected function onAfterDelete(): Responsable|Response|Renderable|View
     {
         return redirect()->to($this->redirectTo());
     }
@@ -462,7 +463,7 @@ abstract class AbstractWizard
         $this->wizardRepository->saveData($this, $data);
     }
 
-    private function processLastStep(Request $request, WizardStep $step): Response|Responsable|Renderable
+    private function processLastStep(Request $request, WizardStep $step): Responsable|Response|Renderable|View
     {
         $this->load($this->id);
 

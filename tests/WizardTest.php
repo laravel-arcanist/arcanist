@@ -40,6 +40,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Testing\TestResponse;
 use Illuminate\Validation\ValidationException;
 use Mockery as m;
+use Statamic\View\View;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -718,14 +719,14 @@ class TestWizard extends AbstractWizard
         TestStepWithViewData::class,
     ];
 
-    protected function onAfterComplete(ActionResult $result): Response|Responsable|Renderable
+    protected function onAfterComplete(ActionResult $result): Responsable|Response|Renderable|View
     {
         ++$_SERVER['__onAfterComplete.called'];
 
         return redirect()->back();
     }
 
-    protected function onAfterDelete(): Response|Responsable|Renderable
+    protected function onAfterDelete(): Responsable|Response|Renderable|View
     {
         ++$_SERVER['__onAfterDelete.called'];
 

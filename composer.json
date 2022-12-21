@@ -12,7 +12,8 @@
     "require": {
         "php": "^8.0",
         "facade/ignition-contracts": "^1.0",
-        "laravel/framework": "^8.0 || ^9.0"
+        "laravel/framework": "^8.0 || ^9.0",
+        "statamic/cms": "^3.3"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.15",
@@ -40,7 +41,8 @@
     },
     "config": {
         "allow-plugins": {
-            "ergebnis/composer-normalize": true
+            "ergebnis/composer-normalize": true,
+            "pixelfear/composer-dist-plugin": true
         }
     },
     "extra": {
