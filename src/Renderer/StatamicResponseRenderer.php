@@ -20,14 +20,13 @@ use Arcanist\WizardStep;
 use function redirect;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\Responsable;
-use Illuminate\View\Factory;
 use InvalidArgumentException;
 use Statamic\View\View;
 use Symfony\Component\HttpFoundation\Response;
 
 class StatamicResponseRenderer implements ResponseRenderer
 {
-    public function __construct(private Factory $factory, private string $viewBasePath)
+    public function __construct(private string $viewBasePath)
     {
     }
 
