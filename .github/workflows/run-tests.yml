@@ -7,8 +7,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        php: ["8.0", "8.1"]
-        laravel: [8.*, 9.*]
+        php: ["8.0", "8.1", "8.2"]
+        laravel: [8.*, 9.*, 10.*]
         stability: [prefer-lowest, prefer-stable]
         include:
           - laravel: 8.*
@@ -17,6 +17,9 @@ jobs:
           - laravel: 9.*
             testbench: ^7.6
             larastan: ^2.0
+          - laravel: 10.*
+            testbench: ^8.0
+            larastan: ^2.4
         os: [ubuntu-latest]
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
@@ -30,10 +33,10 @@ jobs:
           coverage: none
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Cache dependencies
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/.composer/cache/files
           key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
