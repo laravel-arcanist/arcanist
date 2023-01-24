@@ -7,13 +7,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        php: ["8.0", "8.1", "8.2"]
-        laravel: [8.*, 9.*, 10.*]
+        php: ["8.1", "8.2"]
+        laravel: [9.*, 10.*]
         stability: [prefer-lowest, prefer-stable]
         include:
-          - laravel: 8.*
-            testbench: ^6.17
-            larastan: ^1.0
           - laravel: 9.*
             testbench: ^7.6
             larastan: ^2.0
