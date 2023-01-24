@@ -12,7 +12,7 @@ jobs:
         uses: tj-actions/branch-names@v5.1
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
 
