@@ -13,10 +13,8 @@ jobs:
         include:
           - laravel: 9.*
             testbench: ^7.6
-            larastan: ^2.0
           - laravel: 10.*
             testbench: ^8.0
-            larastan: ^2.4
         os: [ubuntu-latest]
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
@@ -40,7 +38,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "nunomaduro/larastan:${{ matrix.larastan }}" --no-interaction --no-update
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: Execute tests
