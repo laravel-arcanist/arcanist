@@ -23,7 +23,6 @@ class Field
     private $transformationCallback;
 
     /**
-     * @param string                   $name
      * @param array<int, Rule|string>  $rules
      * @param array<array-key, string> $dependencies
      */

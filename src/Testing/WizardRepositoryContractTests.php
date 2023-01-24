@@ -26,6 +26,7 @@ trait WizardRepositoryContractTests
 {
     /**
      * @test
+     *
      * @group WizardRepository
      */
     public function it_can_save_and_retrieve_wizard_data(): void
@@ -46,6 +47,7 @@ trait WizardRepositoryContractTests
 
     /**
      * @test
+     *
      * @group WizardRepository
      */
     public function it_updates_the_wizards_data_after_saving(): void
@@ -63,6 +65,7 @@ trait WizardRepositoryContractTests
 
     /**
      * @test
+     *
      * @group WizardRepository
      */
     public function it_throws_an_exception_when_trying_to_load_a_wizard_that_doesnt_exist(): void
@@ -80,6 +83,7 @@ trait WizardRepositoryContractTests
 
     /**
      * @test
+     *
      * @group WizardRepository
      */
     public function it_creates_a_new_wizard_if_saving_for_the_first_time(): void
@@ -95,6 +99,7 @@ trait WizardRepositoryContractTests
 
     /**
      * @test
+     *
      * @group WizardRepository
      */
     public function it_updates_an_existing_wizard(): void
@@ -124,6 +129,7 @@ trait WizardRepositoryContractTests
 
     /**
      * @test
+     *
      * @group WizardRepository
      */
     public function it_keeps_track_of_each_wizard_data_separately(): void
@@ -145,6 +151,7 @@ trait WizardRepositoryContractTests
 
     /**
      * @test
+     *
      * @group WizardRepository
      */
     public function it_merges_new_data_with_the_existing_data(): void
@@ -173,6 +180,7 @@ trait WizardRepositoryContractTests
 
     /**
      * @test
+     *
      * @group WizardRepository
      */
     public function it_deletes_a_wizard(): void
@@ -195,6 +203,7 @@ trait WizardRepositoryContractTests
 
     /**
      * @test
+     *
      * @group WizardRepository
      */
     public function it_unsets_the_wizard_id_after_deleting_it(): void
@@ -216,6 +225,7 @@ trait WizardRepositoryContractTests
 
     /**
      * @test
+     *
      * @group WizardRepository
      */
     public function it_does_not_unset_the_wizards_it_(): void
@@ -237,6 +247,7 @@ trait WizardRepositoryContractTests
 
     /**
      * @test
+     *
      * @group WizardRepository
      */
     public function it_throws_an_exception_when_trying_to_save_a_wizard_but_a_wizard_with_the_same_id_but_different_class_already_exists(): void
@@ -258,6 +269,7 @@ trait WizardRepositoryContractTests
 
     /**
      * @test
+     *
      * @group WizardRepository
      */
     public function it_does_not_delete_the_wizards_class_and_id_dont_match(): void
