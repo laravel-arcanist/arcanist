@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f8ee8a4de7ddca997401bdbdab839721",
+    "content-hash": "7154902bd55e2ac2375fe2021eedb9cf",
     "packages": [
         {
             "name": "brick/math",
@@ -5240,31 +5240,34 @@
         },
         {
             "name": "ergebnis/php-cs-fixer-config",
-            "version": "4.11.0",
+            "version": "5.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/php-cs-fixer-config.git",
-                "reference": "4badc10de51dc114b24f6c79ac3fae47a6c08c3e"
+                "reference": "54745143749e09c0a6ba7554b640524ab04e98bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/php-cs-fixer-config/zipball/4badc10de51dc114b24f6c79ac3fae47a6c08c3e",
-                "reference": "4badc10de51dc114b24f6c79ac3fae47a6c08c3e",
+                "url": "https://api.github.com/repos/ergebnis/php-cs-fixer-config/zipball/54745143749e09c0a6ba7554b640524ab04e98bf",
+                "reference": "54745143749e09c0a6ba7554b640524ab04e98bf",
                 "shasum": ""
             },
             "require": {
                 "ext-filter": "*",
-                "friendsofphp/php-cs-fixer": "~3.13.0",
-                "php": "^7.4 || ^8.0"
+                "friendsofphp/php-cs-fixer": "~3.13.2",
+                "php": "~8.0.0 || ~8.1.0 || ~8.2.0"
             },
             "require-dev": {
-                "ergebnis/composer-normalize": "^2.28.3",
-                "ergebnis/license": "^2.0.0",
-                "fakerphp/faker": "^1.20.0",
-                "phpunit/phpunit": "^9.5.26",
-                "psalm/plugin-phpunit": "~0.17.0",
-                "symfony/filesystem": "^4.4.0 || ^5.0.0",
-                "vimeo/psalm": "^4.29"
+                "ergebnis/composer-normalize": "^2.29.0",
+                "ergebnis/license": "^2.1.0",
+                "fakerphp/faker": "^1.21.0",
+                "infection/infection": "~0.26.6",
+                "phpunit/phpunit": "^9.5.27",
+                "psalm/plugin-phpunit": "~0.18.4",
+                "rector/rector": "~0.15.2",
+                "symfony/filesystem": "^5.0.0 || ^6.0.0",
+                "symfony/process": "^5.0.0 || ^6.0.0",
+                "vimeo/psalm": "^5.4.0"
             },
             "type": "library",
             "extra": {
@@ -5294,7 +5297,7 @@
                 "issues": "https://github.com/ergebnis/php-cs-fixer-config/issues",
                 "source": "https://github.com/ergebnis/php-cs-fixer-config"
             },
-            "time": "2022-11-01T09:06:11+00:00"
+            "time": "2023-01-05T19:42:35+00:00"
         },
         {
             "name": "fakerphp/faker",
