@@ -6,7 +6,7 @@ parameters:
 			path: src/AbstractWizard.php
 
 		-
-			message: "#^Method Arcanist\\\\AbstractWizard\\:\\:firstIncompleteStep\\(\\) should return Arcanist\\\\WizardStep but returns Arcanist\\\\WizardStep\\|null\\.$#"
+			message: "#^Method Arcanist\\\\AbstractWizard\\:\\:firstIncompleteStep\\(\\) should return Arcanist\\\\WizardStep but returns mixed\\.$#"
 			count: 1
 			path: src/AbstractWizard.php
 
