@@ -23,7 +23,6 @@ class ContainerWizardActionResolver implements WizardActionResolver
      */
     public function resolveAction(string $actionClass): WizardAction
     {
-        /** @phpstan-ignore-next-line */
         return app()->make($actionClass);
     }
 }
