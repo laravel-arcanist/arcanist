@@ -17,7 +17,7 @@
     "require-dev": {
         "ergebnis/composer-normalize": "^2.15",
         "ergebnis/php-cs-fixer-config": "^4.4",
-        "mockery/mockery": "^1.4.3",
+        "mockery/mockery": "^1.5.1",
         "nunomaduro/collision": "^5.3 || ^6.0",
         "nunomaduro/larastan": "^2.0",
         "orchestra/testbench": "^6.23 || ^7.0 || ^8.0",
