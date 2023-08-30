@@ -21,6 +21,7 @@ class WizardStepMakeCommand extends GeneratorCommand
 {
     protected $name = 'make:wizard-step';
     protected $type = 'Wizard Step';
+    protected $description = 'Create a new Arcanist wizard step';
 
     protected function getStub(): string
     {
