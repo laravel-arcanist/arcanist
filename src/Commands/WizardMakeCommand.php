@@ -21,6 +21,7 @@ class WizardMakeCommand extends GeneratorCommand
 {
     protected $name = 'make:wizard';
     protected $type = 'Wizard';
+    protected $description = 'Create a new Arcanist wizard';
 
     public function handle(): ?bool
     {
